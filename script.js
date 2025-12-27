@@ -1,69 +1,74 @@
-function normalizar(entero, decimal) {
-  entero = entero || "0";
-  decimal = decimal || "";
-  return { entero, decimal };
+function getNumero(entero, decimal) {
+  if (entero === "" && decimal === "") return 0;
+  if (decimal === "") return parseInt(entero);
+  return parseFloat(entero + "." + decimal);
 }
 
 function calcular() {
   const op = document.getElementById("operacion").value;
 
-  const a = normalizar(
-    document.getElementById("aEntero").value,
-    document.getElementById("aDecimal").value
-  );
+  const aE = document.getElementById("aEntero").value || "0";
+  const aD = document.getElementById("aDecimal").value || "";
+  const bE = document.getElementById("bEntero").value || "0";
+  const bD = document.getElementById("bDecimal").value || "";
 
-  const b = normalizar(
-    document.getElementById("bEntero").value,
-    document.getElementById("bDecimal").value
-  );
+  const A = getNumero(aE, aD);
+  const B = getNumero(bE, bD);
 
-  let pasos = "";
   let resultado = "";
   let resto = "";
+  let pasos = "";
 
-  if (op === "suma" || op === "resta") {
-    const decLen = Math.max(a.decimal.length, b.decimal.length);
-    const aNum = parseInt(a.entero + a.decimal.padEnd(decLen, "0"));
-    const bNum = parseInt(b.entero + b.decimal.padEnd(decLen, "0"));
+  if (op === "suma") {
+    resultado = (A + B).toFixed(2);
+    pasos = `
+      <b>Suma paso a paso</b><br>
+      Operamos sin decimales:<br>
+      <span class="azul">${aE}${aD}</span> + <span class="azul">${bE}${bD}</span>
+      = <span class="verde">${resultado.replace(",", "")}</span><br><br>
+      Resultado final: <span class="verde">${resultado.replace(".", ",")}</span>
+    `;
+  }
 
-    const res = op === "suma" ? aNum + bNum : aNum - bNum;
-    resultado = (res / Math.pow(10, decLen)).toString().replace(".", ",");
-
-    pasos = `<strong>${op === "suma" ? "Suma" : "Resta"} paso a paso</strong><br>
-    Operamos sin decimales:<br>
-    <span class="num">${aNum}</span> ${op === "suma" ? "+" : "-"} <span class="num">${bNum}</span> =
-    <span class="calc">${res}</span><br><br>
-    Resultado final: <span class="calc">${resultado}</span>`;
+  if (op === "resta") {
+    resultado = (A - B).toFixed(2);
+    pasos = `
+      <b>Resta paso a paso</b><br>
+      Operamos sin decimales:<br>
+      <span class="azul">${aE}${aD}</span> - <span class="azul">${bE}${bD}</span>
+      = <span class="verde">${resultado.replace(".", "")}</span><br><br>
+      Resultado final: <span class="verde">${resultado.replace(".", ",")}</span>
+    `;
   }
 
   if (op === "multiplicacion") {
-    const decLen = a.decimal.length + b.decimal.length;
-    const aNum = parseInt(a.entero + a.decimal);
-    const bNum = parseInt(b.entero + b.decimal);
-
-    const res = aNum * bNum;
-    resultado = (res / Math.pow(10, decLen)).toString().replace(".", ",");
-
-    pasos = `<strong>Multiplicación paso a paso</strong><br>
-    Multiplicamos sin decimales:<br>
-    <span class="num">${aNum}</span> × <span class="num">${bNum}</span> =
-    <span class="calc">${res}</span><br><br>
-    Resultado final: <span class="calc">${resultado}</span>`;
+    resultado = (A * B).toFixed(2);
+    pasos = `
+      <b>Multiplicación paso a paso</b><br>
+      Multiplicamos sin decimales:<br>
+      <span class="azul">${aE}${aD}</span> × <span class="azul">${bE}${bD}</span>
+      = <span class="verde">${resultado.replace(".", "")}</span><br><br>
+      Resultado final: <span class="verde">${resultado.replace(".", ",")}</span>
+    `;
   }
 
   if (op === "division") {
-    const dividendo = parseInt(a.entero + a.decimal);
-    const divisor = parseInt(b.entero || "1");
-    resultado = Math.floor(dividendo / divisor);
+    const dividendo = parseInt(aE + aD);
+    const divisor = parseInt(bE);
+    const cociente = Math.floor(dividendo / divisor);
     resto = dividendo % divisor;
 
-    pasos = `<strong>División paso a paso</strong><br>
-    <span class="num">${dividendo}</span> ÷ <span class="num">${divisor}</span><br>
-    Cociente: <span class="calc">${resultado}</span><br>
-    Resto: <span class="calc">${resto}</span>`;
+    resultado = cociente;
+
+    pasos = `
+      <b>División paso a paso</b><br>
+      <span class="azul">${dividendo}</span> ÷ <span class="azul">${divisor}</span><br>
+      Cociente: <span class="verde">${cociente}</span><br>
+      Resto: <span class="rojo">${resto}</span>
+    `;
   }
 
-  document.getElementById("resultado").value = resultado;
+  document.getElementById("resultado").value = resultado.toString().replace(".", ",");
   document.getElementById("resto").value = resto;
   document.getElementById("pasos").innerHTML = pasos;
 }
