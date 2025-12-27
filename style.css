@@ -1,18 +1,25 @@
+/* ===== CONTENEDOR GENERAL ===== */
 body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   padding: 14px;
+  display: flex;
+  justify-content: center;
 }
 
-/* TÍTULO */
+body > * {
+  max-width: 360px;
+  width: 100%;
+}
+
+/* ===== TÍTULO ===== */
 h1 {
   text-align: center;
   margin-bottom: 12px;
 }
 
-/* SELECTOR DE OPERACIÓN */
+/* ===== SELECTOR DE OPERACIÓN ===== */
 .operacion-selector {
-  text-align: center;
   margin-bottom: 15px;
 }
 
@@ -26,11 +33,11 @@ h1 {
   color: white;
 }
 
-/* INPUTS */
+/* ===== INPUTS ===== */
 .inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 label {
@@ -38,62 +45,61 @@ label {
 }
 
 .inputs input {
-  font-size: 18px;
-  padding: 12px;
-  border-radius: 12px;
+  font-size: 17px;
+  padding: 10px;
+  border-radius: 10px;
   border: 1px solid #ccc;
   width: 100%;
 }
 
-/* BOTÓN CALCULAR */
+/* ===== BOTÓN ===== */
 .calcular {
   width: 100%;
   margin-top: 15px;
-  padding: 14px;
-  font-size: 18px;
+  padding: 13px;
+  font-size: 17px;
   border-radius: 14px;
   background: #2563eb;
   color: white;
   border: none;
 }
 
-/* RESULTADOS */
-/* Resultado ancho, Resto estrecho */
+/* ===== RESULTADOS ===== */
 .resultados {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 12px;
+  gap: 10px;
   margin-top: 15px;
 }
 
 .resultados input {
-  font-size: 20px;
-  padding: 14px;
-  border-radius: 14px;
+  font-size: 18px;
+  padding: 12px;
+  border-radius: 12px;
   background: #e0f2fe;
   border: none;
   width: 100%;
 }
 
-/* Resto centrado y compacto */
 .resultados div:last-child input {
   text-align: center;
   font-weight: bold;
 }
 
-/* PROCESO PASO A PASO */
+/* ===== PROCESO PASO A PASO ===== */
 .explicacion {
   background: white;
   margin-top: 18px;
-  padding: 16px;
+  padding: 14px;
   border-radius: 16px;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-/* FIRMA */
+/* ===== FIRMA ===== */
 .firma {
   text-align: center;
   margin-top: 10px;
   color: #555;
+  font-size: 13px;
 }
