@@ -1,105 +1,109 @@
-/* ===== CONTENEDOR GENERAL ===== */
 body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   padding: 14px;
-  display: flex;
-  justify-content: center;
 }
 
-body > * {
-  max-width: 360px;
-  width: 100%;
-}
-
-/* ===== TÍTULO ===== */
-h1 {
+.titulo {
+  background: #15803d;
+  color: white;
   text-align: center;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 24px;
   margin-bottom: 12px;
 }
 
-/* ===== SELECTOR DE OPERACIÓN ===== */
-.operacion-selector {
-  margin-bottom: 15px;
-}
-
-.operacion-selector select {
+.operacion {
   width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 12px;
-  border: none;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 18px;
   background: #16a34a;
   color: white;
+  border: none;
+  margin-bottom: 14px;
 }
 
-/* ===== INPUTS ===== */
-.inputs {
+.bloque {
+  background: white;
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.bloque h3 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.fila {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-label {
-  font-size: 14px;
-}
-
-.inputs input {
-  font-size: 17px;
-  padding: 10px;
-  border-radius: 10px;
+input {
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 12px;
   border: 1px solid #ccc;
-  width: 100%;
 }
 
-/* ===== BOTÓN ===== */
 .calcular {
   width: 100%;
-  margin-top: 15px;
-  padding: 13px;
-  font-size: 17px;
-  border-radius: 14px;
   background: #2563eb;
   color: white;
+  font-size: 18px;
+  padding: 14px;
+  border-radius: 14px;
   border: none;
+  margin: 14px 0;
 }
 
-/* ===== RESULTADOS ===== */
 .resultados {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 10px;
-  margin-top: 15px;
 }
 
 .resultados input {
-  font-size: 18px;
-  padding: 12px;
-  border-radius: 12px;
   background: #e0f2fe;
   border: none;
-  width: 100%;
+  font-size: 18px;
+  padding: 12px;
 }
 
-.resultados div:last-child input {
+.resto input {
   text-align: center;
   font-weight: bold;
 }
 
-/* ===== PROCESO PASO A PASO ===== */
-.explicacion {
-  background: white;
-  margin-top: 18px;
+.pasos {
+  background: #dbeafe;
+  margin-top: 14px;
   padding: 14px;
   border-radius: 16px;
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-/* ===== FIRMA ===== */
+.pasos strong {
+  color: #1d4ed8;
+}
+
+.num {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.calc {
+  color: #16a34a;
+  font-weight: bold;
+}
+
 .firma {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 14px;
   color: #555;
-  font-size: 13px;
 }
