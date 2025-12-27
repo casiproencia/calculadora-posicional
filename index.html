@@ -3,33 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculadora Posicional</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="titulo">CALCULADORA POSICIONAL</div>
+<h1>CALCULADORA POSICIONAL</h1>
 
-<select id="operacion" class="operacion">
-  <option value="suma">SUMA</option>
-  <option value="resta">RESTA</option>
-  <option value="multiplicacion">MULTIPLICACIÓN</option>
-  <option value="division">DIVISIÓN</option>
-</select>
-
-<div class="bloque">
-  <h3>NÚMERO A</h3>
-  <div class="fila">
-    <input type="number" id="aEntero" placeholder="ENTERO">
-    <input type="number" id="aDecimal" placeholder="DECIMALES">
-  </div>
+<div class="operacion-selector">
+  <button onclick="setOperacion('SUMA')">SUMA</button>
+  <button onclick="setOperacion('RESTA')">RESTA</button>
+  <button onclick="setOperacion('MULTIPLICACIÓN')">MULTIPLICACIÓN</button>
+  <button onclick="setOperacion('DIVISIÓN')">DIVISIÓN</button>
 </div>
 
-<div class="bloque">
-  <h3>NÚMERO B</h3>
-  <div class="fila">
-    <input type="number" id="bEntero" placeholder="ENTERO">
-    <input type="number" id="bDecimal" placeholder="DECIMALES">
+<h2 id="operacionActual">DIVISIÓN</h2>
+
+<div class="inputs">
+  <div>
+    <label>Dividendo (entero)</label>
+    <input type="number" id="aEntero">
+  </div>
+  <div>
+    <label>Dividendo (decimales)</label>
+    <input type="number" id="aDecimal">
+  </div>
+  <div>
+    <label>Divisor (entero)</label>
+    <input type="number" id="bEntero">
+  </div>
+  <div>
+    <label>Divisor (decimales)</label>
+    <input type="number" id="bDecimal">
   </div>
 </div>
 
@@ -40,15 +44,23 @@
     <label>Resultado</label>
     <input type="text" id="resultado" readonly>
   </div>
-  <div class="resto">
+  <div>
     <label>Resto</label>
     <input type="text" id="resto" readonly>
   </div>
 </div>
 
-<div id="pasos" class="pasos"></div>
+<div class="explicacion">
+  <div class="columna">
+    <h3>PROCESO PASO A PASO</h3>
+    <div id="pasos"></div>
+  </div>
 
-<div class="firma">Creada por Jose Casanova</div>
+  <div class="columna">
+    <h3>REJILLA POSICIONAL</h3>
+    <div id="rejilla"></div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
