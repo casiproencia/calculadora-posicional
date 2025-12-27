@@ -2,10 +2,18 @@ body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   padding: 12px;
-  max-width: 380px;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+body > * {
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+}
+
+/* CABECERA */
 .cabecera {
   background: #15803d;
   color: white;
@@ -17,21 +25,23 @@ body {
   margin-bottom: 12px;
 }
 
+/* OPERACIÓN */
 .operacion-box {
   background: #16a34a;
   padding: 12px;
   border-radius: 16px;
   margin-bottom: 12px;
+  text-align: center;
 }
 
-.titulo-verde {
-  text-align: center;
+.operacion-box label {
   color: white;
-  font-weight: bold;
+  font-size: 16px;
+  display: block;
   margin-bottom: 6px;
 }
 
-select {
+.operacion-box select {
   width: 100%;
   font-size: 18px;
   padding: 10px;
@@ -39,63 +49,105 @@ select {
   border: none;
 }
 
-.bloque {
+/* BLOQUES */
+.bloque-numero {
   background: white;
   padding: 12px;
   border-radius: 16px;
   margin-bottom: 10px;
 }
 
-.fila {
+.titulo-numero {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.fila-inputs {
   display: flex;
   gap: 8px;
 }
 
-input {
+.fila-inputs > div {
+  flex: 1;
+}
+
+.fila-inputs input {
   width: 100%;
-  padding: 10px;
   font-size: 16px;
+  padding: 8px;
   border-radius: 10px;
   border: 1px solid #ccc;
 }
 
-button {
-  width: 100%;
-  margin-top: 10px;
+small {
+  text-align: center;
+  display: block;
+  font-size: 12px;
+}
+
+/* BOTÓN */
+.calcular {
+  margin-top: 8px;
   padding: 14px;
   font-size: 18px;
+  border-radius: 16px;
   background: #2563eb;
   color: white;
   border: none;
-  border-radius: 16px;
 }
 
+/* RESULTADOS */
 .resultados {
   display: flex;
   gap: 8px;
   margin-top: 10px;
 }
 
+.resultados > div:first-child {
+  flex: 2;
+}
+
+.resultados > div:last-child {
+  flex: 1;
+}
+
 .resultados input {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 12px;
   background: #e0f2fe;
   border: none;
 }
 
-.pasos-box {
+/* PROCESO PASO A PASO */
+.explicacion {
   background: #16a34a;
   color: white;
+  margin-top: 14px;
   padding: 14px;
   border-radius: 16px;
-  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
+.explicacion h3 {
+  text-align: center;
+  margin: 0 0 8px 0;
+}
+
+/* FOOTER */
 footer {
   text-align: center;
-  margin-top: 8px;
-  color: #555;
+  margin-top: 6px;
   font-size: 13px;
+  color: #555;
 }
 
-.num { color: #93c5fd; font-weight: bold; }
-.llevada { color: #fde047; font-weight: bold; }
-.pedido { color: #fecaca; font-weight: bold; }
+/* COLORES DIDÁCTICOS */
+.num { color: #2563eb; font-weight: bold; }
+.llevada { color: #f59e0b; font-weight: bold; }
+.pedido { color: #dc2626; font-weight: bold; }
+.resto { color: #fecaca; font-weight: bold; }
+.op { color: #bbf7d0; font-weight: bold; }
