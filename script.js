@@ -1,176 +1,126 @@
 function calcular() {
   const op = document.getElementById('operacion').value;
-  if (!op) return;
 
   const aE = document.getElementById('aEntero').value || '0';
   const aD = document.getElementById('aDecimal').value || '';
   const bE = document.getElementById('bEntero').value || '0';
   const bD = document.getElementById('bDecimal').value || '';
 
-  const A = aD ? `${aE}.${aD}` : aE;
-  const B = bD ? `${bE}.${bD}` : bE;
-
+  document.getElementById('pasos').innerHTML = '';
   document.getElementById('resultado').value = '';
   document.getElementById('resto').value = '';
-  document.getElementById('pasos').innerHTML = '';
 
-  if (op === 'suma') suma(A, B);
-  if (op === 'resta') resta(A, B);
-  if (op === 'multiplicacion') multiplicacion(A, B);
-  if (op === 'division') division(A, B);
+  if (op === 'suma') suma(aE, aD, bE, bD);
+  if (op === 'resta') resta(aE, aD, bE, bD);
+  if (op === 'multiplicacion') multiplicacion(aE, aD, bE, bD);
+  if (op === 'division') division(aE, aD, bE);
 }
 
-/* ===== SUMA ===== */
-function suma(A, B) {
+/* ================= SUMA ================= */
+function suma(aE, aD, bE, bD) {
+  const dec = Math.max(aD.length, bD.length);
+  const A = (aE + aD.padEnd(dec, '0')).split('');
+  const B = (bE + bD.padEnd(dec, '0')).split('');
+
   let pasos = `<strong>Suma paso a paso</strong><br><br>`;
+  let carry = 0;
+  let resultado = [];
 
-  let a = A.replace('.', '').split('').reverse();
-  let b = B.replace('.', '').split('').reverse();
-  let dec = Math.max((A.split('.')[1] || '').length, (B.split('.')[1] || '').length);
+  for (let i = A.length - 1; i >= 0; i--) {
+    let suma = parseInt(A[i]) + parseInt(B[i]) + carry;
+    carry = Math.floor(suma / 10);
+    resultado.unshift(suma % 10);
 
-  let llevar = 0;
-  let res = [];
-
-  for (let i = 0; i < Math.max(a.length, b.length); i++) {
-    let da = parseInt(a[i] || 0);
-    let db = parseInt(b[i] || 0);
-    let ant = llevar;
-
-    let suma = da + db + llevar;
-    let cifra = suma % 10;
-    llevar = Math.floor(suma / 10);
-
-    res.push(cifra);
-
-    pasos += `${da} + ${db}`;
-    if (ant) pasos += ` + <span class="llevada">(${ant})</span>`;
-    pasos += ` = <span class="num">${suma}</span><br>`;
-    pasos += `Escribimos <span class="num">${cifra}</span>`;
-    if (llevar) pasos += ` y llevamos <span class="llevada">${llevar}</span>`;
-    pasos += `<br><br>`;
+    pasos += `${A[i]} + ${B[i]}${carry ? ' + llevamos ' + carry : ''} = ${suma % 10}<br>`;
   }
 
-  if (llevar) res.push(llevar);
+  if (carry) resultado.unshift(carry);
 
-  res = res.reverse();
-  if (dec > 0) res.splice(res.length - dec, 0, ',');
+  document.getElementById('resultado').value =
+    resultado.join('').slice(0, -dec) + ',' + resultado.join('').slice(-dec);
 
-  const resultado = res.join('');
-  document.getElementById('resultado').value = resultado;
   document.getElementById('pasos').innerHTML = pasos;
 }
 
-/* ===== RESTA ===== */
-function resta(A, B) {
+/* ================= RESTA ================= */
+function resta(aE, aD, bE, bD) {
+  const dec = Math.max(aD.length, bD.length);
+  let A = (aE + aD.padEnd(dec, '0')).split('').map(Number);
+  let B = (bE + bD.padEnd(dec, '0')).split('').map(Number);
+
   let pasos = `<strong>Resta paso a paso</strong><br><br>`;
+  let resultado = [];
 
-  let a = A.replace('.', '').split('').reverse();
-  let b = B.replace('.', '').split('').reverse();
-  let dec = Math.max((A.split('.')[1] || '').length, (B.split('.')[1] || '').length);
-
-  let pedir = 0;
-  let res = [];
-
-  for (let i = 0; i < a.length; i++) {
-    let da = parseInt(a[i]) - pedir;
-    let db = parseInt(b[i] || 0);
-    pedir = 0;
-
-    if (da < db) {
-      da += 10;
-      pedir = 1;
-      pasos += `<span class="pedido">Pedimos 1</span><br>`;
+  for (let i = A.length - 1; i >= 0; i--) {
+    if (A[i] < B[i]) {
+      A[i] += 10;
+      A[i - 1]--;
+      pasos += `Pedimos 1 → ${A[i]} - ${B[i]} = ${A[i] - B[i]}<br>`;
+    } else {
+      pasos += `${A[i]} - ${B[i]} = ${A[i] - B[i]}<br>`;
     }
-
-    let r = da - db;
-    res.push(r);
-    pasos += `${da} − ${db} = <span class="num">${r}</span><br><br>`;
+    resultado.unshift(A[i] - B[i]);
   }
 
-  res = res.reverse();
-  if (dec > 0) res.splice(res.length - dec, 0, ',');
+  document.getElementById('resultado').value =
+    resultado.join('').slice(0, -dec) + ',' + resultado.join('').slice(-dec);
 
-  const resultado = res.join('').replace(/^0+/, '');
-  document.getElementById('resultado').value = resultado;
   document.getElementById('pasos').innerHTML = pasos;
 }
 
-/* ===== MULTIPLICACIÓN ===== */
-function multiplicacion(A, B) {
+/* ================= MULTIPLICACIÓN ================= */
+function multiplicacion(aE, aD, bE, bD) {
+  const A = (aE + aD).split('').map(Number);
+  const B = parseInt(bE + bD);
+  let carry = 0;
+  let resultado = [];
   let pasos = `<strong>Multiplicación paso a paso</strong><br><br>`;
 
-  let a = A.replace('.', '').split('').reverse();
-  let b = B.replace('.', '').split('').reverse();
-  let dec = (A.split('.')[1] || '').length + (B.split('.')[1] || '').length;
+  for (let i = A.length - 1; i >= 0; i--) {
+    let mult = A[i] * B + carry;
+    carry = Math.floor(mult / 10);
+    resultado.unshift(mult % 10);
 
-  let parciales = [];
-
-  for (let i = 0; i < b.length; i++) {
-    let db = parseInt(b[i]);
-    let llevar = 0;
-    let parcial = [];
-
-    pasos += `Multiplicamos por ${db}<br>`;
-
-    for (let j = 0; j < a.length; j++) {
-      let da = parseInt(a[j]);
-      let base = da * db;
-      let total = base + llevar;
-      let cifra = total % 10;
-      let ant = llevar;
-      llevar = Math.floor(total / 10);
-
-      parcial.push(cifra);
-
-      pasos += `${da} × ${db} = ${base}`;
-      if (ant) pasos += ` + <span class="llevada">(${ant})</span>`;
-      pasos += ` = <span class="num">${total}</span><br>`;
-      pasos += `Escribimos <span class="num">${cifra}</span>`;
-      if (llevar) pasos += ` y llevamos <span class="llevada">${llevar}</span>`;
-      pasos += `<br><br>`;
-    }
-
-    if (llevar) parcial.push(llevar);
-
-    let parcialStr = parcial.reverse().join('') + '0'.repeat(i);
-    parciales.push(parseInt(parcialStr));
-
-    pasos += `Resultado parcial: <span class="num">${parcialStr}</span><br><br>`;
+    pasos += `${A[i]} × ${B} = ${mult % 10}${carry ? ' (llevamos ' + carry + ')' : ''}<br>`;
   }
 
-  let total = parciales.reduce((x, y) => x + y, 0).toString();
-  if (dec > 0) total = total.slice(0, -dec) + ',' + total.slice(-dec);
+  if (carry) resultado.unshift(carry);
 
-  document.getElementById('resultado').value = total;
+  const dec = aD.length + bD.length;
+  document.getElementById('resultado').value =
+    resultado.join('').slice(0, -dec) + ',' + resultado.join('').slice(-dec);
+
   document.getElementById('pasos').innerHTML = pasos;
 }
 
-/* ===== DIVISIÓN ===== */
-function division(A, B) {
-  let pasos = `<strong>División paso a paso</strong><br><br>`;
+/* ================= DIVISIÓN ================= */
+function division(aE, aD, bE) {
+  const dividendoStr = aD ? aE + '.' + aD : aE;
+  const divisor = parseInt(bE);
 
-  let texto = A.replace('.', '');
-  let dec = (A.split('.')[1] || '').length;
-  let divisor = parseInt(B);
+  let partes = dividendoStr.split('.');
+  let entero = partes[0];
+  let decimal = partes[1] || '';
+  let texto = entero + decimal;
+
   let resto = 0;
   let cociente = '';
+  let posicionComa = entero.length;
+
+  let pasos = `<strong>División paso a paso</strong><br><br>`;
 
   for (let i = 0; i < texto.length; i++) {
     let actual = resto * 10 + parseInt(texto[i]);
     let q = Math.floor(actual / divisor);
     resto = actual % divisor;
 
-    if (i === texto.length - dec) {
+    if (i === posicionComa) {
       cociente += ',';
       pasos += `👉 Aquí colocamos la coma en el cociente<br><br>`;
     }
 
     cociente += q;
-
-    pasos += `${actual} ÷ ${divisor}<br>`;
-    pasos += `Cabe <span class="op">${q}</span><br>`;
-    pasos += `${q} × ${divisor} = ${q * divisor}<br>`;
-    pasos += `Resto: <span class="resto">${resto}</span><br><br>`;
+    pasos += `${actual} ÷ ${divisor} = ${q} (resto ${resto})<br><br>`;
   }
 
   document.getElementById('resultado').value = cociente;
