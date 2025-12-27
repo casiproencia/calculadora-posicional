@@ -8,16 +8,12 @@
 </head>
 <body>
 
-<!-- CABECERA -->
-<div class="cabecera">
-  CALCULADORA POSICIONAL
-</div>
+<h1 class="cabecera">CALCULADORA POSICIONAL</h1>
 
-<!-- OPERACIÓN -->
-<div class="operacion-box">
-  <label>OPERACIÓN</label>
+<div class="bloque">
+  <label>Operación</label>
   <select id="operacion">
-    <option value="" selected disabled></option>
+    <option value="">-- elige --</option>
     <option value="suma">SUMA</option>
     <option value="resta">RESTA</option>
     <option value="multiplicacion">MULTIPLICACIÓN</option>
@@ -25,57 +21,32 @@
   </select>
 </div>
 
-<!-- NÚMERO A -->
-<div class="bloque-numero">
-  <div class="titulo-numero">NÚMERO A</div>
-  <div class="fila-inputs">
-    <div>
-      <small>(ENTERO)</small>
-      <input type="number" id="aEntero">
-    </div>
-    <div>
-      <small>(DECIMALES)</small>
-      <input type="number" id="aDecimal">
-    </div>
-  </div>
+<div class="bloque">
+  <label>Número A</label>
+  <input id="a" type="text" placeholder="Ej: 25387,23">
 </div>
 
-<!-- NÚMERO B -->
-<div class="bloque-numero">
-  <div class="titulo-numero">NÚMERO B</div>
-  <div class="fila-inputs">
-    <div>
-      <small>(ENTERO)</small>
-      <input type="number" id="bEntero">
-    </div>
-    <div>
-      <small>(DECIMALES)</small>
-      <input type="number" id="bDecimal">
-    </div>
-  </div>
+<div class="bloque">
+  <label>Número B</label>
+  <input id="b" type="text" placeholder="Ej: 9">
 </div>
 
-<button class="calcular" onclick="calcular()">CALCULAR</button>
+<button onclick="calcular()">CALCULAR</button>
 
-<div class="resultados">
-  <div>
-    <label>Resultado</label>
-    <input type="text" id="resultado" readonly>
-  </div>
-  <div>
-    <label>Resto</label>
-    <input type="text" id="resto" readonly>
-  </div>
+<div class="bloque">
+  <label>Resultado</label>
+  <input id="resultado" readonly>
+</div>
+
+<div class="bloque">
+  <label>Resto (solo división)</label>
+  <input id="resto" readonly>
 </div>
 
 <div class="explicacion">
-  <h3>PROCESO PASO A PASO</h3>
+  <h2>Proceso paso a paso</h2>
   <div id="pasos"></div>
 </div>
-
-<footer>
-  Creada por <strong>Jose Casanova</strong>
-</footer>
 
 <script src="script.js"></script>
 </body>
