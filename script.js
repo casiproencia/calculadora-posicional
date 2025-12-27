@@ -1,44 +1,70 @@
 function calcular() {
+  const op = document.getElementById('operacion').value;
+
   const aE = document.getElementById('aEntero').value || '0';
   const aD = document.getElementById('aDecimal').value;
-  const bE = document.getElementById('bEntero').value || '1';
+  const bE = document.getElementById('bEntero').value || '0';
+  const bD = document.getElementById('bDecimal').value;
 
-  const dividendo = aD ? `${aE}.${aD}` : aE;
-  const divisor = parseInt(bE);
+  const A = parseFloat(aD ? `${aE}.${aD}` : aE);
+  const B = parseFloat(bD ? `${bE}.${bD}` : bE);
 
-  realizarDivision(dividendo, divisor);
+  document.getElementById('pasos').innerHTML = '';
+  document.getElementById('resto').value = '';
+
+  if (op === 'division') {
+    divisionPasoAPaso(A, B);
+  } else if (op === 'suma') {
+    simpleOperacion(A, B, '+');
+  } else if (op === 'resta') {
+    simpleOperacion(A, B, '-');
+  } else if (op === 'multiplicacion') {
+    simpleOperacion(A, B, '×');
+  }
 }
 
-function realizarDivision(dividendoStr, divisor) {
+function simpleOperacion(A, B, simbolo) {
+  let resultado;
+  if (simbolo === '+') resultado = A + B;
+  if (simbolo === '-') resultado = A - B;
+  if (simbolo === '×') resultado = A * B;
+
+  document.getElementById('resultado').value = resultado.toFixed(2);
+
+  document.getElementById('pasos').innerHTML = `
+    <strong>Operación paso a paso</strong><br><br>
+    <span class="num">${A}</span> <span class="op">${simbolo}</span> <span class="num">${B}</span><br><br>
+    Resultado: <span class="num">${resultado.toFixed(2)}</span>
+  `;
+}
+
+function divisionPasoAPaso(dividendo, divisor) {
   let pasos = [];
-  let partes = dividendoStr.split('.');
-  let entero = partes[0];
-  let decimal = partes[1] || '';
-  let texto = entero + decimal;
+  let texto = dividendo.toString().replace('.', '');
+  let decimales = (dividendo.toString().split('.')[1] || '').length;
 
   let resto = 0;
   let cociente = '';
-  let posicionComa = entero.length;
 
   pasos.push(`<strong>División paso a paso</strong><br><br>`);
 
   for (let i = 0; i < texto.length; i++) {
-    let numeroActual = resto * 10 + parseInt(texto[i]);
-    let resultado = Math.floor(numeroActual / divisor);
-    resto = numeroActual % divisor;
+    let actual = resto * 10 + parseInt(texto[i]);
+    let res = Math.floor(actual / divisor);
+    resto = actual % divisor;
 
-    if (i === posicionComa) {
+    if (i === texto.length - decimales) {
       cociente += ',';
       pasos.push(`👉 Aquí colocamos la coma en el cociente.<br><br>`);
     }
 
-    cociente += resultado;
+    cociente += res;
 
     pasos.push(
-      `<strong>${numeroActual} ÷ ${divisor}</strong><br>
-       • Cabe ${resultado}<br>
-       • ${resultado} × ${divisor} = ${resultado * divisor}<br>
-       • Resto: ${resto}<br><br>`
+      `<span class="num">${actual}</span> ÷ <span class="num">${divisor}</span><br>
+       • Cabe <span class="op">${res}</span><br>
+       • ${res} × ${divisor} = <span class="num">${res * divisor}</span><br>
+       • Resto: <span class="resto">${resto}</span><br><br>`
     );
   }
 
@@ -47,8 +73,8 @@ function realizarDivision(dividendoStr, divisor) {
 
   pasos.push(
     `<strong>Resultado final</strong><br><br>
-     ${dividendoStr} ÷ ${divisor} = ${cociente}<br>
-     Resto: ${resto}`
+     ${dividendo} ÷ ${divisor} = <span class="num">${cociente}</span><br>
+     Resto: <span class="resto">${resto}</span>`
   );
 
   document.getElementById('pasos').innerHTML = pasos.join('');
