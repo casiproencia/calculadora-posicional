@@ -17,12 +17,12 @@ body > * {
 .cabecera {
   background: #15803d;
   color: white;
-  text-align: center;
   font-size: 22px;
   font-weight: bold;
   padding: 14px;
   border-radius: 16px;
   margin-bottom: 14px;
+  text-align: center;
 }
 
 /* OPERACIÓN */
