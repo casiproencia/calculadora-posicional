@@ -1,49 +1,109 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  background: #f4f6fb;
+  padding: 14px;
 }
 
-.operacion-selector button {
-  margin-right: 10px;
-  font-weight: bold;
+.titulo {
+  background: #15803d;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 24px;
+  margin-bottom: 12px;
 }
 
-.inputs, .resultados {
-  display: flex;
-  gap: 20px;
-  margin: 20px 0;
+.operacion {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 18px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  margin-bottom: 14px;
 }
 
-.inputs div, .resultados div {
-  display: flex;
-  flex-direction: column;
+.bloque {
+  background: white;
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.bloque h3 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+input {
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
 }
 
 .calcular {
-  padding: 10px 20px;
-  font-size: 16px;
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  font-size: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  margin: 14px 0;
 }
 
-.explicacion {
+.resultados {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  margin-top: 30px;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
 }
 
-.columna {
-  border: 1px solid #ccc;
-  padding: 15px;
+.resultados input {
+  background: #e0f2fe;
+  border: none;
+  font-size: 18px;
+  padding: 12px;
 }
 
-.rejilla {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  border: 1px solid #000;
-}
-
-.rejilla div {
-  border: 1px solid #999;
-  padding: 10px;
+.resto input {
   text-align: center;
+  font-weight: bold;
+}
+
+.pasos {
+  background: #dbeafe;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.pasos strong {
+  color: #1d4ed8;
+}
+
+.num {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.calc {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.firma {
+  text-align: center;
+  margin-top: 14px;
+  color: #555;
 }
