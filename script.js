@@ -2,6 +2,9 @@ function calcular() {
   const op = document.getElementById('operacion').value;
   if (!op) return;
 
+  // Mostrar proceso paso a paso al calcular
+  document.querySelector('.explicacion').style.display = 'block';
+
   const aE = document.getElementById('aEntero').value || '0';
   const aD = document.getElementById('aDecimal').value || '';
   const bE = document.getElementById('bEntero').value || '0';
@@ -34,27 +37,27 @@ function sumaPasoAPaso(A, B) {
   for (let i = 0; i < Math.max(a.length, b.length); i++) {
     let da = parseInt(a[i] || 0);
     let db = parseInt(b[i] || 0);
+    let llevadaAnterior = llevar;
 
     let suma = da + db + llevar;
     let cifra = suma % 10;
-    let llevadaAnterior = llevar;
     llevar = Math.floor(suma / 10);
 
     resultado.push(cifra);
 
     pasos.push(
       `${da} + ${db}` +
-      (llevadaAnterior ? ` + (${llevadaAnterior})` : ``) +
+      (llevadaAnterior ? ` + <span class="llevada">(${llevadaAnterior})</span>` : ``) +
       ` = <span class="num">${suma}</span><br>
-       Escribimos <span class="op">${cifra}</span>` +
-      (llevar ? ` y llevamos <span class="op">1</span>` : ``) +
+       Escribimos <span class="num">${cifra}</span>` +
+      (llevar ? ` y llevamos <span class="llevada">${llevar}</span>` : ``) +
       `<br><br>`
     );
   }
 
   if (llevar) {
     resultado.push(llevar);
-    pasos.push(`Añadimos la llevada final: <span class="op">${llevar}</span><br><br>`);
+    pasos.push(`Añadimos la llevada final: <span class="llevada">${llevar}</span><br><br>`);
   }
 
   resultado = resultado.reverse();
@@ -89,7 +92,7 @@ function restaPasoAPaso(A, B) {
     if (da < db) {
       da += 10;
       pedir = 1;
-      pasos.push(`Pedimos 1 a la cifra siguiente<br>`);
+      pasos.push(`<span class="pedido">Pedimos 1</span> a la cifra siguiente<br>`);
     }
 
     let resta = da - db;
@@ -132,8 +135,8 @@ function multiplicacionPasoAPaso(A, B) {
 
     for (let j = 0; j < a.length; j++) {
       let da = parseInt(a[j]);
-      let productoBase = da * db;
-      let producto = productoBase + llevar;
+      let base = da * db;
+      let producto = base + llevar;
       let cifra = producto % 10;
       let llevadaAnterior = llevar;
       llevar = Math.floor(producto / 10);
@@ -141,18 +144,18 @@ function multiplicacionPasoAPaso(A, B) {
       parcial.push(cifra);
 
       pasos.push(
-        `${da} × ${db} = ${productoBase}` +
-        (llevadaAnterior ? ` + (${llevadaAnterior})` : ``) +
+        `${da} × ${db} = ${base}` +
+        (llevadaAnterior ? ` + <span class="llevada">(${llevadaAnterior})</span>` : ``) +
         ` = <span class="num">${producto}</span><br>
-         Escribimos <span class="op">${cifra}</span>` +
-        (llevar ? ` y llevamos <span class="op">${llevar}</span>` : ``) +
+         Escribimos <span class="num">${cifra}</span>` +
+        (llevar ? ` y llevamos <span class="llevada">${llevar}</span>` : ``) +
         `<br><br>`
       );
     }
 
     if (llevar) {
       parcial.push(llevar);
-      pasos.push(`Añadimos la llevada final: <span class="op">${llevar}</span><br><br>`);
+      pasos.push(`Añadimos la llevada final: <span class="llevada">${llevar}</span><br><br>`);
     }
 
     let parcialStr = parcial.reverse().join('') + '0'.repeat(i);
@@ -168,7 +171,6 @@ function multiplicacionPasoAPaso(A, B) {
   }
 
   document.getElementById('resultado').value = total;
-
   pasos.push(`<strong>Resultado final</strong><br>${A} × ${B} = <span class="num">${total}</span>`);
   document.getElementById('pasos').innerHTML = pasos.join('');
 }
@@ -206,6 +208,11 @@ function divisionPasoAPaso(A, B) {
   document.getElementById('resultado').value = cociente;
   document.getElementById('resto').value = resto;
 
-  pasos.push(`<strong>Resultado final</strong><br>${A} ÷ ${B} = <span class="num">${cociente}</span><br>Resto: ${resto}`);
+  pasos.push(
+    `<strong>Resultado final</strong><br>
+     ${A} ÷ ${B} = <span class="num">${cociente}</span><br>
+     Resto: <span class="resto">${resto}</span>`
+  );
+
   document.getElementById('pasos').innerHTML = pasos.join('');
 }
