@@ -20,30 +20,77 @@ function calcular() {
   if (op === 'division') division(A, B);
 }
 
-/* ===== RESTA POSICIONAL CORRECTA ===== */
-function resta(A, B) {
-  let pasos = `<strong>Resta paso a paso</strong><br><br>`;
+/* ===== SUMA ===== */
+function suma(A, B) {
+  let pasos = `<strong>Suma paso a paso</strong><br><br>`;
 
-  // Alinear decimales
-  let aPartes = A.split('.');
-  let bPartes = B.split('.');
-
-  let decA = aPartes[1] || '';
-  let decB = bPartes[1] || '';
+  let aP = A.split('.');
+  let bP = B.split('.');
+  let decA = aP[1] || '';
+  let decB = bP[1] || '';
   let maxDec = Math.max(decA.length, decB.length);
 
   decA = decA.padEnd(maxDec, '0');
   decB = decB.padEnd(maxDec, '0');
 
-  let aNum = (aPartes[0] + decA).split('').reverse();
-  let bNum = (bPartes[0] + decB).split('').reverse();
+  let a = (aP[0] + decA).split('').reverse();
+  let b = (bP[0] + decB).split('').reverse();
+
+  let llevar = 0;
+  let res = [];
+
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    let da = parseInt(a[i] || 0);
+    let db = parseInt(b[i] || 0);
+    let ant = llevar;
+
+    let s = da + db + llevar;
+    let cifra = s % 10;
+    llevar = Math.floor(s / 10);
+    res.push(cifra);
+
+    pasos += `${da} + ${db}`;
+    if (ant) pasos += ` + <span class="llevada">(${ant})</span>`;
+    pasos += ` = <span class="num">${s}</span><br>`;
+    pasos += `Escribimos <span class="num">${cifra}</span>`;
+    if (llevar) pasos += ` y llevamos <span class="llevada">${llevar}</span>`;
+    pasos += `<br><br>`;
+  }
+
+  if (llevar) res.push(llevar);
+
+  res = res.reverse();
+  if (maxDec > 0) res.splice(res.length - maxDec, 0, ',');
+
+  const resultado = res.join('');
+  pasos += `👉 Ponemos la coma en este lugar: <span class="num">${resultado}</span>`;
+
+  document.getElementById('resultado').value = resultado;
+  document.getElementById('pasos').innerHTML = pasos;
+}
+
+/* ===== RESTA ===== */
+function resta(A, B) {
+  let pasos = `<strong>Resta paso a paso</strong><br><br>`;
+
+  let aP = A.split('.');
+  let bP = B.split('.');
+  let decA = aP[1] || '';
+  let decB = bP[1] || '';
+  let maxDec = Math.max(decA.length, decB.length);
+
+  decA = decA.padEnd(maxDec, '0');
+  decB = decB.padEnd(maxDec, '0');
+
+  let a = (aP[0] + decA).split('').reverse();
+  let b = (bP[0] + decB).split('').reverse();
 
   let pedir = 0;
   let res = [];
 
-  for (let i = 0; i < aNum.length; i++) {
-    let da = parseInt(aNum[i]) - pedir;
-    let db = parseInt(bNum[i] || 0);
+  for (let i = 0; i < a.length; i++) {
+    let da = parseInt(a[i]) - pedir;
+    let db = parseInt(b[i] || 0);
     pedir = 0;
 
     if (da < db) {
@@ -58,66 +105,94 @@ function resta(A, B) {
   }
 
   res = res.reverse();
-
-  if (maxDec > 0) {
-    res.splice(res.length - maxDec, 0, ',');
-  }
+  if (maxDec > 0) res.splice(res.length - maxDec, 0, ',');
 
   const resultado = res.join('').replace(/^0+/, '');
+  pasos += `👉 Ponemos la coma en este lugar: <span class="num">${resultado}</span>`;
+
   document.getElementById('resultado').value = resultado;
   document.getElementById('pasos').innerHTML = pasos;
 }
 
-/* ===== SUMA POSICIONAL CORRECTA ===== */
-function suma(A, B) {
-  let pasos = `<strong>Suma paso a paso</strong><br><br>`;
+/* ===== MULTIPLICACIÓN ===== */
+function multiplicacion(A, B) {
+  let pasos = `<strong>Multiplicación paso a paso</strong><br><br>`;
 
-  let aPartes = A.split('.');
-  let bPartes = B.split('.');
+  let a = A.replace('.', '').split('').reverse();
+  let b = B.replace('.', '').split('').reverse();
+  let dec = (A.split('.')[1] || '').length + (B.split('.')[1] || '').length;
 
-  let decA = aPartes[1] || '';
-  let decB = bPartes[1] || '';
-  let maxDec = Math.max(decA.length, decB.length);
+  let parciales = [];
 
-  decA = decA.padEnd(maxDec, '0');
-  decB = decB.padEnd(maxDec, '0');
+  for (let i = 0; i < b.length; i++) {
+    let db = parseInt(b[i]);
+    let llevar = 0;
+    let parcial = [];
 
-  let aNum = (aPartes[0] + decA).split('').reverse();
-  let bNum = (bPartes[0] + decB).split('').reverse();
+    pasos += `Multiplicamos por ${db}<br>`;
 
-  let llevar = 0;
-  let res = [];
+    for (let j = 0; j < a.length; j++) {
+      let da = parseInt(a[j]);
+      let base = da * db;
+      let total = base + llevar;
+      let cifra = total % 10;
+      let ant = llevar;
+      llevar = Math.floor(total / 10);
 
-  for (let i = 0; i < Math.max(aNum.length, bNum.length); i++) {
-    let da = parseInt(aNum[i] || 0);
-    let db = parseInt(bNum[i] || 0);
-    let ant = llevar;
+      parcial.push(cifra);
 
-    let suma = da + db + llevar;
-    let cifra = suma % 10;
-    llevar = Math.floor(suma / 10);
+      pasos += `${da} × ${db} = ${base}`;
+      if (ant) pasos += ` + <span class="llevada">(${ant})</span>`;
+      pasos += ` = <span class="num">${total}</span><br>`;
+      pasos += `Escribimos <span class="num">${cifra}</span>`;
+      if (llevar) pasos += ` y llevamos <span class="llevada">${llevar}</span>`;
+      pasos += `<br><br>`;
+    }
 
-    res.push(cifra);
+    if (llevar) parcial.push(llevar);
 
-    pasos += `${da} + ${db}`;
-    if (ant) pasos += ` + <span class="llevada">(${ant})</span>`;
-    pasos += ` = <span class="num">${suma}</span><br>`;
-    pasos += `Escribimos <span class="num">${cifra}</span>`;
-    if (llevar) pasos += ` y llevamos <span class="llevada">${llevar}</span>`;
-    pasos += `<br><br>`;
+    let p = parcial.reverse().join('') + '0'.repeat(i);
+    parciales.push(parseInt(p));
+    pasos += `Resultado parcial: <span class="num">${p}</span><br><br>`;
   }
 
-  if (llevar) res.push(llevar);
+  let total = parciales.reduce((x, y) => x + y, 0).toString();
+  if (dec > 0) total = total.slice(0, -dec) + ',' + total.slice(-dec);
 
-  res = res.reverse();
-  if (maxDec > 0) {
-    res.splice(res.length - maxDec, 0, ',');
-  }
+  pasos += `👉 Ponemos la coma en este lugar: <span class="num">${total}</span>`;
 
-  const resultado = res.join('');
-  document.getElementById('resultado').value = resultado;
+  document.getElementById('resultado').value = total;
   document.getElementById('pasos').innerHTML = pasos;
 }
 
-/* ===== MULTIPLICACIÓN Y DIVISIÓN ===== */
-/* (las que ya tenías funcionan bien y no se tocan) */
+/* ===== DIVISIÓN ===== */
+function division(A, B) {
+  let pasos = `<strong>División paso a paso</strong><br><br>`;
+
+  let texto = A.replace('.', '');
+  let dec = (A.split('.')[1] || '').length;
+  let divisor = parseInt(B);
+  let resto = 0;
+  let cociente = '';
+
+  for (let i = 0; i < texto.length; i++) {
+    let actual = resto * 10 + parseInt(texto[i]);
+    let q = Math.floor(actual / divisor);
+    resto = actual % divisor;
+
+    if (i === texto.length - dec) {
+      cociente += ',';
+      pasos += `👉 Aquí colocamos la coma en el cociente<br><br>`;
+    }
+
+    cociente += q;
+    pasos += `${actual} ÷ ${divisor}<br>`;
+    pasos += `Cabe <span class="op">${q}</span><br>`;
+    pasos += `${q} × ${divisor} = ${q * divisor}<br>`;
+    pasos += `Resto: <span class="resto">${resto}</span><br><br>`;
+  }
+
+  document.getElementById('resultado').value = cociente;
+  document.getElementById('resto').value = resto;
+  document.getElementById('pasos').innerHTML = pasos;
+}
