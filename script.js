@@ -1,5 +1,6 @@
 function calcular() {
   const op = document.getElementById('operacion').value;
+  if (!op) return;
 
   const aE = document.getElementById('aEntero').value || '0';
   const aD = document.getElementById('aDecimal').value;
@@ -12,15 +13,10 @@ function calcular() {
   document.getElementById('pasos').innerHTML = '';
   document.getElementById('resto').value = '';
 
-  if (op === 'division') {
-    divisionPasoAPaso(A, B);
-  } else if (op === 'suma') {
-    simpleOperacion(A, B, '+');
-  } else if (op === 'resta') {
-    simpleOperacion(A, B, '-');
-  } else if (op === 'multiplicacion') {
-    simpleOperacion(A, B, '×');
-  }
+  if (op === 'division') divisionPasoAPaso(A, B);
+  if (op === 'suma') simpleOperacion(A, B, '+');
+  if (op === 'resta') simpleOperacion(A, B, '-');
+  if (op === 'multiplicacion') simpleOperacion(A, B, '×');
 }
 
 function simpleOperacion(A, B, simbolo) {
