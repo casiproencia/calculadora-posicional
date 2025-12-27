@@ -1,69 +1,56 @@
-function normalizar(entero, decimal) {
-  entero = entero || "0";
-  decimal = decimal || "";
-  return { entero, decimal };
+let operacion = 'DIVISIÓN';
+
+function setOperacion(op) {
+  operacion = op;
+  document.getElementById('operacionActual').innerText = op;
 }
 
 function calcular() {
-  const op = document.getElementById("operacion").value;
+  const aE = document.getElementById('aEntero').value || 0;
+  const aD = document.getElementById('aDecimal').value || 0;
+  const bE = document.getElementById('bEntero').value || 0;
+  const bD = document.getElementById('bDecimal').value || 0;
 
-  const a = normalizar(
-    document.getElementById("aEntero").value,
-    document.getElementById("aDecimal").value
-  );
+  const a = parseFloat(aE + '.' + aD);
+  const b = parseFloat(bE + '.' + bD);
 
-  const b = normalizar(
-    document.getElementById("bEntero").value,
-    document.getElementById("bDecimal").value
-  );
-
-  let pasos = "";
-  let resultado = "";
-  let resto = "";
-
-  if (op === "suma" || op === "resta") {
-    const decLen = Math.max(a.decimal.length, b.decimal.length);
-    const aNum = parseInt(a.entero + a.decimal.padEnd(decLen, "0"));
-    const bNum = parseInt(b.entero + b.decimal.padEnd(decLen, "0"));
-
-    const res = op === "suma" ? aNum + bNum : aNum - bNum;
-    resultado = (res / Math.pow(10, decLen)).toString().replace(".", ",");
-
-    pasos = `<strong>${op === "suma" ? "Suma" : "Resta"} paso a paso</strong><br>
-    Operamos sin decimales:<br>
-    <span class="num">${aNum}</span> ${op === "suma" ? "+" : "-"} <span class="num">${bNum}</span> =
-    <span class="calc">${res}</span><br><br>
-    Resultado final: <span class="calc">${resultado}</span>`;
+  if (operacion !== 'DIVISIÓN') {
+    alert('Por ahora el proceso detallado está implementado solo para división');
+    return;
   }
 
-  if (op === "multiplicacion") {
-    const decLen = a.decimal.length + b.decimal.length;
-    const aNum = parseInt(a.entero + a.decimal);
-    const bNum = parseInt(b.entero + b.decimal);
+  realizarDivision(a, b);
+}
 
-    const res = aNum * bNum;
-    resultado = (res / Math.pow(10, decLen)).toString().replace(".", ",");
+function realizarDivision(dividendo, divisor) {
+  let pasos = [];
+  let resto = dividendo;
+  let cociente = Math.floor(dividendo / divisor);
 
-    pasos = `<strong>Multiplicación paso a paso</strong><br>
-    Multiplicamos sin decimales:<br>
-    <span class="num">${aNum}</span> × <span class="num">${bNum}</span> =
-    <span class="calc">${res}</span><br><br>
-    Resultado final: <span class="calc">${resultado}</span>`;
-  }
+  pasos.push(`Dividimos ${dividendo} entre ${divisor}`);
+  pasos.push(`El divisor cabe ${cociente} veces en la parte entera`);
 
-  if (op === "division") {
-    const dividendo = parseInt(a.entero + a.decimal);
-    const divisor = parseInt(b.entero || "1");
-    resultado = Math.floor(dividendo / divisor);
-    resto = dividendo % divisor;
+  let r = dividendo - (cociente * divisor);
+  pasos.push(`Multiplicamos ${cociente} × ${divisor} = ${cociente * divisor}`);
+  pasos.push(`Restamos y queda un resto de ${r}`);
 
-    pasos = `<strong>División paso a paso</strong><br>
-    <span class="num">${dividendo}</span> ÷ <span class="num">${divisor}</span><br>
-    Cociente: <span class="calc">${resultado}</span><br>
-    Resto: <span class="calc">${resto}</span>`;
-  }
+  document.getElementById('resultado').value = cociente;
+  document.getElementById('resto').value = r;
 
-  document.getElementById("resultado").value = resultado;
-  document.getElementById("resto").value = resto;
-  document.getElementById("pasos").innerHTML = pasos;
+  document.getElementById('pasos').innerHTML = pasos
+    .map(p => `<p>${p}</p>`)
+    .join('');
+
+  construirRejilla(dividendo);
+}
+
+function construirRejilla(numero) {
+  const rejilla = document.getElementById('rejilla');
+  rejilla.innerHTML = '';
+
+  numero.toString().split('').forEach(n => {
+    const celda = document.createElement('div');
+    celda.innerText = n;
+    rejilla.appendChild(celda);
+  });
 }
