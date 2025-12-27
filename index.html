@@ -8,12 +8,14 @@
 </head>
 <body>
 
-<h1 class="cabecera">CALCULADORA POSICIONAL</h1>
+<div class="cabecera">
+  CALCULADORA POSICIONAL
+</div>
 
-<div class="bloque">
-  <label>Operación</label>
+<div class="operacion-box">
+  <label>OPERACIÓN</label>
   <select id="operacion">
-    <option value="">-- elige --</option>
+    <option value="" selected disabled></option>
     <option value="suma">SUMA</option>
     <option value="resta">RESTA</option>
     <option value="multiplicacion">MULTIPLICACIÓN</option>
@@ -21,32 +23,56 @@
   </select>
 </div>
 
-<div class="bloque">
-  <label>Número A</label>
-  <input id="a" type="text" placeholder="Ej: 25387,23">
+<div class="bloque-numero">
+  <div class="titulo-numero">NÚMERO A</div>
+  <div class="fila-inputs">
+    <div>
+      <small>(ENTERO)</small>
+      <input type="text" id="aEntero">
+    </div>
+    <div>
+      <small>(DECIMALES)</small>
+      <input type="text" id="aDecimal">
+    </div>
+  </div>
 </div>
 
-<div class="bloque">
-  <label>Número B</label>
-  <input id="b" type="text" placeholder="Ej: 9">
+<div class="bloque-numero">
+  <div class="titulo-numero">NÚMERO B</div>
+  <div class="fila-inputs">
+    <div>
+      <small>(ENTERO)</small>
+      <input type="text" id="bEntero">
+    </div>
+    <div>
+      <small>(DECIMALES)</small>
+      <input type="text" id="bDecimal">
+    </div>
+  </div>
 </div>
 
-<button onclick="calcular()">CALCULAR</button>
+<button class="calcular" onclick="calcular()">CALCULAR</button>
 
-<div class="bloque">
-  <label>Resultado</label>
-  <input id="resultado" readonly>
+<div class="resultados">
+  <div>
+    <label>Resultado</label>
+    <input type="text" id="resultado" readonly>
+  </div>
+  <div>
+    <label>Resto</label>
+    <input type="text" id="resto" readonly>
+  </div>
 </div>
 
-<div class="bloque">
-  <label>Resto (solo división)</label>
-  <input id="resto" readonly>
-</div>
-
+<!-- PROCESO PASO A PASO -->
 <div class="explicacion">
-  <h2>Proceso paso a paso</h2>
+  <h3>PROCESO PASO A PASO</h3>
   <div id="pasos"></div>
 </div>
+
+<footer>
+  Creada por Jose Casanova
+</footer>
 
 <script src="script.js"></script>
 </body>
