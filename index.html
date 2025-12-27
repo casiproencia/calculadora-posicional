@@ -1,1 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Posicional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>CALCULADORA POSICIONAL</h1>
+
+<div class="operacion-selector">
+  <select id="operacion">
+    <option value="division">DIVISIÓN</option>
+    <option value="suma">SUMA</option>
+    <option value="resta">RESTA</option>
+  </select>
+</div>
+
+<div class="inputs">
+  <div>
+    <label>Número A (entero)</label>
+    <input type="number" id="aEntero" inputmode="numeric">
+  </div>
+  <div>
+    <label>Número A (decimales)</label>
+    <input type="number" id="aDecimal" inputmode="numeric">
+  </div>
+  <div>
+    <label>Número B (entero)</label>
+    <input type="number" id="bEntero" inputmode="numeric">
+  </div>
+  <div>
+    <label>Número B (decimales)</label>
+    <input type="number" id="bDecimal" inputmode="numeric">
+  </div>
+</div>
+
+<button class="calcular" onclick="calcular()">CALCULAR</button>
+
+<div class="resultados">
+  <div>
+    <label>Resultado</label>
+    <input type="text" id="resultado" readonly>
+  </div>
+  <div>
+    <label>Resto</label>
+    <input type="text" id="resto" readonly>
+  </div>
+</div>
+
+<div class="explicacion">
+  <h3>PROCESO PASO A PASO</h3>
+  <div id="pasos"></div>
+</div>
+
+<p class="firma">Creada por Jose Casanova</p>
+
+<script src="script.js"></script>
+</body>
 </html>
