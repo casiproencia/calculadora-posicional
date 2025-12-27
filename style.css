@@ -4,11 +4,13 @@ body {
   padding: 14px;
 }
 
+/* TÍTULO */
 h1 {
   text-align: center;
   margin-bottom: 12px;
 }
 
+/* SELECTOR DE OPERACIÓN */
 .operacion-selector {
   text-align: center;
   margin-bottom: 15px;
@@ -24,6 +26,7 @@ h1 {
   color: white;
 }
 
+/* INPUTS */
 .inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -39,8 +42,10 @@ label {
   padding: 12px;
   border-radius: 12px;
   border: 1px solid #ccc;
+  width: 100%;
 }
 
+/* BOTÓN CALCULAR */
 .calcular {
   width: 100%;
   margin-top: 15px;
@@ -52,9 +57,11 @@ label {
   border: none;
 }
 
+/* RESULTADOS */
+/* Resultado ancho, Resto estrecho */
 .resultados {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 12px;
   margin-top: 15px;
 }
@@ -65,8 +72,16 @@ label {
   border-radius: 14px;
   background: #e0f2fe;
   border: none;
+  width: 100%;
 }
 
+/* Resto centrado y compacto */
+.resultados div:last-child input {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* PROCESO PASO A PASO */
 .explicacion {
   background: white;
   margin-top: 18px;
@@ -76,6 +91,7 @@ label {
   line-height: 1.6;
 }
 
+/* FIRMA */
 .firma {
   text-align: center;
   margin-top: 10px;
