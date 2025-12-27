@@ -2,9 +2,6 @@ function calcular() {
   const op = document.getElementById('operacion').value;
   if (!op) return;
 
-  const pasosDiv = document.getElementById('pasos');
-  pasosDiv.innerHTML = '';
-
   const aE = document.getElementById('aEntero').value || '0';
   const aD = document.getElementById('aDecimal').value || '';
   const bE = document.getElementById('bEntero').value || '0';
@@ -15,6 +12,7 @@ function calcular() {
 
   document.getElementById('resultado').value = '';
   document.getElementById('resto').value = '';
+  document.getElementById('pasos').innerHTML = '';
 
   if (op === 'suma') suma(A, B);
   if (op === 'resta') resta(A, B);
@@ -52,16 +50,10 @@ function suma(A, B) {
     pasos += `<br><br>`;
   }
 
-  if (llevar) {
-    res.push(llevar);
-    pasos += `Añadimos la llevada final: <span class="llevada">${llevar}</span><br><br>`;
-  }
+  if (llevar) res.push(llevar);
 
   res = res.reverse();
-  if (dec > 0) {
-    res.splice(res.length - dec, 0, ',');
-    pasos += `👉 Aquí colocamos la coma en el resultado<br><br>`;
-  }
+  if (dec > 0) res.splice(res.length - dec, 0, ',');
 
   const resultado = res.join('');
   document.getElementById('resultado').value = resultado;
@@ -96,10 +88,7 @@ function resta(A, B) {
   }
 
   res = res.reverse();
-  if (dec > 0) {
-    res.splice(res.length - dec, 0, ',');
-    pasos += `👉 Aquí colocamos la coma en el resultado<br><br>`;
-  }
+  if (dec > 0) res.splice(res.length - dec, 0, ',');
 
   const resultado = res.join('').replace(/^0+/, '');
   document.getElementById('resultado').value = resultado;
@@ -141,10 +130,7 @@ function multiplicacion(A, B) {
       pasos += `<br><br>`;
     }
 
-    if (llevar) {
-      parcial.push(llevar);
-      pasos += `Añadimos la llevada final: <span class="llevada">${llevar}</span><br><br>`;
-    }
+    if (llevar) parcial.push(llevar);
 
     let parcialStr = parcial.reverse().join('') + '0'.repeat(i);
     parciales.push(parseInt(parcialStr));
@@ -153,10 +139,7 @@ function multiplicacion(A, B) {
   }
 
   let total = parciales.reduce((x, y) => x + y, 0).toString();
-  if (dec > 0) {
-    total = total.slice(0, -dec) + ',' + total.slice(-dec);
-    pasos += `👉 Aquí colocamos la coma en el resultado final<br><br>`;
-  }
+  if (dec > 0) total = total.slice(0, -dec) + ',' + total.slice(-dec);
 
   document.getElementById('resultado').value = total;
   document.getElementById('pasos').innerHTML = pasos;
