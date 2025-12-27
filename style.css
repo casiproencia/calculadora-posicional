@@ -7,7 +7,7 @@ body {
   align-items: center;
 }
 
-/* CONTENEDOR */
+/* CONTENEDOR GENERAL */
 body > * {
   width: 100%;
   max-width: 360px;
@@ -50,7 +50,7 @@ body > * {
   border: none;
 }
 
-/* BLOQUES */
+/* BLOQUES NÚMEROS */
 .bloque-numero {
   background: white;
   padding: 12px;
@@ -65,6 +65,7 @@ body > * {
   margin-bottom: 6px;
 }
 
+/* SOLUCIÓN DEFINITIVA: FLEX, NO GRID */
 .fila-inputs {
   display: flex;
   gap: 8px;
@@ -76,8 +77,8 @@ body > * {
 
 .fila-inputs input {
   width: 100%;
-  font-size: 17px;
-  padding: 9px;
+  font-size: 16px;
+  padding: 8px;
   border-radius: 10px;
   border: 1px solid #ccc;
   box-sizing: border-box;
@@ -108,12 +109,18 @@ small {
   margin-top: 10px;
 }
 
-.resultados > div {
+/* RESULTADO GRANDE */
+.resultados > div:first-child {
+  flex: 2;
+}
+
+/* RESTO MÁS ESTRECHO */
+.resultados > div:last-child {
   flex: 1;
 }
 
 .resultados input {
-  font-size: 19px;
+  font-size: 18px;
   padding: 10px;
   border-radius: 12px;
   background: #e0f2fe;
@@ -123,20 +130,19 @@ small {
 
 /* PROCESO PASO A PASO */
 .explicacion {
-  display: none; /* OCULTO POR DEFECTO */
   background: #16a34a;
   color: white;
-  margin-top: 12px;
+  margin-top: 14px;
   padding: 14px;
   border-radius: 16px;
   font-size: 15px;
   line-height: 1.5;
+  display: block; /* SIEMPRE EXISTE */
 }
 
 .explicacion h3 {
   text-align: center;
-  margin-top: 0;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
 }
 
 /* FOOTER */
@@ -148,7 +154,8 @@ footer {
 }
 
 /* COLORES DIDÁCTICOS */
-.num { color: #2563eb; font-weight: bold; }      /* resultado */
-.llevada { color: #f59e0b; font-weight: bold; } /* llevadas */
-.pedido { color: #dc2626; font-weight: bold; }  /* restas */
+.num { color: #2563eb; font-weight: bold; }       /* resultado */
+.llevada { color: #f59e0b; font-weight: bold; }  /* llevadas */
+.pedido { color: #dc2626; font-weight: bold; }   /* restas */
 .op { color: #bbf7d0; font-weight: bold; }
+.resto { color: #fecaca; font-weight: bold; }
