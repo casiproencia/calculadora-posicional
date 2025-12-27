@@ -8,33 +8,28 @@
 </head>
 <body>
 
-<h1>CALCULADORA POSICIONAL</h1>
+<div class="titulo">CALCULADORA POSICIONAL</div>
 
-<div class="operacion-selector">
-  <select id="operacion">
-    <option value="division">DIVISIÓN</option>
-    <option value="multiplicacion">MULTIPLICACIÓN</option>
-    <option value="suma">SUMA</option>
-    <option value="resta">RESTA</option>
-  </select>
+<select id="operacion" class="operacion">
+  <option value="suma">SUMA</option>
+  <option value="resta">RESTA</option>
+  <option value="multiplicacion">MULTIPLICACIÓN</option>
+  <option value="division">DIVISIÓN</option>
+</select>
+
+<div class="bloque">
+  <h3>NÚMERO A</h3>
+  <div class="fila">
+    <input type="number" id="aEntero" placeholder="ENTERO">
+    <input type="number" id="aDecimal" placeholder="DECIMALES">
+  </div>
 </div>
 
-<div class="inputs">
-  <div>
-    <label>Número A (entero)</label>
-    <input type="number" id="aEntero" inputmode="numeric">
-  </div>
-  <div>
-    <label>Número A (decimales)</label>
-    <input type="number" id="aDecimal" inputmode="numeric">
-  </div>
-  <div>
-    <label>Número B (entero)</label>
-    <input type="number" id="bEntero" inputmode="numeric">
-  </div>
-  <div>
-    <label>Número B (decimales)</label>
-    <input type="number" id="bDecimal" inputmode="numeric">
+<div class="bloque">
+  <h3>NÚMERO B</h3>
+  <div class="fila">
+    <input type="number" id="bEntero" placeholder="ENTERO">
+    <input type="number" id="bDecimal" placeholder="DECIMALES">
   </div>
 </div>
 
@@ -45,18 +40,15 @@
     <label>Resultado</label>
     <input type="text" id="resultado" readonly>
   </div>
-  <div>
+  <div class="resto">
     <label>Resto</label>
     <input type="text" id="resto" readonly>
   </div>
 </div>
 
-<div class="explicacion">
-  <h3>PROCESO PASO A PASO</h3>
-  <div id="pasos"></div>
-</div>
+<div id="pasos" class="pasos"></div>
 
-<p class="firma">Creada por Jose Casanova</p>
+<div class="firma">Creada por Jose Casanova</div>
 
 <script src="script.js"></script>
 </body>
