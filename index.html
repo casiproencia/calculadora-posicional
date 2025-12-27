@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Posicional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>CALCULADORA POSICIONAL</h1>
+
+<div class="operacion-selector">
+  <button class="activo">DIVISIÓN</button>
+</div>
+
+<div class="inputs">
+  <div>
+    <label>Dividendo (entero)</label>
+    <input type="number" id="aEntero" placeholder="25387">
+  </div>
+  <div>
+    <label>Dividendo (decimales)</label>
+    <input type="number" id="aDecimal" placeholder="23">
+  </div>
+  <div>
+    <label>Divisor (entero)</label>
+    <input type="number" id="bEntero" placeholder="9">
+  </div>
+  <div>
+    <label>Divisor (decimales)</label>
+    <input type="number" id="bDecimal" disabled>
+  </div>
+</div>
+
+<button class="calcular" onclick="calcular()">CALCULAR</button>
+
+<div class="resultados">
+  <div>
+    <label>Resultado</label>
+    <input type="text" id="resultado" readonly>
+  </div>
+  <div>
+    <label>Resto</label>
+    <input type="text" id="resto" readonly>
+  </div>
+</div>
+
+<div class="explicacion">
+  <h3>PROCESO PASO A PASO</h3>
+  <div id="pasos"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
