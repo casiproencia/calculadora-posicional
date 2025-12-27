@@ -13,9 +13,9 @@
 </div>
 
 <div class="operacion-box">
-  <label>OPERACIÓN</label>
+  <div class="titulo-verde">OPERACIÓN</div>
   <select id="operacion">
-    <option value="" selected disabled></option>
+    <option value="" disabled selected></option>
     <option value="suma">SUMA</option>
     <option value="resta">RESTA</option>
     <option value="multiplicacion">MULTIPLICACIÓN</option>
@@ -23,56 +23,41 @@
   </select>
 </div>
 
-<div class="bloque-numero">
-  <div class="titulo-numero">NÚMERO A</div>
-  <div class="fila-inputs">
-    <div>
-      <small>(ENTERO)</small>
-      <input type="text" id="aEntero">
-    </div>
-    <div>
-      <small>(DECIMALES)</small>
-      <input type="text" id="aDecimal">
-    </div>
+<div class="bloque">
+  <h3>NÚMERO A</h3>
+  <div class="fila">
+    <input id="aEntero" placeholder="ENTERO">
+    <input id="aDecimal" placeholder="DECIMALES">
   </div>
 </div>
 
-<div class="bloque-numero">
-  <div class="titulo-numero">NÚMERO B</div>
-  <div class="fila-inputs">
-    <div>
-      <small>(ENTERO)</small>
-      <input type="text" id="bEntero">
-    </div>
-    <div>
-      <small>(DECIMALES)</small>
-      <input type="text" id="bDecimal">
-    </div>
+<div class="bloque">
+  <h3>NÚMERO B</h3>
+  <div class="fila">
+    <input id="bEntero" placeholder="ENTERO">
+    <input id="bDecimal" placeholder="DECIMALES">
   </div>
 </div>
 
-<button class="calcular" onclick="calcular()">CALCULAR</button>
+<button onclick="calcular()">CALCULAR</button>
 
 <div class="resultados">
   <div>
     <label>Resultado</label>
-    <input type="text" id="resultado" readonly>
+    <input id="resultado" readonly>
   </div>
   <div>
     <label>Resto</label>
-    <input type="text" id="resto" readonly>
+    <input id="resto" readonly>
   </div>
 </div>
 
-<!-- PROCESO PASO A PASO -->
-<div class="explicacion">
+<div class="pasos-box">
   <h3>PROCESO PASO A PASO</h3>
   <div id="pasos"></div>
 </div>
 
-<footer>
-  Creada por Jose Casanova
-</footer>
+<footer>Creada por Jose Casanova</footer>
 
 <script src="script.js"></script>
 </body>
