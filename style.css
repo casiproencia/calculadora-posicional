@@ -6,80 +6,115 @@ body {
 
 h1 {
   text-align: center;
+  margin-bottom: 10px;
 }
 
-.inputs {
+/* OPERACIÓN */
+.operacion-box {
+  background: #16a34a;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.operacion-box label {
+  display: block;
+  color: white;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.operacion-box select {
+  width: 100%;
+  font-size: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+}
+
+/* BLOQUES NÚMERO */
+.bloque-numero {
+  background: white;
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.titulo-numero {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.fila-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.inputs .full {
-  grid-column: span 2;
-}
-
-label {
-  font-size: 14px;
-}
-
-input, select {
-  font-size: 18px;
+.fila-inputs input {
+  width: 100%;
+  font-size: 20px;
   padding: 12px;
   border-radius: 12px;
   border: 1px solid #ccc;
 }
 
-select {
-  background: #eef2ff;
+small {
+  display: block;
+  text-align: center;
+  margin-bottom: 4px;
 }
 
+/* BOTÓN */
 .calcular {
   width: 100%;
-  margin-top: 15px;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 14px;
-  background: #16a34a;
+  margin-top: 10px;
+  padding: 16px;
+  font-size: 20px;
+  border-radius: 16px;
+  background: #2563eb;
   color: white;
   border: none;
 }
 
+/* RESULTADOS */
 .resultados {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 15px;
+  margin-top: 14px;
 }
 
 .resultados input {
-  font-size: 20px;
+  font-size: 22px;
   padding: 14px;
   border-radius: 14px;
   background: #e0f2fe;
   border: none;
 }
 
+/* EXPLICACIÓN */
 .explicacion {
   background: white;
-  margin-top: 18px;
+  margin-top: 16px;
   padding: 16px;
   border-radius: 16px;
   font-size: 16px;
   line-height: 1.6;
 }
 
-/* Colores didácticos */
-.num {
-  color: #1d4ed8;
-  font-weight: bold;
+/* FOOTER */
+footer {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
 }
 
-.op {
-  color: #16a34a;
-  font-weight: bold;
-}
-
-.resto {
-  color: #dc2626;
-  font-weight: bold;
-}
+/* COLORES DIDÁCTICOS */
+.num { color: #1d4ed8; font-weight: bold; }
+.op { color: #16a34a; font-weight: bold; }
+.resto { color: #dc2626; font-weight: bold; }
