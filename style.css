@@ -10,27 +10,27 @@ body {
 /* CONTENEDOR GENERAL */
 body > * {
   width: 100%;
-  max-width: 420px;
+  max-width: 380px; /* MÁS ESTRECHO para iPhone */
 }
 
 /* CABECERA */
 .cabecera {
   background: #15803d;
   color: white;
+  text-align: center;
   font-size: 22px;
   font-weight: bold;
   padding: 14px;
   border-radius: 16px;
-  margin-bottom: 14px;
-  text-align: center;
+  margin-bottom: 12px;
 }
 
 /* OPERACIÓN */
 .operacion-box {
   background: #16a34a;
-  padding: 14px;
+  padding: 12px;
   border-radius: 16px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   text-align: center;
 }
 
@@ -49,87 +49,26 @@ body > * {
   border: none;
 }
 
-/* BLOQUES */
+/* BLOQUES NÚMERO */
 .bloque-numero {
   background: white;
   padding: 12px;
   border-radius: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .titulo-numero {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
+/* AQUÍ ESTÁ LA CLAVE: inputs más estrechos */
 .fila-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px; /* menos separación */
 }
 
-.fila-inputs input {
-  width: 100%;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-}
-
-small {
-  display: block;
-  text-align: center;
-  margin-bottom: 3px;
-}
-
-/* BOTÓN */
-.calcular {
-  margin-top: 8px;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 16px;
-  background: #2563eb;
-  color: white;
-  border: none;
-}
-
-/* RESULTADOS */
-.resultados {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.resultados input {
-  font-size: 20px;
-  padding: 12px;
-  border-radius: 14px;
-  background: #e0f2fe;
-  border: none;
-}
-
-/* EXPLICACIÓN */
-.explicacion {
-  background: white;
-  margin-top: 12px;
-  padding: 14px;
-  border-radius: 16px;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-/* FOOTER */
-footer {
-  text-align: center;
-  margin-top: 8px;
-  font-size: 13px;
-  color: #555;
-}
-
-/* COLORES DIDÁCTICOS */
-.num { color: #1d4ed8; font-weight: bold; }
-.op { color: #16a34a; font-weight: bold; }
-.resto { color: #dc2626; font-weight: bold; }
+.fila-input
