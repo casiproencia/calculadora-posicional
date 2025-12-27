@@ -7,10 +7,11 @@ body {
   align-items: center;
 }
 
-/* CONTENEDOR GENERAL */
+/* CONTENEDOR */
 body > * {
   width: 100%;
-  max-width: 380px; /* MÁS ESTRECHO para iPhone */
+  max-width: 360px;
+  box-sizing: border-box;
 }
 
 /* CABECERA */
@@ -49,7 +50,7 @@ body > * {
   border: none;
 }
 
-/* BLOQUES NÚMERO */
+/* BLOQUES */
 .bloque-numero {
   background: white;
   padding: 12px;
@@ -64,11 +65,90 @@ body > * {
   margin-bottom: 6px;
 }
 
-/* AQUÍ ESTÁ LA CLAVE: inputs más estrechos */
 .fila-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px; /* menos separación */
+  display: flex;
+  gap: 8px;
 }
 
-.fila-input
+.fila-inputs > div {
+  flex: 1;
+}
+
+.fila-inputs input {
+  width: 100%;
+  font-size: 17px;
+  padding: 9px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+small {
+  display: block;
+  text-align: center;
+  margin-bottom: 2px;
+  font-size: 12px;
+}
+
+/* BOTÓN */
+.calcular {
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+
+/* RESULTADOS */
+.resultados {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.resultados > div {
+  flex: 1;
+}
+
+.resultados input {
+  font-size: 19px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #e0f2fe;
+  border: none;
+  box-sizing: border-box;
+}
+
+/* PROCESO PASO A PASO */
+.explicacion {
+  display: none; /* OCULTO POR DEFECTO */
+  background: #16a34a;
+  color: white;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.explicacion h3 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+/* COLORES DIDÁCTICOS */
+.num { color: #2563eb; font-weight: bold; }      /* resultado */
+.llevada { color: #f59e0b; font-weight: bold; } /* llevadas */
+.pedido { color: #dc2626; font-weight: bold; }  /* restas */
+.op { color: #bbf7d0; font-weight: bold; }
