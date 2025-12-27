@@ -8,46 +8,28 @@
 </head>
 <body>
 
-<div class="cabecera">
-  CALCULADORA POSICIONAL
+<h1>CALCULADORA POSICIONAL</h1>
+
+<div class="operacion-selector">
+  <button class="activo">DIVISIÓN</button>
 </div>
 
-<div class="operacion-box">
-  <label>OPERACIÓN</label>
-  <select id="operacion">
-    <option value="" selected disabled></option>
-    <option value="suma">SUMA</option>
-    <option value="resta">RESTA</option>
-    <option value="multiplicacion">MULTIPLICACIÓN</option>
-    <option value="division">DIVISIÓN</option>
-  </select>
-</div>
-
-<div class="bloque-numero">
-  <div class="titulo-numero">NÚMERO A</div>
-  <div class="fila-inputs">
-    <div>
-      <small>(ENTERO)</small>
-      <input type="text" id="aEntero">
-    </div>
-    <div>
-      <small>(DECIMALES)</small>
-      <input type="text" id="aDecimal">
-    </div>
+<div class="inputs">
+  <div>
+    <label>Dividendo (entero)</label>
+    <input type="number" id="aEntero" placeholder="25387">
   </div>
-</div>
-
-<div class="bloque-numero">
-  <div class="titulo-numero">NÚMERO B</div>
-  <div class="fila-inputs">
-    <div>
-      <small>(ENTERO)</small>
-      <input type="text" id="bEntero">
-    </div>
-    <div>
-      <small>(DECIMALES)</small>
-      <input type="text" id="bDecimal">
-    </div>
+  <div>
+    <label>Dividendo (decimales)</label>
+    <input type="number" id="aDecimal" placeholder="23">
+  </div>
+  <div>
+    <label>Divisor (entero)</label>
+    <input type="number" id="bEntero" placeholder="9">
+  </div>
+  <div>
+    <label>Divisor (decimales)</label>
+    <input type="number" id="bDecimal" disabled>
   </div>
 </div>
 
@@ -64,15 +46,10 @@
   </div>
 </div>
 
-<!-- PROCESO PASO A PASO -->
 <div class="explicacion">
   <h3>PROCESO PASO A PASO</h3>
   <div id="pasos"></div>
 </div>
-
-<footer>
-  Creada por Jose Casanova
-</footer>
 
 <script src="script.js"></script>
 </body>
