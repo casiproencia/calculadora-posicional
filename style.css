@@ -1,60 +1,153 @@
 body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
-  padding: 16px;
-  max-width: 360px;
-  margin: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+body > * {
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+}
+
+/* CABECERA */
 .cabecera {
   background: #15803d;
   color: white;
   text-align: center;
-  padding: 12px;
-  border-radius: 12px;
-}
-
-.bloque {
-  margin-top: 12px;
-}
-
-label {
-  display: block;
+  font-size: 22px;
   font-weight: bold;
-  margin-bottom: 4px;
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 12px;
 }
 
-input, select {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-}
-
-button {
-  margin-top: 16px;
-  width: 100%;
+/* OPERACIÓN */
+.operacion-box {
+  background: #16a34a;
   padding: 12px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.operacion-box label {
+  color: white;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.operacion-box select {
+  width: 100%;
   font-size: 18px;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+}
+
+/* BLOQUES */
+.bloque-numero {
+  background: white;
+  padding: 12px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+}
+
+.titulo-numero {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.fila-inputs {
+  display: flex;
+  gap: 8px;
+}
+
+.fila-inputs > div {
+  flex: 1;
+}
+
+.fila-inputs input {
+  width: 100%;
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+small {
+  text-align: center;
+  display: block;
+  font-size: 12px;
+}
+
+/* BOTÓN */
+.calcular {
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 16px;
   background: #2563eb;
   color: white;
   border: none;
-  border-radius: 8px;
 }
 
+/* RESULTADOS */
+.resultados {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.resultados > div:first-child {
+  flex: 2;
+}
+
+.resultados > div:last-child {
+  flex: 1;
+}
+
+.resultados input {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #e0f2fe;
+  border: none;
+}
+
+/* PROCESO PASO A PASO */
 .explicacion {
   background: #16a34a;
   color: white;
-  margin-top: 20px;
-  padding: 12px;
-  border-radius: 12px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-.num {
-  color: #93c5fd;
-  font-weight: bold;
+.explicacion h3 {
+  text-align: center;
+  margin: 0 0 8px 0;
 }
 
-.resto {
-  color: #fecaca;
-  font-weight: bold;
+/* FOOTER */
+footer {
+  text-align: center;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #555;
 }
+
+/* COLORES DIDÁCTICOS */
+.num { color: #2563eb; font-weight: bold; }
+.llevada { color: #f59e0b; font-weight: bold; }
+.pedido { color: #dc2626; font-weight: bold; }
+.resto { color: #fecaca; font-weight: bold; }
+.op { color: #bbf7d0; font-weight: bold; }
