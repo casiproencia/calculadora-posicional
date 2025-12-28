@@ -145,7 +145,7 @@ function calcular() {
             if (i === parteEnteraLen - 1 && decA > 0) {
                 proceso.innerHTML += `
                     <div class="paso llevada">
-                        👉 Aquí colocamos la coma
+                        👉 Aquí colocamos la coma en el cociente
                     </div>
                 `;
             }
@@ -160,14 +160,4 @@ function recolocarComa(num, dec) {
     if (dec === 0) return num.replace(/^0+/, "") || "0";
     const p = num.length - dec;
     return num.slice(0, p) + "," + num.slice(p);
-}
-
-function resetear() {
-    document.getElementById("numeroA").value = "";
-    document.getElementById("numeroB").value = "";
-
-    document.getElementById("resultado").textContent = "—";
-    document.getElementById("resto").textContent = "—";
-
-    document.getElementById("proceso").innerHTML = "";
 }
