@@ -2,115 +2,115 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Posicional</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* { box-sizing: border-box; font-family: system-ui, -apple-system; }
-
-body {
-  background: #000;
-  color: #fff;
-  display: flex;
-  justify-content: center;
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family: Arial, sans-serif;
+  display:flex;
+  justify-content:center;
 }
 
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 15px;
+.app{
+  width:100%;
+  max-width:420px;
+  padding:15px;
 }
 
-.header {
-  background: #1f8f45;
-  text-align: center;
-  padding: 12px;
-  border-radius: 12px;
-  font-weight: 700;
-  margin-bottom: 12px;
+.header{
+  background:#1e7f3b;
+  padding:14px;
+  text-align:center;
+  border-radius:14px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-select, button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  margin-bottom: 12px;
+select{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+  background:#1fa34a;
+  color:#fff;
+  margin-bottom:14px;
 }
 
-select { background: #1fa34a; color: #fff; }
-
-.box {
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 12px;
+.bloque{
+  background:#111;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
 }
 
-.a { border: 2px solid #28c76f; }
-.b { border: 2px solid #4dabff; }
+.bloque.a{ border:2px solid #1fa34a; }
+.bloque.b{ border:2px solid #3b82f6; }
 
-.box h3 { margin-bottom: 8px; }
-
-.inputs {
-  display: flex;
-  gap: 10px;
+.bloque h3{
+  margin:0 0 8px 0;
 }
 
-input {
-  flex: 1;
-  padding: 10px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: none;
-  text-align: center;
+.inputs{
+  display:flex;
+  gap:10px;
 }
 
-input[type="number"] { appearance: textfield; }
-
-button {
-  background: #2563eb;
-  color: #fff;
-  font-size: 18px;
+input{
+  width:100%;
+  padding:12px;
+  font-size:18px;
+  border-radius:10px;
+  border:none;
 }
 
-.result {
-  display: flex;
-  gap: 10px;
+button{
+  width:100%;
+  padding:14px;
+  font-size:18px;
+  border-radius:14px;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  margin:10px 0;
 }
 
-.result div {
-  flex: 1;
-  background: #e0f2ff;
-  color: #000;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
+.resultados{
+  display:flex;
+  gap:10px;
 }
 
-.steps {
-  background: #dbeafe;
-  color: #000;
-  padding: 12px;
-  border-radius: 12px;
-  margin-top: 10px;
+.resultados input{
+  background:#e0f2fe;
+  color:#000;
 }
 
-.blue { color: #2563eb; font-weight: 600; }
-.green { color: #16a34a; font-weight: 700; }
-.red { color: #dc2626; font-weight: 700; }
+.pasos{
+  background:#dbeafe;
+  color:#000;
+  border-radius:14px;
+  padding:12px;
+  margin-top:12px;
+}
 
-.footer {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 13px;
-  color: #aaa;
+.azul{ color:#2563eb; font-weight:bold; }
+.verde{ color:#16a34a; font-weight:bold; }
+.rojo{ color:#dc2626; font-weight:bold; }
+
+.footer{
+  text-align:center;
+  margin-top:10px;
+  opacity:.7;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
+<div class="app">
 
 <div class="header">CALCULADORA POSICIONAL</div>
 
@@ -121,58 +121,103 @@ button {
   <option value="div">DIVISIÓN</option>
 </select>
 
-<div class="box a">
+<div class="bloque a">
   <h3>NÚMERO A</h3>
   <div class="inputs">
-    <input type="number" id="aInt" placeholder="Entero">
-    <input type="number" id="aDec" placeholder="Decimales">
+    <input id="aE" inputmode="numeric" placeholder="Entero">
+    <input id="aD" inputmode="numeric" placeholder="Decimales">
   </div>
 </div>
 
-<div class="box b">
+<div class="bloque b">
   <h3>NÚMERO B</h3>
   <div class="inputs">
-    <input type="number" id="bInt" placeholder="Entero">
-    <input type="number" id="bDec" placeholder="Decimales">
+    <input id="bE" inputmode="numeric" placeholder="Entero">
+    <input id="bD" inputmode="numeric" placeholder="Decimales">
   </div>
 </div>
 
 <button onclick="calcular()">CALCULAR</button>
 
-<div class="result">
-  <div id="res">Resultado</div>
-  <div id="resto">Resto</div>
+<div class="resultados">
+  <div style="flex:2">
+    <label>Resultado</label>
+    <input id="res" readonly>
+  </div>
+  <div style="flex:1">
+    <label>Resto</label>
+    <input id="resto" readonly>
+  </div>
 </div>
 
-<div id="steps" class="steps"></div>
+<div class="pasos" id="pasos"></div>
 
 <div class="footer">Creada por Jose Casanova</div>
 
 </div>
 
 <script>
-function normalizar(int, dec) {
-  dec = dec || "";
-  return int + "." + dec.padEnd(2, "0");
+function num(e,d){
+  if(d==="") d="00";
+  return parseFloat(e+"."+d);
 }
 
-function calcular() {
+function calcular(){
   const op = document.getElementById("op").value;
 
-  let a = normalizar(aInt.value || "0", aDec.value);
-  let b = normalizar(bInt.value || "0", bDec.value);
+  let aE = document.getElementById("aE").value || "0";
+  let aD = document.getElementById("aD").value || "00";
+  let bE = document.getElementById("bE").value || "0";
+  let bD = document.getElementById("bD").value || "00";
 
-  let steps = "";
+  let A = num(aE,aD);
+  let B = num(bE,bD);
+
+  let pasos = "";
   let resultado = "";
   let resto = "";
 
-  if (op === "suma") {
-    steps += `<b>Suma paso a paso</b><br>`;
-    steps += `<span class="blue">${a}</span> + <span class="blue">${b}</span><br>`;
-    resultado = (parseFloat(a) + parseFloat(b)).toFixed(2);
+  if(op==="suma"){
+    resultado = (A+B).toFixed(2);
+    pasos = `
+      <div class="azul">${aE}.${aD} + ${bE}.${bD}</div>
+      <div class="verde">Resultado: ${resultado}</div>
+    `;
   }
 
-  if (op === "resta") {
-    steps += `<b>Resta paso a paso</b><br>`;
-    steps += `<span class="blue">${a}</span> - <span class="blue">${b}</span><br>`;
-    resultado = (parseFloat(a) - parseFloat(b)).to
+  if(op==="resta"){
+    resultado = (A-B).toFixed(2);
+    pasos = `
+      <div class="azul">${aE}.${aD} - ${bE}.${bD}</div>
+      <div class="verde">Resultado: ${resultado}</div>
+    `;
+  }
+
+  if(op==="multi"){
+    resultado = (A*B).toFixed(2);
+    pasos = `
+      <div class="azul">${aE}.${aD} × ${bE}.${bD}</div>
+      <div class="verde">Resultado: ${resultado}</div>
+    `;
+  }
+
+  if(op==="div"){
+    let div = Math.floor(A/B);
+    let r = (A - div*B).toFixed(2);
+    resultado = div;
+    resto = r;
+    pasos = `
+      <div class="azul">${aE}.${aD} ÷ ${bE}.${bD}</div>
+      <div>Cociente: <span class="verde">${div}</span></div>
+      <div>Resto: <span class="rojo">${r}</span></div>
+    `;
+  }
+
+  document.getElementById("res").value = resultado;
+  document.getElementById("resto").value = resto;
+  document.getElementById("pasos").innerHTML = pasos;
+}
+</script>
+
+</body>
+</html>
