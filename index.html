@@ -43,14 +43,13 @@ select{
   margin-bottom:10px;
 }
 
-/* INPUTS (iOS FIX DEFINITIVO) */
+/* INPUTS ESTRECHOS (iOS OK) */
 input{
   background:#1e293b;
   color:#fff;
   height:44px;
-  padding:6px 6px;
+  padding:6px;
   margin-bottom:10px;
-  box-sizing:border-box;
 }
 
 /* BOTONES */
@@ -60,7 +59,6 @@ button{
   font-weight:bold;
   color:#fff;
 }
-
 #btnCalcular{ background:#2563eb; }
 .btn-reset{ background:#374151; }
 
@@ -69,7 +67,6 @@ button{
   gap:10px;
   margin-top:10px;
 }
-
 .box{
   flex:1;
   padding:10px;
@@ -77,7 +74,6 @@ button{
   font-weight:bold;
   text-align:center;
 }
-
 .azul{ background:#1e3a8a; }
 .verde{ background:#166534; }
 
@@ -97,7 +93,7 @@ footer{
 }
 
 /* COLORES PASO A PASO */
-.paso{ line-height:1.5; }
+.paso{ line-height:1.6; }
 .num{ color:#020617; font-weight:900; }
 .op{ color:#6d28d9; font-weight:900; }
 .res{ color:#15803d; font-weight:900; }
@@ -118,17 +114,10 @@ footer{
   <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="numA"
-  type="text"
-  inputmode="decimal"
-  pattern="[0-9,\.]*"
-  placeholder="Número A (ej: 60000,74)">
-
-<input id="numB"
-  type="text"
-  inputmode="decimal"
-  pattern="[0-9,\.]*"
-  placeholder="Número B (ej: 8)">
+<input id="numA" type="text" inputmode="decimal" pattern="[0-9,\.]*"
+ placeholder="Número A (ej: 60000,74)">
+<input id="numB" type="text" inputmode="decimal" pattern="[0-9,\.]*"
+ placeholder="Número B (ej: 8)">
 
 <button id="btnCalcular">CALCULAR</button>
 <button id="btnReset" class="btn-reset">REINICIAR</button>
@@ -157,22 +146,20 @@ const pasosEl = document.getElementById("pasos");
 btnCalcular.onclick = calcular;
 btnReset.onclick = resetear;
 
-function normalizar(v){ return v.replace(",", "."); }
+function norm(v){ return v.replace(",", "."); }
 
 function calcular(){
   pasosEl.innerHTML="";
   restoEl.textContent="—";
   if(!numA.value || !numB.value) return;
 
-  const a = parseFloat(normalizar(numA.value));
-  const b = parseFloat(normalizar(numB.value));
+  const a = norm(numA.value);
+  const b = norm(numB.value);
 
-  if(isNaN(a) || isNaN(b)) return;
-
-  if(operacion.value==="suma") suma(a,b);
-  if(operacion.value==="resta") resta(a,b);
-  if(operacion.value==="multiplicacion") multiplicacion(a,b);
-  if(operacion.value==="division") division(a,b);
+  if(operacion.value==="suma") pasoSuma(a,b);
+  if(operacion.value==="resta") pasoResta(a,b);
+  if(operacion.value==="multiplicacion") pasoMulti(a,b);
+  if(operacion.value==="division") pasoDivision(a,b);
 }
 
 function resetear(){
@@ -183,11 +170,11 @@ function resetear(){
   pasosEl.innerHTML="";
 }
 
-/* ===== SUMA ===== */
-function suma(a,b){
-  const r = a + b;
-  resultadoEl.textContent = r.toLocaleString("es-ES");
-  pasosEl.innerHTML = `
+/* ===== SUMA PASO A PASO ===== */
+function pasoSuma(a,b){
+  const r = (parseFloat(a)+parseFloat(b)).toLocaleString("es-ES");
+  resultadoEl.textContent=r;
+  pasosEl.innerHTML=`
     <div class="paso">
       <span class="num">${a}</span>
       <span class="op"> + </span>
@@ -198,11 +185,11 @@ function suma(a,b){
   `;
 }
 
-/* ===== RESTA ===== */
-function resta(a,b){
-  const r = a - b;
-  resultadoEl.textContent = r.toLocaleString("es-ES");
-  pasosEl.innerHTML = `
+/* ===== RESTA PASO A PASO ===== */
+function pasoResta(a,b){
+  const r = (parseFloat(a)-parseFloat(b)).toLocaleString("es-ES");
+  resultadoEl.textContent=r;
+  pasosEl.innerHTML=`
     <div class="paso">
       <span class="num">${a}</span>
       <span class="op"> − </span>
@@ -213,11 +200,11 @@ function resta(a,b){
   `;
 }
 
-/* ===== MULTIPLICACIÓN ===== */
-function multiplicacion(a,b){
-  const r = a * b;
-  resultadoEl.textContent = r.toLocaleString("es-ES");
-  pasosEl.innerHTML = `
+/* ===== MULTIPLICACIÓN PASO A PASO ===== */
+function pasoMulti(a,b){
+  const r = (parseFloat(a)*parseFloat(b)).toLocaleString("es-ES");
+  resultadoEl.textContent=r;
+  pasosEl.innerHTML=`
     <div class="paso">
       <span class="num">${a}</span>
       <span class="op"> × </span>
@@ -228,17 +215,17 @@ function multiplicacion(a,b){
   `;
 }
 
-/* ===== DIVISIÓN ===== */
-function division(a,b){
-  if(b===0){
+/* ===== DIVISIÓN PASO A PASO ===== */
+function pasoDivision(a,b){
+  if(parseFloat(b)===0){
     pasosEl.innerHTML="No se puede dividir entre 0";
     return;
   }
-  const r = a / b;
-  resultadoEl.textContent = r.toLocaleString("es-ES");
-  restoEl.textContent = (a % b).toLocaleString("es-ES");
+  const r = (parseFloat(a)/parseFloat(b)).toLocaleString("es-ES");
+  resultadoEl.textContent=r;
+  restoEl.textContent=(parseFloat(a)%parseFloat(b)).toLocaleString("es-ES");
 
-  pasosEl.innerHTML = `
+  pasosEl.innerHTML=`
     <div class="paso">
       <span class="num">${a}</span>
       <span class="op"> ÷ </span>
@@ -247,7 +234,7 @@ function division(a,b){
       <span class="res">${r}</span>
     </div>
     <div class="paso">
-      <span class="llevada">La coma se coloca al pasar a decimales</span>
+      <span class="coma">La coma se coloca al pasar a decimales</span>
     </div>
   `;
 }
