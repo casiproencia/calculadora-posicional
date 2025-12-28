@@ -2,84 +2,78 @@ body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   padding: 12px;
-  max-width: 420px;
-  margin: auto;
 }
 
 .titulo {
   background: #15803d;
   color: white;
   text-align: center;
-  font-size: 22px;
   padding: 14px;
   border-radius: 16px;
+  font-size: 22px;
+  font-weight: bold;
   margin-bottom: 12px;
 }
 
-.operacion {
+select {
   width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 16px;
   background: #16a34a;
   color: white;
   border: none;
-  border-radius: 14px;
-  padding: 12px;
-  font-size: 18px;
   margin-bottom: 14px;
 }
 
 .bloque {
   background: white;
   padding: 12px;
-  border-radius: 14px;
-  margin-bottom: 10px;
-}
-
-.bloque h3 {
-  text-align: center;
-  margin-bottom: 8px;
+  border-radius: 16px;
+  margin-bottom: 12px;
 }
 
 .fila {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 input {
+  width: 120px;
   padding: 10px;
-  font-size: 16px;
-  border-radius: 10px;
+  font-size: 18px;
+  border-radius: 12px;
   border: 1px solid #ccc;
+  text-align: center;
 }
 
-.btn {
+button {
   width: 100%;
   padding: 14px;
   font-size: 18px;
+  border-radius: 16px;
   background: #2563eb;
   color: white;
   border: none;
-  border-radius: 14px;
-  margin: 12px 0;
+  margin: 14px 0;
 }
 
 .resultados {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 8px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 .resultados input {
+  width: 140px;
   background: #e0f2fe;
   border: none;
   font-size: 18px;
-  padding: 12px;
-  border-radius: 12px;
 }
 
 .resto input {
-  text-align: center;
-  font-weight: bold;
+  width: 80px;
 }
 
 .pasos {
@@ -90,13 +84,13 @@ input {
   line-height: 1.6;
 }
 
-.azul { color: #2563eb; font-weight: bold; }
+.azul { color: #1d4ed8; font-weight: bold; }
 .verde { color: #15803d; font-weight: bold; }
 .rojo { color: #dc2626; font-weight: bold; }
+.morado { color: #7c3aed; font-weight: bold; }
 
-.firma {
+footer {
   text-align: center;
   margin-top: 14px;
-  color: #555;
   font-size: 14px;
 }
