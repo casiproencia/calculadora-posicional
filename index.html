@@ -3,56 +3,297 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora</title>
+<title>Calculadora Paso a Paso</title>
 
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#020617;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+}
 
-<link rel="stylesheet" href="style.css">
+.app{
+  width:360px;
+  padding:16px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:12px;
+}
+
+select, input, button{
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+}
+
+select{ background:#16a34a; color:#fff; font-weight:bold; }
+input{ background:#1e293b; color:#fff; }
+button{ background:#2563eb; color:#fff; font-weight:bold; }
+
+.btn-reset{ background:#374151; }
+
+.resultados{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.box{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.azul{ background:#1e3a8a; }
+.verde{ background:#166534; }
+
+.pasos{
+  margin-top:12px;
+  background:#22d3ee;
+  color:#020617;
+  padding:12px;
+  border-radius:12px;
+}
+
+footer{
+  text-align:center;
+  margin-top:12px;
+  opacity:0.7;
+  font-size:13px;
+}
+
+/* === COLORES PASO A PASO === */
+.paso{ line-height:1.5; }
+.num{ color:#020617; font-weight:800; }
+.op{ color:#6d28d9; font-weight:800; }
+.res{ color:#15803d; font-weight:900; }
+.llevada{ color:#c2410c; font-weight:900; }
+.coma{ color:#1d4ed8; font-weight:900; }
+</style>
 </head>
 
 <body>
 <div class="app">
 
-    <h1>CALCULADORA</h1>
+<h1>CALCULADORA</h1>
 
-    <select id="operacion">
-        <option value="suma">SUMA</option>
-        <option value="resta">RESTA</option>
-        <option value="multiplicacion">MULTIPLICACIÓN</option>
-        <option value="division">DIVISIÓN</option>
-    </select>
+<select id="operacion">
+  <option value="suma">SUMA</option>
+  <option value="resta">RESTA</option>
+  <option value="multiplicacion">MULTIPLICACIÓN</option>
+  <option value="division">DIVISIÓN</option>
+</select>
 
-    <label>Número A</label>
-    <input id="numA" inputmode="decimal" placeholder="Ej: 5000,75">
+<input id="numA" placeholder="Número A (ej: 60000,74)">
+<input id="numB" placeholder="Número B (ej: 8)">
 
-    <label>Número B</label>
-    <input id="numB" inputmode="decimal" placeholder="Ej: 8">
+<button id="btnCalcular">CALCULAR</button>
+<button id="btnReset" class="btn-reset">REINICIAR</button>
 
-    <button id="btnCalcular">CALCULAR</button>
-    <button id="btnReset" class="btn-reset">REINICIAR</button>
-
-    <div class="resultados">
-        <div class="box azul">
-            <span>Resultado</span>
-            <strong id="resultado">—</strong>
-        </div>
-        <div class="box verde">
-            <span>Resto</span>
-            <strong id="resto">—</strong>
-        </div>
-    </div>
-
-    <div class="pasos">
-        <strong>PROCESO PASO A PASO</strong>
-        <div id="pasos"></div>
-    </div>
-
-    <footer>Creada por Jose Casanova</footer>
-
+<div class="resultados">
+  <div class="box azul">Resultado<br><span id="resultado">—</span></div>
+  <div class="box verde">Resto<br><span id="resto">—</span></div>
 </div>
 
-<script src="script.js"></script>
+<div class="pasos">
+  <strong>PROCESO PASO A PASO</strong>
+  <div id="pasos"></div>
+</div>
+
+<footer>Creada por Jose Casanova</footer>
+</div>
+
+<script>
+const numA = document.getElementById("numA");
+const numB = document.getElementById("numB");
+const operacion = document.getElementById("operacion");
+const resultadoEl = document.getElementById("resultado");
+const restoEl = document.getElementById("resto");
+const pasosEl = document.getElementById("pasos");
+
+btnCalcular.onclick = calcular;
+btnReset.onclick = resetear;
+
+function n(v){ return v.replace(",", "."); }
+
+function calcular(){
+  pasosEl.innerHTML = "";
+  restoEl.textContent = "—";
+
+  if(!numA.value || !numB.value) return;
+
+  const a = numA.value;
+  const b = numB.value;
+
+  if(operacion.value==="suma") suma(a,b);
+  if(operacion.value==="resta") resta(a,b);
+  if(operacion.value==="multiplicacion") multiplicacion(a,b);
+  if(operacion.value==="division") division(a,b);
+}
+
+function resetear(){
+  numA.value = "";
+  numB.value = "";
+  resultadoEl.textContent = "—";
+  restoEl.textContent = "—";
+  pasosEl.innerHTML = "";
+}
+
+/* ========= SUMA ========= */
+function suma(a,b){
+  const A = n(a), B = n(b);
+  const da=(A.split(".")[1]||"").length;
+  const db=(B.split(".")[1]||"").length;
+  const d=Math.max(da,db);
+
+  let x=Math.round(Number(A)*10**d);
+  let y=Math.round(Number(B)*10**d);
+
+  let carry=0, res=[];
+  const sa=String(x).split("").reverse();
+  const sb=String(y).split("").reverse();
+
+  for(let i=0;i<Math.max(sa.length,sb.length);i++){
+    const a1=Number(sa[i]||0);
+    const b1=Number(sb[i]||0);
+    const s=a1+b1+carry;
+
+    pasosEl.innerHTML+=`
+    <div class="paso">
+      <span class="num">${a1}</span>
+      <span class="op"> + </span>
+      <span class="num">${b1}</span>
+      ${carry?`<span class="llevada"> + ${carry}</span>`:""}
+      <span class="op"> = </span>
+      <span class="res">${s%10}</span>
+    </div>`;
+
+    res.unshift(s%10);
+    carry=Math.floor(s/10);
+  }
+  if(carry) res.unshift(carry);
+
+  resultadoEl.textContent=formatea(res,d);
+}
+
+/* ========= RESTA ========= */
+function resta(a,b){
+  const A=n(a), B=n(b);
+  const da=(A.split(".")[1]||"").length;
+  const db=(B.split(".")[1]||"").length;
+  const d=Math.max(da,db);
+
+  let x=Math.round(Number(A)*10**d);
+  let y=Math.round(Number(B)*10**d);
+
+  let sa=String(x).split("");
+  let sb=String(y).padStart(sa.length,"0").split("");
+
+  let res=[];
+
+  for(let i=sa.length-1;i>=0;i--){
+    let a1=Number(sa[i]);
+    let b1=Number(sb[i]);
+
+    if(a1<b1){
+      a1+=10;
+      sa[i-1]--;
+      pasosEl.innerHTML+=`<div class="paso llevada">Pido 1</div>`;
+    }
+
+    const r=a1-b1;
+    pasosEl.innerHTML+=`
+    <div class="paso">
+      <span class="num">${a1}</span>
+      <span class="op"> - </span>
+      <span class="num">${b1}</span>
+      <span class="op"> = </span>
+      <span class="res">${r}</span>
+    </div>`;
+    res.unshift(r);
+  }
+
+  resultadoEl.textContent=formatea(res,d);
+}
+
+/* ========= MULTIPLICACIÓN ========= */
+function multiplicacion(a,b){
+  const A=n(a);
+  const dec=(A.split(".")[1]||"").length;
+  let x=Math.round(Number(A)*10**dec);
+  let m=Number(b);
+
+  let carry=0,res="";
+  const s=String(x).split("").reverse();
+
+  for(let d of s){
+    const t=d*m+carry;
+    pasosEl.innerHTML+=`
+    <div class="paso">
+      <span class="num">${d}</span>
+      <span class="op"> × </span>
+      <span class="num">${m}</span>
+      ${carry?`<span class="llevada"> + ${carry}</span>`:""}
+      <span class="op"> = </span>
+      <span class="res">${t%10}</span>
+    </div>`;
+    res=(t%10)+res;
+    carry=Math.floor(t/10);
+  }
+  if(carry) res=carry+res;
+
+  resultadoEl.textContent=formatea(res.split(""),dec);
+}
+
+/* ========= DIVISIÓN ========= */
+function division(a,b){
+  const A=n(a);
+  const dec=(A.split(".")[1]||"").length;
+  const s=A.replace(".","").split("");
+  const div=Number(b);
+
+  let resto=0, res="", pos=A.indexOf(".");
+
+  for(let i=0;i<s.length;i++){
+    const n1=resto*10+Number(s[i]);
+    const q=Math.floor(n1/div);
+    resto=n1-q*div;
+
+    pasosEl.innerHTML+=`
+    <div class="paso">
+      <span class="num">${n1}</span>
+      <span class="op"> ÷ </span>
+      <span class="num">${div}</span>
+      <span class="op"> = </span>
+      <span class="res">${q}</span>
+      <span class="llevada"> (Resto ${resto})</span>
+    </div>`;
+
+    if(i===pos-1 && dec>0){
+      pasosEl.innerHTML+=`<div class="paso coma">Aquí colocamos la coma</div>`;
+      res+=".";
+    }
+    res+=q;
+  }
+
+  resultadoEl.textContent=res.replace(".",",");
+  restoEl.textContent=resto;
+}
+
+function formatea(arr,dec){
+  if(dec===0) return arr.join("").replace(/^0+/,"")||"0";
+  const p=arr.length-dec;
+  return arr.slice(0,p).join("")+","+arr.slice(p).join("");
+}
+</script>
 </body>
 </html>
