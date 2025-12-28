@@ -23,24 +23,35 @@ function calcular() {
 
         let carry = 0;
         let res = "";
+
         const aStr = A.toString().padStart(Math.max(A, B).toString().length, "0");
         const bStr = B.toString().padStart(aStr.length, "0");
 
-        proceso = "Suma paso a paso\n\n";
+        proceso = "<strong>Suma paso a paso</strong><br><br>";
 
         for (let i = aStr.length - 1; i >= 0; i--) {
-            let suma = parseInt(aStr[i]) + parseInt(bStr[i]) + carry;
+
+            let da = parseInt(aStr[i]);
+            let db = parseInt(bStr[i]);
+
+            let suma = da + db + carry;
             let dig = suma % 10;
+            let carryPrevio = carry;
             carry = Math.floor(suma / 10);
 
-            proceso += `${aStr[i]} + ${bStr[i]}`;
-            if (carry) proceso += ` <span class="llevada">(+${carry})</span>`;
-            proceso += ` = <span class="resultado-num">${dig}</span>\n\n`;
+            proceso += `${da} + ${db}`;
+            if (carryPrevio) {
+                proceso += ` <span class="llevada">(+${carryPrevio})</span>`;
+            }
+            proceso += ` = <span class="resultado-num">${dig}</span><br>`;
 
             res = dig + res;
         }
 
-        if (carry) res = carry + res;
+        if (carry) {
+            proceso += `<span class="llevada">Llevada final: ${carry}</span><br>`;
+            res = carry + res;
+        }
 
         resultado = insertarComa(res, maxDec);
     }
@@ -51,7 +62,7 @@ function calcular() {
         let aArr = A.toString().split("").map(Number);
         let bArr = B.toString().padStart(aArr.length, "0").split("").map(Number);
 
-        proceso = "Resta paso a paso\n\n";
+        proceso = "<strong>Resta paso a paso</strong><br><br>";
         let res = "";
 
         for (let i = aArr.length - 1; i >= 0; i--) {
@@ -59,11 +70,11 @@ function calcular() {
             if (aArr[i] < bArr[i]) {
                 aArr[i] += 10;
                 aArr[i - 1] -= 1;
-                proceso += `<span class="llevada">Pedimos 1</span>\n`;
+                proceso += `<span class="llevada">Pedimos 1</span><br>`;
             }
 
             let r = aArr[i] - bArr[i];
-            proceso += `${aArr[i]} - ${bArr[i]} = <span class="resultado-num">${r}</span>\n\n`;
+            proceso += `${aArr[i]} - ${bArr[i]} = <span class="resultado-num">${r}</span><br>`;
             res = r + res;
         }
 
@@ -73,25 +84,25 @@ function calcular() {
     /* ================= MULTIPLICACIÓN ================= */
     if (op === "MULTIPLICACIÓN") {
 
-        proceso = "Multiplicación paso a paso\n\n";
+        proceso = "<strong>Multiplicación paso a paso</strong><br><br>";
+
         let res = A * B;
         let decTotal = decA + decB;
 
-        resultado = insertarComa(res.toString(), decTotal);
+        const bStr = B.toString().split("").reverse();
 
-        let bStr = B.toString().split("").reverse();
-        let linea = 1;
-
-        bStr.forEach(d => {
-            proceso += `${A} × ${d} = <span class="resultado-num">${A * d}</span>\n`;
-            linea++;
+        bStr.forEach((d, i) => {
+            proceso += `${A} × ${d} = <span class="resultado-num">${A * d}</span><br>`;
         });
+
+        resultado = insertarComa(res.toString(), decTotal);
     }
 
     /* ================= DIVISIÓN ================= */
     if (op === "DIVISIÓN") {
 
-        proceso = "División paso a paso\n\n";
+        proceso = "<strong>División paso a paso</strong><br><br>";
+
         let dividendo = aE + aD;
         let divisor = parseInt(bE);
         let cociente = "";
@@ -104,7 +115,7 @@ function calcular() {
             let numero = restoActual * 10 + cifra;
 
             if (!comaPuesta && i >= aE.length) {
-                proceso += "👉 Aquí colocamos la coma en el cociente\n\n";
+                proceso += "👉 Aquí colocamos la coma en el cociente<br><br>";
                 cociente += ",";
                 comaPuesta = true;
             }
@@ -112,8 +123,8 @@ function calcular() {
             let cabe = Math.floor(numero / divisor);
             restoActual = numero - cabe * divisor;
 
-            proceso += `${numero} ÷ ${divisor} = <span class="resultado-num">${cabe}</span>\n`;
-            proceso += `Resto: ${restoActual}\n\n`;
+            proceso += `${numero} ÷ ${divisor} = <span class="resultado-num">${cabe}</span><br>`;
+            proceso += `Resto: ${restoActual}<br><br>`;
 
             cociente += cabe;
         }
