@@ -31,24 +31,23 @@ function calcular() {
 
         for (let i = aStr.length - 1; i >= 0; i--) {
 
-            let da = parseInt(aStr[i]);
-            let db = parseInt(bStr[i]);
+            const da = parseInt(aStr[i]);
+            const db = parseInt(bStr[i]);
 
-            let suma = da + db + carry;
-            let dig = suma % 10;
-            let carryPrevio = carry;
+            const suma = da + db + carry;
+            const dig = suma % 10;
+
+            let linea = `${da} + ${db}`;
+            if (carry > 0) linea += ` <span class="llevada">(+${carry})</span>`;
+            linea += ` = <span class="resultado-num">${dig}</span><br>`;
+
+            proceso += linea;
+
             carry = Math.floor(suma / 10);
-
-            proceso += `${da} + ${db}`;
-            if (carryPrevio) {
-                proceso += ` <span class="llevada">(+${carryPrevio})</span>`;
-            }
-            proceso += ` = <span class="resultado-num">${dig}</span><br>`;
-
             res = dig + res;
         }
 
-        if (carry) {
+        if (carry > 0) {
             proceso += `<span class="llevada">Llevada final: ${carry}</span><br>`;
             res = carry + res;
         }
@@ -73,7 +72,7 @@ function calcular() {
                 proceso += `<span class="llevada">Pedimos 1</span><br>`;
             }
 
-            let r = aArr[i] - bArr[i];
+            const r = aArr[i] - bArr[i];
             proceso += `${aArr[i]} - ${bArr[i]} = <span class="resultado-num">${r}</span><br>`;
             res = r + res;
         }
@@ -86,59 +85,16 @@ function calcular() {
 
         proceso = "<strong>Multiplicación paso a paso</strong><br><br>";
 
-        let res = A * B;
-        let decTotal = decA + decB;
+        const aStr = A.toString().split("").reverse();
+        const b = B;
 
-        const bStr = B.toString().split("").reverse();
+        let carry = 0;
+        let resParcial = "";
 
-        bStr.forEach((d, i) => {
-            proceso += `${A} × ${d} = <span class="resultado-num">${A * d}</span><br>`;
-        });
+        for (let i = 0; i < aStr.length; i++) {
 
-        resultado = insertarComa(res.toString(), decTotal);
-    }
+            const da = parseInt(aStr[i]);
+            const prod = da * b + carry;
+            const dig = prod % 10;
 
-    /* ================= DIVISIÓN ================= */
-    if (op === "DIVISIÓN") {
-
-        proceso = "<strong>División paso a paso</strong><br><br>";
-
-        let dividendo = aE + aD;
-        let divisor = parseInt(bE);
-        let cociente = "";
-        let restoActual = 0;
-        let comaPuesta = false;
-
-        for (let i = 0; i < dividendo.length; i++) {
-
-            let cifra = parseInt(dividendo[i]);
-            let numero = restoActual * 10 + cifra;
-
-            if (!comaPuesta && i >= aE.length) {
-                proceso += "👉 Aquí colocamos la coma en el cociente<br><br>";
-                cociente += ",";
-                comaPuesta = true;
-            }
-
-            let cabe = Math.floor(numero / divisor);
-            restoActual = numero - cabe * divisor;
-
-            proceso += `${numero} ÷ ${divisor} = <span class="resultado-num">${cabe}</span><br>`;
-            proceso += `Resto: ${restoActual}<br><br>`;
-
-            cociente += cabe;
-        }
-
-        resultado = cociente;
-        resto = restoActual;
-    }
-
-    document.getElementById("resultadoFinal").innerHTML = resultado;
-    document.getElementById("restoFinal").innerHTML = resto;
-    document.getElementById("proceso").innerHTML = proceso;
-}
-
-function insertarComa(num, dec) {
-    if (dec === 0) return num;
-    return num.slice(0, -dec) + "," + num.slice(-dec);
-}
+            let linea = `${da} × ${b}`;
