@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+m<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -20,10 +20,20 @@
     </select>
 
     <label>Número A</label>
-    <input id="numA" type="text" placeholder="Ej: 87367.45">
+    <input
+        id="numA"
+        type="text"
+        inputmode="numeric"
+        placeholder="Ej: 87367,45"
+    >
 
     <label>Número B</label>
-    <input id="numB" type="text" placeholder="Ej: 12.8">
+    <input
+        id="numB"
+        type="text"
+        inputmode="numeric"
+        placeholder="Ej: 12,8"
+    >
 
     <button onclick="calcular()">CALCULAR</button>
 
@@ -38,7 +48,7 @@
         </div>
     </div>
 
-    <div class="titulo proceso-titulo">PROCESO PASO A PASO</div>
+    <div class="titulo">PROCESO PASO A PASO</div>
     <div id="proceso" class="proceso">—</div>
 
     <div class="footer">Creada por Jose Casanova</div>
