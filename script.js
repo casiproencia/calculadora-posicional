@@ -8,13 +8,6 @@ const pasosEl = document.getElementById("pasos");
 document.getElementById("btnCalcular").onclick = calcular;
 document.getElementById("btnReset").onclick = resetear;
 
-/* =========================
-   UTILIDADES
-========================= */
-function normalizar(n) {
-  return n.replace(",", ".");
-}
-
 function resetear() {
   numA.value = "";
   numB.value = "";
@@ -23,18 +16,6 @@ function resetear() {
   pasosEl.innerHTML = "";
 }
 
-function mostrarResultado(numStr, decs) {
-  if (decs > 0) {
-    const p = numStr.length - decs;
-    numStr = numStr.slice(0, p) + "," + numStr.slice(p);
-  }
-  numStr = numStr.replace(/^0+(?!,)/, "");
-  resultadoEl.textContent = numStr || "0";
-}
-
-/* =========================
-   CONTROL
-========================= */
 function calcular() {
   pasosEl.innerHTML = "";
   restoEl.textContent = "—";
@@ -42,110 +23,94 @@ function calcular() {
   if (!numA.value || !numB.value) return;
 
   if (operacion.value === "suma") {
-    sumaPasoAPaso(numA.value, numB.value);
-  } else if (operacion.value === "resta") {
-    restaPasoAPaso(numA.value, numB.value);
-  } else {
-    pasosEl.innerHTML =
-      "<div class='llevada'>Multiplicación y división se activan después.</div>";
+    operar(numA.value, numB.value, "+");
+  }
+  if (operacion.value === "resta") {
+    operar(numA.value, numB.value, "-");
   }
 }
 
 /* =========================
-   SUMA (correcta)
+   MOTOR CORRECTO
 ========================= */
-function sumaPasoAPaso(a, b) {
-  const [ai, ad = ""] = a.split(",");
-  const [bi, bd = ""] = b.split(",");
-  const decs = Math.max(ad.length, bd.length);
+function operar(a, b, signo) {
 
-  const A = (ai + ad.padEnd(decs, "0")).split("").reverse().map(Number);
-  const B = (bi + bd.padEnd(decs, "0")).split("").reverse().map(Number);
+  const da = (a.split(",")[1] || "").length;
+  const db = (b.split(",")[1] || "").length;
+  const decs = Math.max(da, db);
 
+  const A = Number(a.replace(",", ".")) * Math.pow(10, decs);
+  const B = Number(b.replace(",", ".")) * Math.pow(10, decs);
+
+  const resultado = signo === "+" ? A + B : A - B;
+
+  mostrarResultado(resultado, decs);
+
+  generarPasos(a, b, signo, decs);
+}
+
+function mostrarResultado(valor, decs) {
+  let s = Math.abs(valor).toString().padStart(decs + 1, "0");
+
+  if (decs > 0) {
+    s = s.slice(0, -decs) + "," + s.slice(-decs);
+  }
+
+  if (valor < 0) s = "-" + s;
+
+  resultadoEl.textContent = s;
+}
+
+/* =========================
+   PASO A PASO DIDÁCTICO
+========================= */
+function generarPasos(a, b, signo, decs) {
+
+  const A = a.replace(",", "").padEnd(a.length + (decs - (a.split(",")[1]?.length || 0)), "0");
+  const B = b.replace(",", "").padEnd(b.length + (decs - (b.split(",")[1]?.length || 0)), "0");
+
+  let pasos = [];
   let carry = 0;
-  let res = [];
-  let pasos = [];
 
-  for (let i = 0; i < Math.max(A.length, B.length); i++) {
-    const x = A[i] || 0;
-    const y = B[i] || 0;
-    const s = x + y + carry;
-    const cifra = s % 10;
-
-    pasos.push(
-      `<div class="paso">
-        ${x} + ${y}
-        ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
-        = <span class="resultado-num">${s}</span>
-        → cifra <span class="resultado-num">${cifra}</span>
-      </div>`
-    );
-
-    res.push(cifra);
-    carry = Math.floor(s / 10);
-  }
-
-  if (carry) {
-    pasos.push(`<div class="llevada">Llevada final: ${carry}</div>`);
-    res.push(carry);
-  }
-
-  mostrarResultado(res.reverse().join(""), decs);
-  pasosEl.innerHTML = pasos.join("");
-}
-
-/* =========================
-   RESTA (DE VERDAD CORRECTA)
-========================= */
-function restaPasoAPaso(a, b) {
-  const [ai, ad = ""] = a.split(",");
-  const [bi, bd = ""] = b.split(",");
-  const decs = Math.max(ad.length, bd.length);
-
-  let A = (ai + ad.padEnd(decs, "0")).split("").map(Number);
-  let B = (bi + bd.padEnd(decs, "0")).split("").map(Number);
-
-  while (B.length < A.length) B.unshift(0);
-
-  let pasos = [];
-  let res = [];
+  pasos.push(`<strong>${signo === "+" ? "Suma" : "Resta"} alineando decimales</strong><br><br>`);
 
   for (let i = A.length - 1; i >= 0; i--) {
-    if (A[i] < B[i]) {
-      let j = i - 1;
+    const x = Number(A[i]);
+    const y = Number(B[i]);
 
-      while (A[j] === 0) {
-        pasos.push(
-          `<div class="llevada">
-            El ${A[j]} se convierte en 9 al pedir prestado
-          </div>`
-        );
-        A[j] = 9;
-        j--;
+    if (signo === "+") {
+      const t = x + y + carry;
+      pasos.push(
+        `<div class="paso">
+          ${x} + ${y} ${carry ? `<span class="llevada">+ ${carry}</span>` : ""}
+          = <span class="resultado-num">${t}</span>
+          → cifra <span class="resultado-num">${t % 10}</span>
+        </div>`
+      );
+      carry = Math.floor(t / 10);
+    }
+
+    if (signo === "-") {
+      let xx = x - carry;
+      let prestamo = "";
+
+      if (xx < y) {
+        xx += 10;
+        carry = 1;
+        prestamo = `<span class="llevada"> (pido 1)</span>`;
+      } else {
+        carry = 0;
       }
 
-      A[j]--;
-      A[i] += 10;
+      const r = xx - y;
 
       pasos.push(
-        `<div class="llevada">
-          Pido 1 → ahora ${A[i]} - ${B[i]}
+        `<div class="paso">
+          ${xx} - ${y} = <span class="resultado-num">${r}</span>${prestamo}
         </div>`
       );
     }
-
-    const r = A[i] - B[i];
-
-    pasos.push(
-      `<div class="paso">
-        ${A[i]} - ${B[i]} =
-        <span class="resultado-num">${r}</span>
-      </div>`
-    );
-
-    res.unshift(r);
   }
 
-  mostrarResultado(res.join(""), decs);
   pasosEl.innerHTML = pasos.join("");
 }
