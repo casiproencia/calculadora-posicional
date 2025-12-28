@@ -5,153 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora</title>
 
-<style>
-body{
-    margin:0;
-    background:#020617;
-    color:#fff;
-    font-family: system-ui;
-    display:flex;
-    justify-content:center;
-}
-.app{width:360px;padding:16px;}
-h1{text-align:center;margin-bottom:14px;}
-select,input,button{
-    width:100%;padding:14px;border-radius:14px;
-    border:none;margin-bottom:10px;font-size:16px;
-}
-select{background:#16a34a;color:#fff;font-weight:bold;}
-input{background:#1f2937;color:#fff;text-align:center;}
-button{background:#2563eb;color:#fff;font-weight:bold;}
-.btn-reset{background:#374151;}
-.boxes{display:flex;gap:10px;}
-.box{flex:1;padding:12px;border-radius:14px;font-weight:bold;}
-.res{background:#1e3a8a;}
-.rest{background:#14532d;}
-.paso{
-    margin-top:10px;
-    background:#22d3ee;
-    color:#000;
-    padding:12px;
-    border-radius:14px;
-    font-size:14px;
-    white-space:pre-line;
-}
-footer{text-align:center;margin-top:10px;font-size:12px;color:#94a3b8;}
-</style>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 <div class="app">
 
-<h1>CALCULADORA</h1>
+    <h1>CALCULADORA</h1>
 
-<select id="op">
-<option>SUMA</option>
-<option>RESTA</option>
-<option>MULTIPLICACIÓN</option>
-<option>DIVISIÓN</option>
-</select>
+    <select id="operacion">
+        <option value="suma">SUMA</option>
+        <option value="resta">RESTA</option>
+        <option value="multiplicacion">MULTIPLICACIÓN</option>
+        <option value="division">DIVISIÓN</option>
+    </select>
 
-<input id="a" inputmode="decimal" placeholder="Número A">
-<input id="b" inputmode="decimal" placeholder="Número B">
+    <label>Número A</label>
+    <input id="numA" inputmode="decimal" placeholder="Ej: 5000,75">
 
-<button onclick="calcular()">CALCULAR</button>
-<button class="btn-reset" onclick="resetear()">REINICIAR</button>
+    <label>Número B</label>
+    <input id="numB" inputmode="decimal" placeholder="Ej: 8">
 
-<div class="boxes">
-<div class="box res">Resultado<br><span id="res">—</span></div>
-<div class="box rest">Resto<br><span id="resto">—</span></div>
+    <button id="btnCalcular">CALCULAR</button>
+    <button id="btnReset" class="btn-reset">REINICIAR</button>
+
+    <div class="resultados">
+        <div class="box azul">
+            <span>Resultado</span>
+            <strong id="resultado">—</strong>
+        </div>
+        <div class="box verde">
+            <span>Resto</span>
+            <strong id="resto">—</strong>
+        </div>
+    </div>
+
+    <div class="pasos">
+        <strong>PROCESO PASO A PASO</strong>
+        <div id="pasos"></div>
+    </div>
+
+    <footer>Creada por Jose Casanova</footer>
+
 </div>
 
-<div class="paso" id="paso">PROCESO PASO A PASO</div>
-
-<footer>Creada por Jose Casanova</footer>
-</div>
-
-<script>
-function norm(v){return v.replace(',','.');}
-
-function calcular(){
-    let op=document.getElementById('op').value;
-    let a=norm(document.getElementById('a').value);
-    let b=norm(document.getElementById('b').value);
-    if(!a||!b)return;
-
-    let da=(a.split('.')[1]||'').length;
-    let db=(b.split('.')[1]||'').length;
-    let f=Math.pow(10,Math.max(da,db));
-
-    let A=Math.round(parseFloat(a)*f);
-    let B=Math.round(parseFloat(b)*f);
-
-    let pasos=[];
-    let res=0, resto='—';
-
-    if(op==='SUMA'){
-        let carry=0;
-        let sa=A.toString().padStart(B.toString().length,'0');
-        let sb=B.toString().padStart(sa.length,'0');
-        for(let i=sa.length-1;i>=0;i--){
-            let s=parseInt(sa[i])+parseInt(sb[i])+carry;
-            pasos.push(`${sa[i]} + ${sb[i]}${carry?` + ${carry}`:''} = ${s} → cifra ${s%10}`);
-            carry=Math.floor(s/10);
-        }
-        if(carry)pasos.push(`Llevada final: ${carry}`);
-        res=(A+B)/f;
-    }
-
-    if(op==='RESTA'){
-        let borrow=0;
-        let sa=A.toString().padStart(B.toString().length,'0');
-        let sb=B.toString().padStart(sa.length,'0');
-        for(let i=sa.length-1;i>=0;i--){
-            let x=parseInt(sa[i])-borrow;
-            let y=parseInt(sb[i]);
-            if(x<y){x+=10;borrow=1;}else borrow=0;
-            pasos.push(`${x} - ${y} = ${x-y}`);
-        }
-        res=(A-B)/f;
-    }
-
-    if(op==='MULTIPLICACIÓN'){
-        let carry=0;
-        let sA=A.toString();
-        for(let i=sA.length-1;i>=0;i--){
-            let m=parseInt(sA[i])*B+carry;
-            pasos.push(`${sA[i]} × ${B} + ${carry} = ${m} → cifra ${m%10}`);
-            carry=Math.floor(m/10);
-        }
-        if(carry)pasos.push(`Llevada final: ${carry}`);
-        res=(A*B)/(f*f);
-    }
-
-    if(op==='DIVISIÓN'){
-        let parcial=0;
-        let sA=A.toString();
-        let coc='';
-        for(let i=0;i<sA.length;i++){
-            parcial=parcial*10+parseInt(sA[i]);
-            let q=Math.floor(parcial/B);
-            coc+=q;
-            pasos.push(`${parcial} ÷ ${B} = ${q}`);
-            parcial%=B;
-            pasos.push(`Resto: ${parcial}`);
-        }
-        res=parseFloat(coc)/f;
-        resto=parcial;
-    }
-
-    document.getElementById('res').textContent=res.toString().replace('.',',');
-    document.getElementById('resto').textContent=resto;
-    document.getElementById('paso').textContent=pasos.join('\n');
-}
-
-function resetear(){
-    a.value=b.value='';
-    res.textContent=resto.textContent='—';
-    paso.textContent='PROCESO PASO A PASO';
-}
-</script>
+<script src="script.js"></script>
 </body>
 </html>
