@@ -17,26 +17,24 @@ function calcular() {
         return;
     }
 
-    /* ========= NORMALIZACIÓN ========= */
     const decA = rawA.includes(".") ? rawA.split(".")[1].length : 0;
     const decB = rawB.includes(".") ? rawB.split(".")[1].length : 0;
-    const maxDec = Math.max(decA, decB);
 
     let A = rawA.replace(".", "");
     let B = rawB.replace(".", "");
 
-    A = A.padEnd(A.length + (maxDec - decA), "0");
-    B = B.padEnd(B.length + (maxDec - decB), "0");
+    A = A.padEnd(A.length + (decB > decA ? decB - decA : 0), "0");
+    B = B.padEnd(B.length + (decA > decB ? decA - decB : 0), "0");
 
     let aArr = A.split("").map(Number);
     let bArr = B.padStart(A.length, "0").split("").map(Number);
 
-    /* ================= SUMA ================= */
+    /* ===== SUMA ===== */
     if (op === "SUMA") {
 
-        proceso.innerHTML = "<strong>Suma paso a paso</strong><br><br>";
         let carry = 0;
         let res = "";
+        proceso.innerHTML = "<strong>Suma paso a paso</strong><br><br>";
 
         for (let i = aArr.length - 1; i >= 0; i--) {
             const total = aArr[i] + bArr[i] + carry;
@@ -60,14 +58,14 @@ function calcular() {
             res = carry + res;
         }
 
-        resultadoEl.textContent = recolocarComa(res, maxDec);
+        resultadoEl.textContent = recolocarComa(res, Math.max(decA, decB));
     }
 
-    /* ================= RESTA ================= */
+    /* ===== RESTA ===== */
     if (op === "RESTA") {
 
-        proceso.innerHTML = "<strong>Resta paso a paso</strong><br><br>";
         let res = "";
+        proceso.innerHTML = "<strong>Resta paso a paso</strong><br><br>";
 
         for (let i = aArr.length - 1; i >= 0; i--) {
 
@@ -78,31 +76,27 @@ function calcular() {
             }
 
             const r = aArr[i] - bArr[i];
-
             proceso.innerHTML += `
                 <div class="paso">
                     ${aArr[i]} - ${bArr[i]} =
                     <span class="resultado-num">${r}</span>
                 </div>
             `;
-
             res = r + res;
         }
 
-        resultadoEl.textContent = recolocarComa(res, maxDec);
+        resultadoEl.textContent = recolocarComa(res, Math.max(decA, decB));
     }
 
-    /* ================= MULTIPLICACIÓN ================= */
+    /* ===== MULTIPLICACIÓN ===== */
     if (op === "MULTIPLICACIÓN") {
-
-        proceso.innerHTML = "<strong>Multiplicación paso a paso</strong><br><br>";
 
         const multiplicador = parseInt(B, 10);
         let carry = 0;
         let res = "";
+        proceso.innerHTML = "<strong>Multiplicación paso a paso</strong><br><br>";
 
         for (let i = aArr.length - 1; i >= 0; i--) {
-
             const total = aArr[i] * multiplicador + carry;
             const dig = total % 10;
 
@@ -124,20 +118,18 @@ function calcular() {
             res = carry + res;
         }
 
-        resultadoEl.textContent = recolocarComa(res, maxDec * 2);
+        resultadoEl.textContent = recolocarComa(res, decA + decB);
     }
 
-    /* ================= DIVISIÓN ================= */
+    /* ===== DIVISIÓN ===== */
     if (op === "DIVISIÓN") {
-
-        proceso.innerHTML = "<strong>División paso a paso</strong><br><br>";
 
         const divisor = parseInt(B, 10);
         let resto = 0;
         let cociente = "";
+        proceso.innerHTML = "<strong>División paso a paso</strong><br><br>";
 
         for (let i = 0; i < A.length; i++) {
-
             const num = resto * 10 + parseInt(A[i]);
             const q = Math.floor(num / divisor);
             resto = num - q * divisor;
@@ -145,8 +137,7 @@ function calcular() {
             proceso.innerHTML += `
                 <div class="paso">
                     ${num} ÷ ${divisor} =
-                    <span class="resultado-num">${q}</span>
-                    <br>
+                    <span class="resultado-num">${q}</span><br>
                     <span class="llevada">Resto: ${resto}</span>
                 </div>
             `;
@@ -154,12 +145,11 @@ function calcular() {
             cociente += q;
         }
 
-        resultadoEl.textContent = recolocarComa(cociente, maxDec);
+        resultadoEl.textContent = recolocarComa(cociente, decA);
         restoEl.textContent = resto;
     }
 }
 
-/* ========= UTIL ========= */
 function recolocarComa(num, dec) {
     if (dec === 0) return num;
     const p = num.length - dec;
