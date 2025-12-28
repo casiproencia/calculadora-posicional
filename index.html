@@ -8,33 +8,27 @@
 <style>
 body{
   margin:0;
-  font-family: Arial, Helvetica, sans-serif;
   background:#020617;
   color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
   display:flex;
   justify-content:center;
 }
-
 .app{
   width:360px;
   padding:14px;
   box-sizing:border-box;
 }
+h1{text-align:center;}
 
-h1{
-  text-align:center;
-  margin-bottom:12px;
-}
-
-select, input, button{
+select,input,button{
   width:100%;
-  border-radius:12px;
   border:none;
+  border-radius:12px;
   font-size:16px;
   box-sizing:border-box;
 }
 
-/* SELECT */
 select{
   background:#16a34a;
   color:#fff;
@@ -43,7 +37,6 @@ select{
   margin-bottom:10px;
 }
 
-/* INPUTS ESTRECHOS (iOS OK) */
 input{
   background:#1e293b;
   color:#fff;
@@ -52,30 +45,28 @@ input{
   margin-bottom:10px;
 }
 
-/* BOTONES */
 button{
   padding:12px;
   margin-bottom:10px;
   font-weight:bold;
   color:#fff;
 }
-#btnCalcular{ background:#2563eb; }
-.btn-reset{ background:#374151; }
+#btnCalcular{background:#2563eb;}
+#btnReset{background:#374151;}
 
 .resultados{
   display:flex;
   gap:10px;
-  margin-top:10px;
 }
 .box{
   flex:1;
   padding:10px;
   border-radius:12px;
-  font-weight:bold;
   text-align:center;
+  font-weight:bold;
 }
-.azul{ background:#1e3a8a; }
-.verde{ background:#166534; }
+.azul{background:#1e3a8a;}
+.verde{background:#166534;}
 
 .pasos{
   margin-top:12px;
@@ -83,22 +74,15 @@ button{
   color:#020617;
   padding:12px;
   border-radius:12px;
+  font-size:15px;
 }
 
-footer{
-  text-align:center;
-  margin-top:12px;
-  opacity:0.7;
-  font-size:13px;
-}
-
-/* COLORES PASO A PASO */
-.paso{ line-height:1.6; }
-.num{ color:#020617; font-weight:900; }
-.op{ color:#6d28d9; font-weight:900; }
-.res{ color:#15803d; font-weight:900; }
-.llevada{ color:#c2410c; font-weight:900; }
-.coma{ color:#1d4ed8; font-weight:900; }
+/* COLORES */
+.paso{margin-bottom:6px;}
+.num{color:#020617;font-weight:900;}
+.op{color:#6d28d9;font-weight:900;}
+.res{color:#15803d;font-weight:900;}
+.llevada{color:#c2410c;font-weight:900;}
 </style>
 </head>
 
@@ -110,17 +94,13 @@ footer{
 <select id="operacion">
   <option value="suma">SUMA</option>
   <option value="resta">RESTA</option>
-  <option value="multiplicacion">MULTIPLICACIÓN</option>
-  <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="numA" type="text" inputmode="decimal" pattern="[0-9,\.]*"
- placeholder="Número A (ej: 60000,74)">
-<input id="numB" type="text" inputmode="decimal" pattern="[0-9,\.]*"
- placeholder="Número B (ej: 8)">
+<input id="numA" inputmode="decimal" placeholder="Número A (ej: 458)">
+<input id="numB" inputmode="decimal" placeholder="Número B (ej: 76)">
 
 <button id="btnCalcular">CALCULAR</button>
-<button id="btnReset" class="btn-reset">REINICIAR</button>
+<button id="btnReset">REINICIAR</button>
 
 <div class="resultados">
   <div class="box azul">Resultado<br><span id="resultado">—</span></div>
@@ -128,115 +108,102 @@ footer{
 </div>
 
 <div class="pasos">
-  <strong>PROCESO PASO A PASO</strong>
+  <strong>PASO A PASO</strong>
   <div id="pasos"></div>
 </div>
 
-<footer>Creada por Jose Casanova</footer>
 </div>
 
 <script>
 const numA = document.getElementById("numA");
 const numB = document.getElementById("numB");
 const operacion = document.getElementById("operacion");
-const resultadoEl = document.getElementById("resultado");
-const restoEl = document.getElementById("resto");
-const pasosEl = document.getElementById("pasos");
+const resultado = document.getElementById("resultado");
+const pasos = document.getElementById("pasos");
 
 btnCalcular.onclick = calcular;
 btnReset.onclick = resetear;
 
-function norm(v){ return v.replace(",", "."); }
-
 function calcular(){
-  pasosEl.innerHTML="";
-  restoEl.textContent="—";
+  pasos.innerHTML="";
   if(!numA.value || !numB.value) return;
 
-  const a = norm(numA.value);
-  const b = norm(numB.value);
+  const A = numA.value.split("").reverse().map(Number);
+  const B = numB.value.split("").reverse().map(Number);
 
-  if(operacion.value==="suma") pasoSuma(a,b);
-  if(operacion.value==="resta") pasoResta(a,b);
-  if(operacion.value==="multiplicacion") pasoMulti(a,b);
-  if(operacion.value==="division") pasoDivision(a,b);
+  if(operacion.value==="suma") sumaPaso(A,B);
+  if(operacion.value==="resta") restaPaso(A,B);
 }
 
 function resetear(){
   numA.value="";
   numB.value="";
-  resultadoEl.textContent="—";
-  restoEl.textContent="—";
-  pasosEl.innerHTML="";
+  resultado.textContent="—";
+  pasos.innerHTML="";
 }
 
-/* ===== SUMA PASO A PASO ===== */
-function pasoSuma(a,b){
-  const r = (parseFloat(a)+parseFloat(b)).toLocaleString("es-ES");
-  resultadoEl.textContent=r;
-  pasosEl.innerHTML=`
-    <div class="paso">
-      <span class="num">${a}</span>
-      <span class="op"> + </span>
-      <span class="num">${b}</span>
-      <span class="op"> = </span>
-      <span class="res">${r}</span>
-    </div>
-  `;
-}
+/* ===== SUMA PASO A PASO REAL ===== */
+function sumaPaso(A,B){
+  let carry=0;
+  let res=[];
 
-/* ===== RESTA PASO A PASO ===== */
-function pasoResta(a,b){
-  const r = (parseFloat(a)-parseFloat(b)).toLocaleString("es-ES");
-  resultadoEl.textContent=r;
-  pasosEl.innerHTML=`
-    <div class="paso">
-      <span class="num">${a}</span>
-      <span class="op"> − </span>
-      <span class="num">${b}</span>
-      <span class="op"> = </span>
-      <span class="res">${r}</span>
-    </div>
-  `;
-}
+  for(let i=0;i<Math.max(A.length,B.length);i++){
+    const a=A[i]||0;
+    const b=B[i]||0;
+    const total=a+b+carry;
+    const dig=total%10;
 
-/* ===== MULTIPLICACIÓN PASO A PASO ===== */
-function pasoMulti(a,b){
-  const r = (parseFloat(a)*parseFloat(b)).toLocaleString("es-ES");
-  resultadoEl.textContent=r;
-  pasosEl.innerHTML=`
-    <div class="paso">
-      <span class="num">${a}</span>
-      <span class="op"> × </span>
-      <span class="num">${b}</span>
-      <span class="op"> = </span>
-      <span class="res">${r}</span>
-    </div>
-  `;
-}
+    pasos.innerHTML+=`
+      <div class="paso">
+        <span class="num">${a}</span>
+        <span class="op"> + </span>
+        <span class="num">${b}</span>
+        ${carry?`<span class="llevada"> + ${carry}</span>`:""}
+        <span class="op"> = </span>
+        <span class="res">${dig}</span>
+      </div>
+    `;
 
-/* ===== DIVISIÓN PASO A PASO ===== */
-function pasoDivision(a,b){
-  if(parseFloat(b)===0){
-    pasosEl.innerHTML="No se puede dividir entre 0";
-    return;
+    carry=Math.floor(total/10);
+    res.unshift(dig);
   }
-  const r = (parseFloat(a)/parseFloat(b)).toLocaleString("es-ES");
-  resultadoEl.textContent=r;
-  restoEl.textContent=(parseFloat(a)%parseFloat(b)).toLocaleString("es-ES");
 
-  pasosEl.innerHTML=`
-    <div class="paso">
-      <span class="num">${a}</span>
-      <span class="op"> ÷ </span>
-      <span class="num">${b}</span>
-      <span class="op"> = </span>
-      <span class="res">${r}</span>
-    </div>
-    <div class="paso">
-      <span class="coma">La coma se coloca al pasar a decimales</span>
-    </div>
-  `;
+  if(carry){
+    pasos.innerHTML+=`<div class="paso llevada">Llevada final: ${carry}</div>`;
+    res.unshift(carry);
+  }
+
+  resultado.textContent=res.join("");
+}
+
+/* ===== RESTA PASO A PASO REAL ===== */
+function restaPaso(A,B){
+  let res=[];
+
+  for(let i=0;i<A.length;i++){
+    let a=A[i];
+    let b=B[i]||0;
+
+    if(a<b){
+      a+=10;
+      A[i+1]--;
+      pasos.innerHTML+=`<div class="paso llevada">Pido 1</div>`;
+    }
+
+    const r=a-b;
+    pasos.innerHTML+=`
+      <div class="paso">
+        <span class="num">${a}</span>
+        <span class="op"> − </span>
+        <span class="num">${b}</span>
+        <span class="op"> = </span>
+        <span class="res">${r}</span>
+      </div>
+    `;
+    res.unshift(r);
+  }
+
+  resultado.textContent=res.join("");
 }
 </script>
 
