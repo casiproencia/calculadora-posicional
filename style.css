@@ -2,6 +2,7 @@
     box-sizing: border-box;
 }
 
+/* ===== CUERPO GENERAL ===== */
 body {
     margin: 0;
     background: #0b0f14;
@@ -9,29 +10,36 @@ body {
     color: #ffffff;
 }
 
+/* ===== TÍTULO ===== */
 h1 {
     text-align: center;
     margin: 20px 0;
+    font-size: 26px;
+    letter-spacing: 1px;
 }
 
+/* ===== CONTENEDOR ===== */
 .panel {
     width: 100%;
     max-width: 360px;
     margin: auto;
     padding: 18px;
     background: #121826;
-    border-radius: 20px;
+    border-radius: 22px;
 }
 
+/* ===== ETIQUETAS ===== */
 label {
+    display: block;
     text-align: center;
     font-size: 14px;
     color: #9fb3c8;
     margin-top: 14px;
-    display: block;
 }
 
-input, select {
+/* ===== INPUTS Y SELECT ===== */
+input,
+select {
     width: 100%;
     max-width: 260px;
     margin: 6px auto;
@@ -45,11 +53,14 @@ input, select {
     text-align: center;
 }
 
+/* SELECT OPERACIÓN */
 select {
     background: #16a34a;
     font-weight: bold;
+    color: #ffffff;
 }
 
+/* ===== BOTÓN ===== */
 button {
     width: 100%;
     max-width: 280px;
@@ -61,12 +72,14 @@ button {
     border-radius: 14px;
     border: none;
     background: #2563eb;
-    color: white;
+    color: #ffffff;
 }
 
+/* ===== RESULTADOS ===== */
 .resultado {
     display: flex;
     gap: 10px;
+    margin-top: 10px;
 }
 
 .caja {
@@ -76,17 +89,25 @@ button {
     font-size: 18px;
     font-weight: bold;
     color: #ffffff;
+    word-break: break-word;
 }
 
-.azul { background: #1e3a8a; }
-.verde { background: #14532d; }
+.azul {
+    background: #1e3a8a;
+}
 
+.verde {
+    background: #14532d;
+}
+
+/* ===== TÍTULOS INTERNOS ===== */
 .titulo {
     font-size: 13px;
     margin-bottom: 4px;
     color: #cbd5e1;
 }
 
+/* ===== PROCESO PASO A PASO ===== */
 .proceso {
     background: #22d3ee;
     color: #042f2e;
@@ -98,16 +119,23 @@ button {
     min-height: 60px;
 }
 
+/* ===== PASOS ===== */
+.paso {
+    margin-bottom: 6px;
+}
+
+/* ===== COLORES DIDÁCTICOS ===== */
 .resultado-num {
+    color: #16a34a; /* VERDE */
     font-weight: bold;
-    color: #0f172a;
 }
 
 .llevada {
-    color: #dc2626;
+    color: #dc2626; /* ROJO */
     font-weight: bold;
 }
 
+/* ===== FOOTER ===== */
 .footer {
     text-align: center;
     font-size: 13px;
