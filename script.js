@@ -13,29 +13,23 @@ function normalizar(n) {
 }
 
 function calcular() {
-  const aTxt = normalizar(numA.value.trim());
-  const bTxt = normalizar(numB.value.trim());
-
-  if (!aTxt || !bTxt) return;
-
-  const a = parseFloat(aTxt);
-  const b = parseFloat(bTxt);
-
   pasosEl.innerHTML = "";
   restoEl.textContent = "—";
 
+  if (!numA.value || !numB.value) return;
+
   switch (operacion.value) {
     case "suma":
-      sumaPasoAPaso(aTxt, bTxt);
+      sumaPasoAPaso(numA.value, numB.value);
       break;
     case "resta":
-      restaPasoAPaso(aTxt, bTxt);
+      restaPasoAPaso(numA.value, numB.value);
       break;
     case "multiplicacion":
-      multiplicacionPasoAPaso(aTxt, bTxt);
+      multiplicacionPasoAPaso(numA.value, numB.value);
       break;
     case "division":
-      divisionPasoAPaso(aTxt, bTxt);
+      divisionPasoAPaso(numA.value, numB.value);
       break;
   }
 }
@@ -49,57 +43,48 @@ function resetear() {
 }
 
 /* =========================
-   SUMA POSICIONAL
+   SUMA
 ========================= */
 function sumaPasoAPaso(a, b) {
-  const da = a.split(",");
-  const db = b.split(",");
+  const [ai, ad = ""] = a.split(",");
+  const [bi, bd = ""] = b.split(",");
+  const decs = Math.max(ad.length, bd.length);
 
-  const decA = da[1] || "";
-  const decB = db[1] || "";
-  const decs = Math.max(decA.length, decB.length);
-
-  const A = (da[0] + decA.padEnd(decs, "0")).split("").reverse();
-  const B = (db[0] + decB.padEnd(decs, "0")).split("").reverse();
+  const A = (ai + ad.padEnd(decs, "0")).split("").reverse().map(Number);
+  const B = (bi + bd.padEnd(decs, "0")).split("").reverse().map(Number);
 
   let carry = 0;
   let res = [];
   let pasos = [];
 
   for (let i = 0; i < Math.max(A.length, B.length); i++) {
-    const x = parseInt(A[i] || 0);
-    const y = parseInt(B[i] || 0);
+    const x = A[i] || 0;
+    const y = B[i] || 0;
     const s = x + y + carry;
-    res.push(s % 10);
     pasos.push(`${x} + ${y}${carry ? " + " + carry : ""} = ${s} → cifra ${s % 10}`);
+    res.push(s % 10);
     carry = Math.floor(s / 10);
   }
+
   if (carry) {
-    res.push(carry);
     pasos.push(`Llevada final: ${carry}`);
+    res.push(carry);
   }
 
-  const resultado =
-    res.reverse().join("").slice(0, -decs) +
-    (decs ? "," + res.reverse().join("").slice(-decs) : "");
-
-  resultadoEl.textContent = resultado;
+  mostrarResultado(res, decs);
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
 /* =========================
-   RESTA POSICIONAL
+   RESTA
 ========================= */
 function restaPasoAPaso(a, b) {
-  const da = a.split(",");
-  const db = b.split(",");
+  const [ai, ad = ""] = a.split(",");
+  const [bi, bd = ""] = b.split(",");
+  const decs = Math.max(ad.length, bd.length);
 
-  const decA = da[1] || "";
-  const decB = db[1] || "";
-  const decs = Math.max(decA.length, decB.length);
-
-  let A = (da[0] + decA.padEnd(decs, "0")).split("").map(Number);
-  let B = (db[0] + decB.padEnd(decs, "0")).split("").map(Number);
+  let A = (ai + ad.padEnd(decs, "0")).split("").map(Number);
+  let B = (bi + bd.padEnd(decs, "0")).split("").map(Number);
 
   while (B.length < A.length) B.unshift(0);
 
@@ -110,83 +95,98 @@ function restaPasoAPaso(a, b) {
     if (A[i] < B[i]) {
       A[i] += 10;
       A[i - 1]--;
-      pasos.push(`Pido prestado → ${A[i]} - ${B[i]}`);
+      pasos.push(`Pido 1 → ${A[i]} - ${B[i]}`);
     }
     const r = A[i] - B[i];
-    res.unshift(r);
     pasos.push(`${A[i]} - ${B[i]} = ${r}`);
+    res.unshift(r);
   }
 
-  const resultado =
-    res.join("").slice(0, -decs) +
-    (decs ? "," + res.join("").slice(-decs) : "");
-
-  resultadoEl.textContent = resultado;
+  mostrarResultado(res, decs);
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
 /* =========================
-   MULTIPLICACIÓN POSICIONAL
+   MULTIPLICACIÓN
 ========================= */
 function multiplicacionPasoAPaso(a, b) {
-  if (b.includes(",") || a.includes(",")) {
-    pasosEl.innerHTML = "Para el proceso posicional, usa multiplicador entero.";
-  }
-
+  const m = parseInt(b, 10);
   const A = a.replace(",", "").split("").reverse().map(Number);
-  const m = parseInt(b);
+
   let carry = 0;
   let res = [];
   let pasos = [];
 
   for (let i = 0; i < A.length; i++) {
     const p = A[i] * m + carry;
-    res.push(p % 10);
     pasos.push(`${A[i]} × ${m} + ${carry} = ${p} → cifra ${p % 10}`);
+    res.push(p % 10);
     carry = Math.floor(p / 10);
   }
-  if (carry) pasos.push(`Llevada final: ${carry}`);
 
-  resultadoEl.textContent = (parseFloat(a.replace(",", ".")) * m)
-    .toFixed(2)
-    .replace(".", ",");
+  if (carry) {
+    pasos.push(`Llevada final: ${carry}`);
+    res.push(carry);
+  }
+
+  resultadoEl.textContent =
+    (parseFloat(normalizar(a)) * m).toFixed(2).replace(".", ",");
 
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
 /* =========================
-   DIVISIÓN POSICIONAL
+   DIVISIÓN (con coma)
 ========================= */
 function divisionPasoAPaso(a, b) {
-  const divisor = parseInt(b);
-  let pasos = [];
+  const divisor = parseInt(b, 10);
+  const partes = a.split(",");
+  let cifras = partes[0].split("");
+  let decimales = partes[1] || "";
+
   let resto = 0;
   let cociente = "";
-
-  const partes = a.replace(",", "").split("");
-
+  let pasos = [];
   let comaPuesta = false;
-  let decimales = 0;
 
-  for (let i = 0; i < partes.length; i++) {
-    resto = resto * 10 + parseInt(partes[i]);
+  for (let i = 0; i < cifras.length; i++) {
+    resto = resto * 10 + parseInt(cifras[i]);
     const q = Math.floor(resto / divisor);
+    pasos.push(`${resto} ÷ ${divisor} = ${q}`);
     resto = resto % divisor;
+    pasos.push(`<span style="color:#dc2626">Resto: ${resto}</span>`);
     cociente += q;
-    pasos.push(`${resto + q * divisor} ÷ ${divisor} = ${q}`);
-    pasos.push(`<span style="color:#ff4444">Resto: ${resto}</span>`);
   }
 
-  if (a.includes(",")) {
-    cociente =
-      cociente.slice(0, a.indexOf(",")) +
-      "," +
-      cociente.slice(a.indexOf(","));
+  if (decimales.length > 0) {
+    pasos.push(`<strong>👉 Aquí colocamos la coma en el cociente</strong>`);
+    cociente += ",";
+    comaPuesta = true;
   }
 
-  resultadoEl.textContent = (parseFloat(a.replace(",", ".")) / divisor)
-    .toFixed(2)
-    .replace(".", ",");
+  for (let i = 0; i < decimales.length; i++) {
+    resto = resto * 10 + parseInt(decimales[i]);
+    const q = Math.floor(resto / divisor);
+    pasos.push(`${resto} ÷ ${divisor} = ${q}`);
+    resto = resto % divisor;
+    pasos.push(`<span style="color:#dc2626">Resto: ${resto}</span>`);
+    cociente += q;
+  }
+
+  resultadoEl.textContent =
+    (parseFloat(normalizar(a)) / divisor).toFixed(2).replace(".", ",");
   restoEl.textContent = resto;
+
   pasosEl.innerHTML = pasos.join("<br>");
+}
+
+/* =========================
+   FORMATO RESULTADO
+========================= */
+function mostrarResultado(resArray, decs) {
+  const texto = resArray.reverse().join("");
+  const r =
+    texto.slice(0, texto.length - decs) +
+    (decs ? "," + texto.slice(-decs) : "");
+  resultadoEl.textContent = r;
 }
