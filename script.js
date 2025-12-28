@@ -161,3 +161,13 @@ function recolocarComa(num, dec) {
     const p = num.length - dec;
     return num.slice(0, p) + "," + num.slice(p);
 }
+
+function resetear() {
+    document.getElementById("numeroA").value = "";
+    document.getElementById("numeroB").value = "";
+
+    document.getElementById("resultado").textContent = "—";
+    document.getElementById("resto").textContent = "—";
+
+    document.getElementById("proceso").innerHTML = "";
+}
