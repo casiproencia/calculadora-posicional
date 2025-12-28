@@ -2,78 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Calculadora</title>
-
-    <!-- VIEWPORT -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- iOS APP MODE -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Calculadora</title>
     <meta name="apple-mobile-web-app-title" content="Calculadora">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <!-- ICONO iOS -->
+    <!-- Icono para iOS -->
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-    <!-- ICONO GENERAL -->
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-
-    <!-- ESTILOS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>CALCULADORA POSICIONAL</h1>
+<div class="app">
 
-<div class="panel">
+    <h1>CALCULADORA POSICIONAL</h1>
 
     <select id="operacion">
-        <option>SUMA</option>
-        <option>RESTA</option>
-        <option>MULTIPLICACIÓN</option>
-        <option>DIVISIÓN</option>
+        <option value="SUMA">SUMA</option>
+        <option value="RESTA">RESTA</option>
+        <option value="MULTIPLICACION">MULTIPLICACIÓN</option>
+        <option value="DIVISION">DIVISIÓN</option>
     </select>
 
     <label>Número A</label>
     <input
-        id="numA"
+        id="numeroA"
         type="text"
         inputmode="decimal"
-        pattern="[0-9]*[.,]?[0-9]*"
-        placeholder="Ej: 87367,45"
+        placeholder="Ej: 87367.45"
     >
 
     <label>Número B</label>
     <input
-        id="numB"
+        id="numeroB"
         type="text"
         inputmode="decimal"
-        pattern="[0-9]*[.,]?[0-9]*"
-        placeholder="Ej: 12,8"
+        placeholder="Ej: 12.8"
     >
 
     <button onclick="calcular()">CALCULAR</button>
 
-<button id="resetBtn" class="btn-reset" onclick="resetear()">
-    REINICIAR
-</button>
+    <button class="btn-reset" onclick="resetear()">REINICIAR</button>
 
-    <div class="resultado">
-        <div class="caja azul">
-            <div class="titulo">Resultado</div>
-            <div id="resultadoFinal">—</div>
+    <div class="resultado-container">
+        <div class="resultado-box">
+            <span class="titulo">Resultado</span>
+            <span id="resultado">—</span>
         </div>
-        <div class="caja verde">
-            <div class="titulo">Resto</div>
-            <div id="restoFinal">—</div>
+
+        <div class="resultado-box resto">
+            <span class="titulo">Resto</span>
+            <span id="resto">—</span>
         </div>
     </div>
 
-    <div class="titulo">PROCESO PASO A PASO</div>
-    <div id="proceso" class="proceso">—</div>
+    <div class="proceso-container">
+        <h3>PROCESO PASO A PASO</h3>
+        <div id="proceso">—</div>
+    </div>
 
-    <div class="footer">Creada por Jose Casanova</div>
+    <footer>Creada por Jose Casanova</footer>
 
 </div>
 
