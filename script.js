@@ -1,80 +1,40 @@
-function calcular() {
-  const op = document.getElementById("operacion").value;
+function realizarDivision(dividendo, divisor) {
+  let pasos = [];
+  let texto = dividendo.toString().replace('.', '');
+  let decimales = (dividendo.toString().split('.')[1] || '').length;
 
-  const aE = document.getElementById("aE").value || "0";
-  const aD = document.getElementById("aD").value || "";
-  const bE = document.getElementById("bE").value || "0";
-  const bD = document.getElementById("bD").value || "";
+  let resto = 0;
+  let cociente = '';
 
-  const A = aE + aD;
-  const B = bE + bD;
+  pasos.push(`<strong>División paso a paso</strong><br><br>`);
 
-  const decA = aD.length;
-  const decB = bD.length;
+  for (let i = 0; i < texto.length; i++) {
+    let numeroActual = resto * 10 + parseInt(texto[i]);
+    let resultado = Math.floor(numeroActual / divisor);
+    resto = numeroActual % divisor;
 
-  let pasos = "";
-  let resultado = "";
-  let resto = "";
+    if (i === texto.length - decimales) {
+      cociente += ',';
+      pasos.push(`👉 Aquí colocamos la coma en el cociente.<br><br>`);
+    }
 
-  if (op === "suma") {
-    const res = Number(A) + Number(B);
-    const dec = Math.max(decA, decB);
-    resultado = (res / Math.pow(10, dec)).toFixed(dec).replace(".", ",");
+    cociente += resultado;
 
-    pasos = `
-      <h3 class="azul">Suma paso a paso</h3>
-      <p>Operamos sin decimales:</p>
-      <p class="azul">${A} + ${B} = <span class="verde">${res}</span></p>
-      <p>Colocamos la coma:</p>
-      <p class="verde">Resultado final: ${resultado}</p>
-    `;
+    pasos.push(
+      `<strong>${numeroActual} ÷ ${divisor}</strong><br>
+       • Cabe ${resultado}<br>
+       • ${resultado} × ${divisor} = ${resultado * divisor}<br>
+       • Resto: ${resto}<br><br>`
+    );
   }
 
-  if (op === "resta") {
-    const res = Number(A) - Number(B);
-    const dec = Math.max(decA, decB);
-    resultado = (res / Math.pow(10, dec)).toFixed(dec).replace(".", ",");
+  document.getElementById('resultado').value = cociente;
+  document.getElementById('resto').value = resto;
 
-    pasos = `
-      <h3 class="azul">Resta paso a paso</h3>
-      <p>Operamos sin decimales:</p>
-      <p class="azul">${A} - ${B} = <span class="verde">${res}</span></p>
-      <p>Colocamos la coma:</p>
-      <p class="verde">Resultado final: ${resultado}</p>
-    `;
-  }
+  pasos.push(`<strong>Resultado final</strong><br><br>
+    ${dividendo} ÷ ${divisor} = ${cociente}<br>
+    Resto: ${resto}
+  `);
 
-  if (op === "multiplicacion") {
-    const res = Number(A) * Number(B);
-    const dec = decA + decB;
-    resultado = (res / Math.pow(10, dec)).toFixed(dec).replace(".", ",");
-
-    pasos = `
-      <h3 class="azul">Multiplicación paso a paso</h3>
-      <p>Multiplicamos sin decimales:</p>
-      <p class="azul">${A} × ${B} = <span class="verde">${res}</span></p>
-      <p>Colocamos la coma:</p>
-      <p class="verde">Resultado final: ${resultado}</p>
-    `;
-  }
-
-  if (op === "division") {
-    const dividendo = Number(A);
-    const divisor = Number(bE);
-
-    const cociente = Math.floor(dividendo / divisor);
-    resto = dividendo % divisor;
-    resultado = cociente.toString();
-
-    pasos = `
-      <h3 class="azul">División paso a paso</h3>
-      <p class="azul">${dividendo} ÷ ${divisor}</p>
-      <p>Cociente: <span class="verde">${cociente}</span></p>
-      <p>Resto: <span class="morado">${resto}</span></p>
-    `;
-  }
-
-  document.getElementById("resultado").value = resultado;
-  document.getElementById("resto").value = resto;
-  document.getElementById("pasos").innerHTML = pasos;
+  document.getElementById('pasos').innerHTML = pasos.join('');
 }
