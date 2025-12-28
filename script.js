@@ -1,4 +1,4 @@
-function calcular() {
+mfunction calcular() {
 
     const op = document.getElementById("operacion").value;
 
@@ -98,3 +98,65 @@ function calcular() {
             const dig = prod % 10;
 
             let linea = `${da} × ${b}`;
+            if (carry > 0) linea += ` + <span class="llevada">${carry}</span>`;
+            linea += ` = <span class="resultado-num">${dig}</span><br>`;
+
+            proceso += linea;
+
+            carry = Math.floor(prod / 10);
+            resParcial = dig + resParcial;
+        }
+
+        if (carry > 0) {
+            proceso += `<span class="llevada">Llevada final: ${carry}</span><br>`;
+            resParcial = carry + resParcial;
+        }
+
+        resultado = insertarComa(resParcial, decA + decB);
+    }
+
+    /* ================= DIVISIÓN ================= */
+    if (op === "DIVISIÓN") {
+
+        proceso = "<strong>División paso a paso</strong><br><br>";
+
+        let dividendo = aE + aD;
+        let divisor = parseInt(bE);
+        let cociente = "";
+        let restoActual = 0;
+        let comaPuesta = false;
+
+        for (let i = 0; i < dividendo.length; i++) {
+
+            const cifra = parseInt(dividendo[i]);
+            const numero = restoActual * 10 + cifra;
+
+            if (!comaPuesta && i >= aE.length) {
+                proceso += "👉 Aquí colocamos la coma en el cociente<br><br>";
+                cociente += ",";
+                comaPuesta = true;
+            }
+
+            const cabe = Math.floor(numero / divisor);
+            restoActual = numero - cabe * divisor;
+
+            proceso += `${numero} ÷ ${divisor} = <span class="resultado-num">${cabe}</span><br>`;
+            proceso += `Resto: ${restoActual}<br><br>`;
+
+            cociente += cabe;
+        }
+
+        resultado = cociente;
+        resto = restoActual;
+    }
+
+    document.getElementById("resultadoFinal").innerHTML = resultado;
+    document.getElementById("restoFinal").innerHTML = resto;
+    document.getElementById("proceso").innerHTML = proceso;
+}
+
+/* ===== FUNCIÓN AUXILIAR ===== */
+function insertarComa(num, dec) {
+    if (dec === 0) return num;
+    return num.slice(0, -dec) + "," + num.slice(-dec);
+}
