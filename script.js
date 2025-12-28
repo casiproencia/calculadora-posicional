@@ -1,85 +1,81 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6fb;
-  padding: 14px;
+function calcular() {
+  const op = document.getElementById('operacion').value;
+
+  const aE = document.getElementById('aEntero').value || '0';
+  const aD = document.getElementById('aDecimal').value;
+  const bE = document.getElementById('bEntero').value || '0';
+  const bD = document.getElementById('bDecimal').value;
+
+  const A = parseFloat(aD ? `${aE}.${aD}` : aE);
+  const B = parseFloat(bD ? `${bE}.${bD}` : bE);
+
+  document.getElementById('pasos').innerHTML = '';
+  document.getElementById('resto').value = '';
+
+  if (op === 'division') {
+    divisionPasoAPaso(A, B);
+  } else if (op === 'suma') {
+    simpleOperacion(A, B, '+');
+  } else if (op === 'resta') {
+    simpleOperacion(A, B, '-');
+  } else if (op === 'multiplicacion') {
+    simpleOperacion(A, B, '×');
+  }
 }
 
-h1 {
-  text-align: center;
+function simpleOperacion(A, B, simbolo) {
+  let resultado;
+  if (simbolo === '+') resultado = A + B;
+  if (simbolo === '-') resultado = A - B;
+  if (simbolo === '×') resultado = A * B;
+
+  document.getElementById('resultado').value = resultado.toFixed(2);
+
+  document.getElementById('pasos').innerHTML = `
+    <strong>Operación paso a paso</strong><br><br>
+    <span class="num">${A}</span> <span class="op">${simbolo}</span> <span class="num">${B}</span><br><br>
+    Resultado: <span class="num">${resultado.toFixed(2)}</span>
+  `;
 }
 
-.inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+function divisionPasoAPaso(dividendo, divisor) {
+  let pasos = [];
+  let texto = dividendo.toString().replace('.', '');
+  let decimales = (dividendo.toString().split('.')[1] || '').length;
 
-.inputs .full {
-  grid-column: span 2;
-}
+  let resto = 0;
+  let cociente = '';
 
-label {
-  font-size: 14px;
-}
+  pasos.push(`<strong>División paso a paso</strong><br><br>`);
 
-input, select {
-  font-size: 18px;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-}
+  for (let i = 0; i < texto.length; i++) {
+    let actual = resto * 10 + parseInt(texto[i]);
+    let res = Math.floor(actual / divisor);
+    resto = actual % divisor;
 
-select {
-  background: #eef2ff;
-}
+    if (i === texto.length - decimales) {
+      cociente += ',';
+      pasos.push(`👉 Aquí colocamos la coma en el cociente.<br><br>`);
+    }
 
-.calcular {
-  width: 100%;
-  margin-top: 15px;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 14px;
-  background: #16a34a;
-  color: white;
-  border: none;
-}
+    cociente += res;
 
-.resultados {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 15px;
-}
+    pasos.push(
+      `<span class="num">${actual}</span> ÷ <span class="num">${divisor}</span><br>
+       • Cabe <span class="op">${res}</span><br>
+       • ${res} × ${divisor} = <span class="num">${res * divisor}</span><br>
+       • Resto: <span class="resto">${resto}</span><br><br>`
+    );
+  }
 
-.resultados input {
-  font-size: 20px;
-  padding: 14px;
-  border-radius: 14px;
-  background: #e0f2fe;
-  border: none;
-}
+  document.getElementById('resultado').value = cociente;
+  document.getElementById('resto').value = resto;
 
-.explicacion {
-  background: white;
-  margin-top: 18px;
-  padding: 16px;
-  border-radius: 16px;
-  font-size: 16px;
-  line-height: 1.6;
-}
+  pasos.push(
+    `<strong>Resultado final</strong><br><br>
+     ${dividendo} ÷ ${divisor} = <span class="num">${cociente}</span><br>
+     Resto: <span class="resto">${resto}</span>`
+  );
 
-/* Colores didácticos */
-.num {
-  color: #1d4ed8;
-  font-weight: bold;
-}
-
-.op {
-  color: #16a34a;
-  font-weight: bold;
-}
-
-.resto {
-  color: #dc2626;
-  font-weight: bold;
+  document.getElementById('pasos').innerHTML = pasos.join('');
 }
