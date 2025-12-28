@@ -3,26 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Posicional</title>
+<title>Calculadora</title>
 
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Calculadora">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#020617">
 
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
 <div class="app">
 
 <h1>CALCULADORA</h1>
 
 <select id="operacion">
-    <option>SUMA</option>
-    <option>RESTA</option>
-    <option>MULTIPLICACIÓN</option>
-    <option>DIVISIÓN</option>
+    <option value="SUMA">SUMA</option>
+    <option value="RESTA">RESTA</option>
+    <option value="MULTIPLICACION">MULTIPLICACIÓN</option>
+    <option value="DIVISION">DIVISIÓN</option>
 </select>
 
 <label>Número A</label>
@@ -31,15 +32,15 @@
 <label>Número B</label>
 <input id="numB" inputmode="decimal" placeholder="Ej: 10000,40">
 
-<button class="btn-calcular" onclick="calcular()">CALCULAR</button>
-<button class="btn-reset" onclick="resetear()">REINICIAR</button>
+<button onclick="calcular()">CALCULAR</button>
+<button class="reset" onclick="resetear()">REINICIAR</button>
 
-<div class="resultado-box">
-    <div>
+<div class="resultados">
+    <div class="box azul">
         <span>Resultado</span>
         <div id="resultado">—</div>
     </div>
-    <div>
+    <div class="box verde">
         <span>Resto</span>
         <div id="resto">—</div>
     </div>
