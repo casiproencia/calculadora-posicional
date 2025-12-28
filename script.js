@@ -8,6 +8,17 @@ const pasosEl = document.getElementById("pasos");
 document.getElementById("btnCalcular").onclick = calcular;
 document.getElementById("btnReset").onclick = resetear;
 
+/* =========================
+   UTILIDADES
+========================= */
+function parseNumero(valor) {
+  return valor.replace(",", ".");
+}
+
+function formatear(num, decimales) {
+  return num.toFixed(decimales).replace(".", ",");
+}
+
 function resetear() {
   numA.value = "";
   numB.value = "";
@@ -16,101 +27,120 @@ function resetear() {
   pasosEl.innerHTML = "";
 }
 
+/* =========================
+   CALCULAR
+========================= */
 function calcular() {
   pasosEl.innerHTML = "";
   restoEl.textContent = "—";
 
   if (!numA.value || !numB.value) return;
 
-  if (operacion.value === "suma") {
-    operar(numA.value, numB.value, "+");
-  }
-  if (operacion.value === "resta") {
-    operar(numA.value, numB.value, "-");
+  const aStr = numA.value;
+  const bStr = numB.value;
+
+  const a = parseFloat(parseNumero(aStr));
+  const b = parseFloat(parseNumero(bStr));
+
+  if (isNaN(a) || isNaN(b)) return;
+
+  switch (operacion.value) {
+    case "suma":
+      sumaPasoAPaso(aStr, bStr);
+      break;
+    case "resta":
+      restaPasoAPaso(aStr, bStr);
+      break;
+    case "multiplicacion":
+      multiplicacionPasoAPaso(aStr, bStr);
+      break;
+    case "division":
+      divisionPasoAPaso(aStr, bStr);
+      break;
   }
 }
 
 /* =========================
-   MOTOR CORRECTO
+   SUMA
 ========================= */
-function operar(a, b, signo) {
+function sumaPasoAPaso(aStr, bStr) {
+  const a = parseFloat(parseNumero(aStr));
+  const b = parseFloat(parseNumero(bStr));
 
-  const da = (a.split(",")[1] || "").length;
-  const db = (b.split(",")[1] || "").length;
-  const decs = Math.max(da, db);
+  const dec = Math.max(
+    (aStr.split(",")[1] || "").length,
+    (bStr.split(",")[1] || "").length
+  );
 
-  const A = Number(a.replace(",", ".")) * Math.pow(10, decs);
-  const B = Number(b.replace(",", ".")) * Math.pow(10, decs);
+  const res = a + b;
+  resultadoEl.textContent = formatear(res, dec);
 
-  const resultado = signo === "+" ? A + B : A - B;
-
-  mostrarResultado(resultado, decs);
-
-  generarPasos(a, b, signo, decs);
-}
-
-function mostrarResultado(valor, decs) {
-  let s = Math.abs(valor).toString().padStart(decs + 1, "0");
-
-  if (decs > 0) {
-    s = s.slice(0, -decs) + "," + s.slice(-decs);
-  }
-
-  if (valor < 0) s = "-" + s;
-
-  resultadoEl.textContent = s;
+  pasosEl.innerHTML =
+    `<strong>Suma paso a paso</strong><br>` +
+    `${aStr} + ${bStr} = ${formatear(res, dec)}`;
 }
 
 /* =========================
-   PASO A PASO DIDÁCTICO
+   RESTA (CORRECTA)
 ========================= */
-function generarPasos(a, b, signo, decs) {
+function restaPasoAPaso(aStr, bStr) {
+  const a = parseFloat(parseNumero(aStr));
+  const b = parseFloat(parseNumero(bStr));
 
-  const A = a.replace(",", "").padEnd(a.length + (decs - (a.split(",")[1]?.length || 0)), "0");
-  const B = b.replace(",", "").padEnd(b.length + (decs - (b.split(",")[1]?.length || 0)), "0");
+  const dec = Math.max(
+    (aStr.split(",")[1] || "").length,
+    (bStr.split(",")[1] || "").length
+  );
 
-  let pasos = [];
-  let carry = 0;
+  const res = a - b;
+  resultadoEl.textContent = formatear(res, dec);
 
-  pasos.push(`<strong>${signo === "+" ? "Suma" : "Resta"} alineando decimales</strong><br><br>`);
+  pasosEl.innerHTML =
+    `<strong>Resta paso a paso</strong><br>` +
+    `${aStr} − ${bStr} = ${formatear(res, dec)}`;
+}
 
-  for (let i = A.length - 1; i >= 0; i--) {
-    const x = Number(A[i]);
-    const y = Number(B[i]);
+/* =========================
+   MULTIPLICACIÓN (DECIMALES OK)
+========================= */
+function multiplicacionPasoAPaso(aStr, bStr) {
+  const aDec = (aStr.split(",")[1] || "").length;
+  const bDec = (bStr.split(",")[1] || "").length;
 
-    if (signo === "+") {
-      const t = x + y + carry;
-      pasos.push(
-        `<div class="paso">
-          ${x} + ${y} ${carry ? `<span class="llevada">+ ${carry}</span>` : ""}
-          = <span class="resultado-num">${t}</span>
-          → cifra <span class="resultado-num">${t % 10}</span>
-        </div>`
-      );
-      carry = Math.floor(t / 10);
-    }
+  const a = parseFloat(parseNumero(aStr));
+  const b = parseFloat(parseNumero(bStr));
 
-    if (signo === "-") {
-      let xx = x - carry;
-      let prestamo = "";
+  const res = a * b;
+  const dec = aDec + bDec;
 
-      if (xx < y) {
-        xx += 10;
-        carry = 1;
-        prestamo = `<span class="llevada"> (pido 1)</span>`;
-      } else {
-        carry = 0;
-      }
+  resultadoEl.textContent = formatear(res, dec);
 
-      const r = xx - y;
+  pasosEl.innerHTML =
+    `<strong>Multiplicación paso a paso</strong><br>` +
+    `${aStr} × ${bStr} = ${formatear(res, dec)}`;
+}
 
-      pasos.push(
-        `<div class="paso">
-          ${xx} - ${y} = <span class="resultado-num">${r}</span>${prestamo}
-        </div>`
-      );
-    }
+/* =========================
+   DIVISIÓN (COMA CORRECTA)
+========================= */
+function divisionPasoAPaso(aStr, bStr) {
+  const a = parseFloat(parseNumero(aStr));
+  const b = parseFloat(parseNumero(bStr));
+
+  if (b === 0) {
+    pasosEl.innerHTML = "No se puede dividir entre 0";
+    return;
   }
 
-  pasosEl.innerHTML = pasos.join("");
+  const dec = 2;
+  const res = a / b;
+  const resto = a % b;
+
+  resultadoEl.textContent = formatear(res, dec);
+  restoEl.textContent = resto.toFixed(0);
+
+  pasosEl.innerHTML =
+    `<strong>División paso a paso</strong><br>` +
+    `${aStr} ÷ ${bStr} = ${formatear(res, dec)}<br>` +
+    `Resto: ${resto.toFixed(0)}`;
 }
