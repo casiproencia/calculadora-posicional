@@ -1,103 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Posicional</title>
 
 <style>
-    body{
-        margin:0;
-        font-family: Arial, Helvetica, sans-serif;
-        background:#000;
-        color:#fff;
-        display:flex;
-        justify-content:center;
-    }
-    .app{
-        width:360px;
-        padding:15px;
-        text-align:center;
-    }
-    .title{
-        background:#1e8f3e;
-        padding:12px;
-        border-radius:12px;
-        font-weight:bold;
-        margin-bottom:10px;
-    }
-    select, button{
-        width:100%;
-        padding:10px;
-        border-radius:10px;
-        border:none;
-        font-size:16px;
-        margin-bottom:10px;
-    }
-    select{ background:#24a148; color:#fff; }
-    button{ background:#2563eb; color:#fff; font-weight:bold; }
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    display:flex;
+    justify-content:center;
+}
+.app{
+    width:360px;
+    padding:15px;
+    text-align:center;
+}
+.title{
+    background:#1e8f3e;
+    padding:12px;
+    border-radius:12px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+select,button{
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    font-size:16px;
+    margin-bottom:10px;
+}
+select{background:#24a148;color:#fff;}
+button{background:#2563eb;color:#fff;font-weight:bold;}
 
-    .box{
-        border:2px solid;
-        border-radius:12px;
-        padding:10px;
-        margin-bottom:10px;
-    }
-    .box.a{ border-color:#22c55e; }
-    .box.b{ border-color:#3b82f6; }
+.box{
+    border:2px solid;
+    border-radius:12px;
+    padding:10px;
+    margin-bottom:10px;
+}
+.box.a{border-color:#22c55e;}
+.box.b{border-color:#3b82f6;}
 
-    .box h3{ margin:0 0 8px 0; font-size:15px; }
-
-    .row{
-        display:flex;
-        gap:8px;
-        justify-content:center;
-    }
-    input{
-        width:140px;
-        padding:8px;
-        border-radius:8px;
-        border:none;
-        font-size:16px;
-        text-align:center;
-    }
-
-    .results{
-        display:flex;
-        justify-content:center;
-        gap:10px;
-        margin:10px 0;
-    }
-    .resbox{
-        width:140px;
-        background:#e0f2fe;
-        color:#000;
-        padding:8px;
-        border-radius:10px;
-        font-weight:bold;
-    }
-
-    .steps{
-        background:#e0f2fe;
-        color:#000;
-        border-radius:12px;
-        padding:10px;
-        margin-top:10px;
-        text-align:left;
-        font-size:14px;
-    }
-
-    .blue{ color:#2563eb; font-weight:bold; }
-    .green{ color:#16a34a; font-weight:bold; }
-    .red{ color:#dc2626; font-weight:bold; }
-    .purple{ color:#7c3aed; font-weight:bold; }
-
-    footer{
-        margin-top:15px;
-        font-size:12px;
-        opacity:0.8;
-        text-align:center;
-    }
+.row{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+}
+input{
+    width:130px;
+    padding:8px;
+    border-radius:8px;
+    border:none;
+    font-size:16px;
+    text-align:center;
+}
+.results{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:10px 0;
+}
+.resbox{
+    width:120px;
+    background:#e0f2fe;
+    color:#000;
+    padding:8px;
+    border-radius:10px;
+    font-weight:bold;
+}
+.steps{
+    background:#e0f2fe;
+    color:#000;
+    border-radius:12px;
+    padding:10px;
+    margin-top:10px;
+    text-align:left;
+    font-size:14px;
+}
+.blue{color:#2563eb;font-weight:bold;}
+.green{color:#16a34a;font-weight:bold;}
+.red{color:#dc2626;font-weight:bold;}
+.purple{color:#7c3aed;font-weight:bold;}
+footer{
+    margin-top:15px;
+    font-size:12px;
+    opacity:0.8;
+}
 </style>
 </head>
 
@@ -114,7 +107,7 @@
 </select>
 
 <div class="box a">
-    <h3>NÚMERO A</h3>
+    <b>NÚMERO A</b>
     <div class="row">
         <input id="aEnt" inputmode="numeric" placeholder="Entero">
         <input id="aDec" inputmode="numeric" placeholder="Decimales">
@@ -122,7 +115,7 @@
 </div>
 
 <div class="box b">
-    <h3>NÚMERO B</h3>
+    <b>NÚMERO B</b>
     <div class="row">
         <input id="bEnt" inputmode="numeric" placeholder="Entero">
         <input id="bDec" inputmode="numeric" placeholder="Decimales">
@@ -132,8 +125,8 @@
 <button onclick="calcular()">CALCULAR</button>
 
 <div class="results">
-    <div class="resbox" id="resultado">Resultado</div>
-    <div class="resbox" id="resto">Resto</div>
+    <div class="resbox" id="resultado"></div>
+    <div class="resbox" id="resto"></div>
 </div>
 
 <div class="steps" id="pasos"></div>
@@ -142,4 +135,49 @@
 </div>
 
 <script>
-function num
+function getNumero(ent, dec){
+    ent = ent || "0";
+    dec = dec || "";
+    return {
+        str: ent + (dec ? "," + dec : ""),
+        val: parseFloat(ent + "." + (dec || "0")),
+        decs: dec.length
+    };
+}
+
+function calcular(){
+    const op = document.getElementById("op").value;
+    const A = getNumero(aEnt.value, aDec.value);
+    const B = getNumero(bEnt.value, bDec.value);
+
+    let pasos = "";
+    let res = "";
+    let resto = "";
+
+    if(op === "suma"){
+        pasos += `<b>Suma paso a paso</b><br>`;
+        pasos += `<span class="blue">${A.str}</span> + <span class="blue">${B.str}</span><br>`;
+        res = (A.val + B.val).toFixed(Math.max(A.decs,B.decs));
+    }
+
+    if(op === "resta"){
+        pasos += `<b>Resta paso a paso</b><br>`;
+        pasos += `<span class="blue">${A.str}</span> - <span class="blue">${B.str}</span><br>`;
+        res = (A.val - B.val).toFixed(Math.max(A.decs,B.decs));
+    }
+
+    if(op === "multiplicacion"){
+        pasos += `<b>Multiplicación paso a paso</b><br>`;
+        pasos += `Quitamos comas:<br>`;
+        const ai = Number(aEnt.value + (aDec.value||""));
+        const bi = Number(bEnt.value + (bDec.value||""));
+        pasos += `<span class="blue">${ai}</span> × <span class="blue">${bi}</span><br>`;
+        const totalDec = A.decs + B.decs;
+        const r = ai * bi;
+        pasos += `Colocamos ${totalDec} decimales<br>`;
+        res = (r / Math.pow(10,totalDec)).toFixed(totalDec);
+    }
+
+    if(op === "division"){
+        pasos += `<b>División paso a paso</b><br>`;
+        pasos += `<span class="blue">${A
