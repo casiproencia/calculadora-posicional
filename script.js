@@ -1,51 +1,57 @@
-document.getElementById("btnCalcular").addEventListener("click", calcular);
-
 function calcular() {
-  const op = document.getElementById("operacion").value;
 
-  const aE = document.getElementById("aEntero").value || "0";
-  const aD = document.getElementById("aDecimal").value || "";
-  const bE = document.getElementById("bEntero").value || "0";
-  const bD = document.getElementById("bDecimal").value || "";
+    const op = document.getElementById("operacion").value;
 
-  const A = aE + aD;
-  const B = bE + bD;
+    const aE = document.getElementById("aEntera").value || "0";
+    const aD = document.getElementById("aDecimal").value || "";
+    const bE = document.getElementById("bEntera").value || "0";
+    const bD = document.getElementById("bDecimal").value || "";
 
-  let pasos = "";
-  let resultado = "";
-  let resto = "";
+    const A = parseFloat(aE + "." + aD);
+    const B = parseFloat(bE + "." + bD);
 
-  if (op === "suma") {
-    resultado = Number(aE + "." + aD) + Number(bE + "." + bD);
-    pasos = `<h3>Suma paso a paso</h3>
-      <div><span class="azul">${aE}.${aD}</span> + <span class="azul">${bE}.${bD}</span></div>
-      <div class="verde">Resultado: ${resultado}</div>`;
-  }
+    let proceso = "";
+    let resultado = "";
+    let resto = "";
 
-  if (op === "resta") {
-    resultado = Number(aE + "." + aD) - Number(bE + "." + bD);
-    pasos = `<h3>Resta paso a paso</h3>
-      <div><span class="azul">${aE}.${aD}</span> - <span class="azul">${bE}.${bD}</span></div>
-      <div class="verde">Resultado: ${resultado}</div>`;
-  }
+    if (op === "DIVISIÓN") {
 
-  if (op === "multiplicacion") {
-    resultado = Number(aE + "." + aD) * Number(bE + "." + bD);
-    pasos = `<h3>Multiplicación paso a paso</h3>
-      <div><span class="azul">${aE}.${aD}</span> × <span class="azul">${bE}.${bD}</span></div>
-      <div class="verde">Resultado: ${resultado}</div>`;
-  }
+        let dividendo = aE + aD;
+        let divisor = parseInt(bE);
+        let cociente = "";
+        let restoActual = 0;
+        let comaPuesta = false;
 
-  if (op === "division") {
-    resultado = Math.floor(Number(aE) / Number(bE));
-    resto = Number(aE) % Number(bE);
-    pasos = `<h3>División paso a paso</h3>
-      <div><span class="azul">${aE}</span> ÷ <span class="azul">${bE}</span></div>
-      <div>Cociente: <span class="verde">${resultado}</span></div>
-      <div>Resto: <span class="rojo">${resto}</span></div>`;
-  }
+        proceso += "División paso a paso\n\n";
 
-  document.getElementById("resultado").value = resultado;
-  document.getElementById("resto").value = resto;
-  document.getElementById("pasos").innerHTML = pasos;
+        for (let i = 0; i < dividendo.length; i++) {
+
+            let cifra = parseInt(dividendo[i]);
+            let numero = restoActual * 10 + cifra;
+
+            if (!comaPuesta && i >= aE.length) {
+                proceso += "👉 Aquí ya colocamos la coma en el cociente.\n\n";
+                cociente += ",";
+                comaPuesta = true;
+            }
+
+            let cabe = Math.floor(numero / divisor);
+            let producto = cabe * divisor;
+            restoActual = numero - producto;
+
+            proceso += `${String.fromCharCode(97 + i)}) ${numero} ÷ ${divisor}\n`;
+            proceso += `• Cabe ${cabe}\n`;
+            proceso += `• ${cabe} × ${divisor} = ${producto}\n`;
+            proceso += `• Resto: ${restoActual}\n\n`;
+
+            cociente += cabe;
+        }
+
+        resultado = cociente;
+        resto = restoActual;
+    }
+
+    document.getElementById("resultadoFinal").innerText = resultado;
+    document.getElementById("restoFinal").innerText = resto;
+    document.getElementById("proceso").innerText = proceso;
 }
