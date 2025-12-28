@@ -2,7 +2,6 @@
     box-sizing: border-box;
 }
 
-/* ===== CUERPO GENERAL ===== */
 body {
     margin: 0;
     background: #0b0f14;
@@ -10,15 +9,12 @@ body {
     color: #ffffff;
 }
 
-/* ===== TÍTULO ===== */
 h1 {
     text-align: center;
     margin: 20px 0;
     font-size: 26px;
-    letter-spacing: 1px;
 }
 
-/* ===== CONTENEDOR ===== */
 .panel {
     width: 100%;
     max-width: 360px;
@@ -28,7 +24,6 @@ h1 {
     border-radius: 22px;
 }
 
-/* ===== ETIQUETAS ===== */
 label {
     display: block;
     text-align: center;
@@ -37,7 +32,6 @@ label {
     margin-top: 14px;
 }
 
-/* ===== INPUTS Y SELECT ===== */
 input,
 select {
     width: 100%;
@@ -53,14 +47,11 @@ select {
     text-align: center;
 }
 
-/* SELECT OPERACIÓN */
 select {
     background: #16a34a;
     font-weight: bold;
-    color: #ffffff;
 }
 
-/* ===== BOTÓN ===== */
 button {
     width: 100%;
     max-width: 280px;
@@ -75,7 +66,6 @@ button {
     color: #ffffff;
 }
 
-/* ===== RESULTADOS ===== */
 .resultado {
     display: flex;
     gap: 10px;
@@ -88,8 +78,6 @@ button {
     border-radius: 14px;
     font-size: 18px;
     font-weight: bold;
-    color: #ffffff;
-    word-break: break-word;
 }
 
 .azul {
@@ -100,14 +88,12 @@ button {
     background: #14532d;
 }
 
-/* ===== TÍTULOS INTERNOS ===== */
 .titulo {
     font-size: 13px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     color: #cbd5e1;
 }
 
-/* ===== PROCESO PASO A PASO ===== */
 .proceso {
     background: #22d3ee;
     color: #042f2e;
@@ -116,26 +102,22 @@ button {
     font-size: 15px;
     line-height: 1.5;
     margin-top: 10px;
-    min-height: 60px;
 }
 
-/* ===== PASOS ===== */
 .paso {
     margin-bottom: 6px;
 }
 
-/* ===== COLORES DIDÁCTICOS ===== */
 .resultado-num {
-    color: #16a34a; /* VERDE */
+    color: #16a34a;
     font-weight: bold;
 }
 
 .llevada {
-    color: #dc2626; /* ROJO */
+    color: #dc2626;
     font-weight: bold;
 }
 
-/* ===== FOOTER ===== */
 .footer {
     text-align: center;
     font-size: 13px;
