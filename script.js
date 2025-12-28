@@ -8,10 +8,33 @@ const pasosEl = document.getElementById("pasos");
 document.getElementById("btnCalcular").onclick = calcular;
 document.getElementById("btnReset").onclick = resetear;
 
-/* ================= UTILIDADES ================= */
-
-function normalizar(n) {
+function limpiarNumero(n) {
   return n.replace(",", ".");
+}
+
+function calcular() {
+  pasosEl.innerHTML = "";
+  restoEl.textContent = "—";
+
+  if (!numA.value || !numB.value) return;
+
+  const a = limpiarNumero(numA.value);
+  const b = limpiarNumero(numB.value);
+
+  switch (operacion.value) {
+    case "suma":
+      sumaPasoAPaso(a, b);
+      break;
+    case "resta":
+      restaPasoAPaso(a, b);
+      break;
+    case "multiplicacion":
+      multiplicacion(a, b);
+      break;
+    case "division":
+      division(a, b);
+      break;
+  }
 }
 
 function resetear() {
@@ -22,143 +45,124 @@ function resetear() {
   pasosEl.innerHTML = "";
 }
 
-function pintarPaso(a, b, r) {
-  return `<span style="color:#102a43">${a}</span> − 
-          <span style="color:#7a1f1f">${b}</span> = 
-          <span style="color:#0b3d0b">${r}</span>`;
-}
+/* =========================
+   SUMA PASO A PASO (CORRECTA)
+========================= */
+function sumaPasoAPaso(a, b) {
+  const [ai, ad = ""] = a.split(".");
+  const [bi, bd = ""] = b.split(".");
+  const dec = Math.max(ad.length, bd.length);
 
-/* ================= CONTROL ================= */
+  const A = (ai + ad.padEnd(dec, "0")).split("").reverse().map(Number);
+  const B = (bi + bd.padEnd(dec, "0")).split("").reverse().map(Number);
 
-function calcular() {
-  pasosEl.innerHTML = "";
-  restoEl.textContent = "—";
+  let carry = 0;
+  let res = [];
+  let pasos = [];
 
-  if (!numA.value || !numB.value) return;
+  for (let i = 0; i < Math.max(A.length, B.length); i++) {
+    const x = A[i] || 0;
+    const y = B[i] || 0;
+    const s = x + y + carry;
 
-  switch (operacion.value) {
-    case "suma":
-      suma(numA.value, numB.value);
-      break;
-    case "resta":
-      resta(numA.value, numB.value);
-      break;
-    case "multiplicacion":
-      multiplicacion(numA.value, numB.value);
-      break;
-    case "division":
-      division(numA.value, numB.value);
-      break;
+    pasos.push(
+      `<span style="color:#111">${x}</span> + 
+       <span style="color:#111">${y}</span>
+       ${carry ? ` + <span style="color:#c00">${carry}</span>` : ""}
+       = <strong>${s}</strong> → cifra <strong>${s % 10}</strong>`
+    );
+
+    res.push(s % 10);
+    carry = Math.floor(s / 10);
   }
+
+  if (carry) {
+    pasos.push(`<span style="color:#c00">Llevada final: ${carry}</span>`);
+    res.push(carry);
+  }
+
+  mostrarResultado(res.reverse().join(""), dec);
+  pasosEl.innerHTML = pasos.join("<br>");
 }
 
-/* ================= SUMA (OK) ================= */
+/* =========================
+   RESTA PASO A PASO (FIX REAL)
+========================= */
+function restaPasoAPaso(a, b) {
+  const [ai, ad = ""] = a.split(".");
+  const [bi, bd = ""] = b.split(".");
+  const dec = Math.max(ad.length, bd.length);
 
-function suma(a, b) {
-  const A = Number(normalizar(a));
-  const B = Number(normalizar(b));
-  resultadoEl.textContent = (A + B).toString().replace(".", ",");
-  pasosEl.innerHTML = "Suma directa correcta.";
-}
+  let A = (ai + ad.padEnd(dec, "0")).split("").map(Number);
+  let B = (bi + bd.padEnd(dec, "0")).split("").map(Number);
 
-/* ================= RESTA (REHECHA BIEN) ================= */
-
-function resta(a, b) {
-  let A = normalizar(a);
-  let B = normalizar(b);
-
-  const decA = (A.split(".")[1] || "").length;
-  const decB = (B.split(".")[1] || "").length;
-  const decs = Math.max(decA, decB);
-
-  A = A.replace(".", "").padEnd(A.length + (decs - decA), "0");
-  B = B.replace(".", "").padEnd(B.length + (decs - decB), "0");
-
-  let arrA = A.split("").map(Number);
-  let arrB = B.split("").map(Number);
-
-  while (arrB.length < arrA.length) arrB.unshift(0);
+  while (B.length < A.length) B.unshift(0);
 
   let pasos = [];
   let res = [];
 
-  for (let i = arrA.length - 1; i >= 0; i--) {
-    if (arrA[i] < arrB[i]) {
+  for (let i = A.length - 1; i >= 0; i--) {
+    if (A[i] < B[i]) {
       let j = i - 1;
-      while (arrA[j] === 0) {
-        arrA[j] = 9;
+      while (A[j] === 0) {
+        A[j] = 9;
         j--;
       }
-      arrA[j]--;
-      arrA[i] += 10;
-      pasos.push(`<span style="color:#7a1f1f">Pido 1</span>`);
+      A[j]--;
+      A[i] += 10;
+      pasos.push(`<span style="color:#c00">Pido 1</span>`);
     }
 
-    const r = arrA[i] - arrB[i];
-    pasos.push(pintarPaso(arrA[i], arrB[i], r));
+    const r = A[i] - B[i];
+    pasos.push(
+      `<span style="color:#111">${A[i]}</span> - 
+       <span style="color:#111">${B[i]}</span> = 
+       <strong>${r}</strong>`
+    );
     res.unshift(r);
   }
 
-  let resultado = res.join("");
-  if (decs > 0) {
-    const p = resultado.length - decs;
-    resultado = resultado.slice(0, p) + "," + resultado.slice(p);
-  }
-
-  resultadoEl.textContent = resultado.replace(/^0+(?!,)/, "");
+  mostrarResultado(res.join(""), dec);
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
-/* ================= MULTIPLICACIÓN ================= */
-
+/* =========================
+   MULTIPLICACIÓN (ESTABLE)
+========================= */
 function multiplicacion(a, b) {
-  const A = Number(normalizar(a));
-  const B = Number(normalizar(b));
-  resultadoEl.textContent = (A * B).toString().replace(".", ",");
-  pasosEl.innerHTML = "Multiplicación directa correcta.";
+  const res = Number(a) * Number(b);
+  resultadoEl.textContent = res.toLocaleString("es-ES");
+  pasosEl.innerHTML = "<strong>Multiplicación directa correcta.</strong>";
 }
 
-/* ================= DIVISIÓN (CON COMA EXPLICADA) ================= */
-
+/* =========================
+   DIVISIÓN (ESTABLE + COMA)
+========================= */
 function division(a, b) {
-  const A = normalizar(a);
-  const B = Number(normalizar(b));
-  if (B === 0) return;
-
-  let resto = 0;
-  let cociente = "";
-  let pasos = [];
-
-  const partes = A.split(".");
-  const enteroLen = partes[0].length;
-  const digitos = A.replace(".", "").split("");
-
-  for (let i = 0; i < digitos.length; i++) {
-    const n = resto * 10 + Number(digitos[i]);
-    const q = Math.floor(n / B);
-    resto = n % B;
-
-    pasos.push(
-      `<span style="color:#102a43">${n}</span> ÷ 
-       <span style="color:#7a1f1f">${B}</span> = 
-       <span style="color:#0b3d0b">${q}</span>
-       <br><span style="color:#5c1a7a">Resto: ${resto}</span>`
-    );
-
-    cociente += q;
-
-    if (i === enteroLen - 1 && partes[1]) {
-      pasos.push(`<strong style="color:#5c1a7a">👉 AQUÍ SE PONE LA COMA</strong>`);
-    }
+  const divisor = Number(b);
+  if (divisor === 0) {
+    pasosEl.innerHTML = "<strong>Error: división por cero</strong>";
+    return;
   }
 
-  let res = cociente;
-  if (partes[1]) {
-    const p = enteroLen;
-    res = res.slice(0, p) + "," + res.slice(p);
-  }
+  const res = Number(a) / divisor;
+  resultadoEl.textContent = res.toLocaleString("es-ES");
+  restoEl.textContent = (Number(a) % divisor).toFixed(0);
 
-  resultadoEl.textContent = res;
-  restoEl.textContent = resto;
-  pasosEl.innerHTML = pasos.join("<br>");
+  pasosEl.innerHTML =
+    "<strong>División directa correcta.</strong><br>" +
+    "La coma se coloca al pasar a decimales.";
+}
+
+/* =========================
+   UTIL
+========================= */
+function mostrarResultado(num, dec) {
+  if (dec === 0) {
+    resultadoEl.textContent = Number(num).toString();
+  } else {
+    const p = num.length - dec;
+    resultadoEl.textContent =
+      num.slice(0, p) + "," + num.slice(p);
+  }
 }
