@@ -5,117 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora</title>
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
 <style>
-/* ===== RESET ===== */
-*{
-  box-sizing:border-box;
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* ===== BODY ===== */
 body{
-  margin:0;
-  background:linear-gradient(#020617,#020617);
-  color:#fff;
-  display:flex;
-  justify-content:center;
+    margin:0;
+    background:#0b1020;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont;
+    color:#fff;
+    display:flex;
+    justify-content:center;
 }
-
-/* ===== APP ===== */
 .app{
-  width:360px;
-  padding:16px;
+    width:360px;
+    padding:15px;
 }
-
-/* ===== TITULO ===== */
 h1{
-  text-align:center;
-  margin-bottom:14px;
+    text-align:center;
+    margin-bottom:12px;
 }
-
-/* ===== SELECT ===== */
-select{
-  width:100%;
-  height:44px;
-  background:#16a34a;
-  color:#fff;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:bold;
-  padding:6px 12px;
-  margin-bottom:12px;
+select,input,button{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border-radius:12px;
+    border:none;
+    font-size:16px;
 }
+select{background:#22a34a;color:#fff;}
+input{background:#1f2937;color:#fff;}
+button{font-weight:bold;}
+#btnCalcular{background:#2563eb;color:#fff;}
+#btnReset{background:#374151;color:#fff;}
 
-/* ===== INPUTS (FIX DEFINITIVO iOS) ===== */
-input{
-  width:100%;
-  height:44px;
-  padding:6px 10px;
-  margin-bottom:10px;
-  border-radius:12px;
-  border:none;
-  background:#1e293b;
-  color:#fff;
-  font-size:16px;
-  box-sizing:border-box;
-}
-
-/* ===== BOTONES ===== */
-button{
-  width:100%;
-  height:44px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:bold;
-  margin-bottom:10px;
-  cursor:pointer;
-}
-
-#btnCalcular{ background:#2563eb; color:#fff; }
-#btnReset{ background:#374151; color:#fff; }
-
-/* ===== RESULTADOS ===== */
 .resultados{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
+    display:flex;
+    gap:10px;
 }
-
 .box{
-  flex:1;
-  padding:10px;
-  border-radius:14px;
-  font-weight:bold;
+    flex:1;
+    padding:12px;
+    border-radius:12px;
+    text-align:center;
 }
+.azul{background:#1e3a8a;}
+.verde{background:#14532d;}
 
-.azul{ background:#1e3a8a; }
-.verde{ background:#14532d; }
-
-/* ===== PASOS ===== */
 .pasos{
-  margin-top:12px;
-  background:#22d3ee;
-  color:#020617;
-  border-radius:14px;
-  padding:12px;
-  font-size:14px;
+    margin-top:12px;
+    background:#22d3ee;
+    color:#000;
+    border-radius:12px;
+    padding:12px;
+    font-size:15px;
 }
+.pasos strong{display:block;margin-bottom:6px;}
 
-/* ===== COLORES PASO A PASO ===== */
-.n-op{ color:#1e40af; font-weight:bold; }
-.n-carry{ color:#b91c1c; font-weight:bold; }
-.n-res{ color:#065f46; font-weight:bold; }
+.num{font-weight:bold;color:#111;}
+.op{color:#2563eb;font-weight:bold;}
+.res{color:#047857;font-weight:bold;}
+.carry{color:#b91c1c;font-weight:bold;}
 
 footer{
-  margin-top:14px;
-  text-align:center;
-  opacity:.6;
-  font-size:13px;
+    text-align:center;
+    margin-top:12px;
+    opacity:.6;
+    font-size:13px;
 }
 </style>
 </head>
@@ -125,96 +78,31 @@ footer{
 
 <h1>CALCULADORA</h1>
 
-<select id="op">
-  <option value="suma">SUMA</option>
-  <option value="resta">RESTA</option>
-  <option value="mult">MULTIPLICACIÓN</option>
-  <option value="div">DIVISIÓN</option>
+<select id="operacion">
+    <option value="suma">SUMA</option>
+    <option value="resta">RESTA</option>
+    <option value="multiplicacion">MULTIPLICACIÓN</option>
+    <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="a" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
-<input id="b" inputmode="decimal" placeholder="Número B (ej: 8)">
+<input id="numA" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
+<input id="numB" inputmode="decimal" placeholder="Número B (ej: 8)">
 
 <button id="btnCalcular">CALCULAR</button>
 <button id="btnReset">REINICIAR</button>
 
 <div class="resultados">
-  <div class="box azul">Resultado<br><span id="res">—</span></div>
-  <div class="box verde">Resto<br><span id="resto">—</span></div>
+    <div class="box azul">Resultado<br><strong id="resultado">—</strong></div>
+    <div class="box verde">Resto<br><strong id="resto">—</strong></div>
 </div>
 
-<div class="pasos" id="pasos">PROCESO PASO A PASO</div>
+<div class="pasos">
+    <strong>PROCESO PASO A PASO</strong>
+    <div id="pasos">—</div>
+</div>
 
 <footer>Creada por Jose Casanova</footer>
-
 </div>
 
 <script>
-const a = document.getElementById("a");
-const b = document.getElementById("b");
-const op = document.getElementById("op");
-const res = document.getElementById("res");
-const resto = document.getElementById("resto");
-const pasos = document.getElementById("pasos");
-
-document.getElementById("btnCalcular").onclick = calcular;
-document.getElementById("btnReset").onclick = ()=>{
-  a.value=b.value="";
-  res.textContent=resto.textContent="—";
-  pasos.textContent="PROCESO PASO A PASO";
-};
-
-function n(v){ return v.replace(",","."); }
-
-/* ================= CALCULAR ================= */
-function calcular(){
-  pasos.innerHTML="";
-  resto.textContent="—";
-
-  let A = Number(n(a.value));
-  let B = Number(n(b.value));
-  if(isNaN(A)||isNaN(B)) return;
-
-  if(op.value==="suma") suma(A,B);
-  if(op.value==="resta") resta(A,B);
-  if(op.value==="mult") mult(A,B);
-  if(op.value==="div") div(A,B);
-}
-
-/* ================= SUMA ================= */
-function suma(A,B){
-  res.textContent=(A+B).toString().replace(".",",");
-  pasos.innerHTML=`<b>Suma paso a paso</b><br>
-  <span class="n-op">${A}</span> + <span class="n-op">${B}</span>
-  = <span class="n-res">${A+B}</span>`;
-}
-
-/* ================= RESTA ================= */
-function resta(A,B){
-  res.textContent=(A-B).toString().replace(".",",");
-  pasos.innerHTML=`<b>Resta paso a paso</b><br>
-  <span class="n-op">${A}</span> − <span class="n-op">${B}</span>
-  = <span class="n-res">${A-B}</span>`;
-}
-
-/* ================= MULTIPLICACIÓN ================= */
-function mult(A,B){
-  res.textContent=(A*B).toString().replace(".",",");
-  pasos.innerHTML=`<b>Multiplicación paso a paso</b><br>
-  <span class="n-op">${A}</span> × <span class="n-op">${B}</span>
-  = <span class="n-res">${A*B}</span>`;
-}
-
-/* ================= DIVISIÓN ================= */
-function div(A,B){
-  res.textContent=(A/B).toString().replace(".",",");
-  resto.textContent=(A%B).toString().replace(".",",");
-  pasos.innerHTML=`<b>División paso a paso</b><br>
-  <span class="n-op">${A}</span> ÷ <span class="n-op">${B}</span>
-  = <span class="n-res">${A/B}</span><br>
-  La coma aparece al pasar a decimales.`;
-}
-</script>
-
-</body>
-</html>
+const numA = document.getElementById("numA");
