@@ -1,75 +1,67 @@
-
 body {
+  background: #000;
   font-family: Arial, sans-serif;
-  background: #f4f6fb;
-  padding: 12px;
+  color: white;
+  padding: 15px;
 }
 
 .titulo {
   background: #15803d;
-  color: white;
   text-align: center;
   padding: 14px;
   border-radius: 16px;
   font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
-select {
+.selector {
   width: 100%;
   padding: 12px;
   border-radius: 14px;
-  font-size: 16px;
   background: #16a34a;
   color: white;
+  font-size: 16px;
   border: none;
-  margin-bottom: 14px;
+  margin-bottom: 15px;
 }
 
 .bloque {
-  background: white;
+  background: #111;
   padding: 12px;
-  border-radius: 16px;
+  border-radius: 14px;
   margin-bottom: 12px;
 }
 
-.fila {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
+.bloque.a { border: 2px solid #22c55e; }
+.bloque.b { border: 2px solid #3b82f6; }
 
 input {
-  width: 120px;
+  width: 48%;
   padding: 10px;
-  font-size: 18px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  text-align: center;
+  border-radius: 10px;
+  border: none;
+  margin: 5px 1%;
+  font-size: 16px;
 }
 
 button {
   width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 16px;
   background: #2563eb;
   color: white;
+  padding: 14px;
+  border-radius: 16px;
   border: none;
-  margin: 14px 0;
+  font-size: 18px;
+  margin: 15px 0;
 }
 
 .resultados {
   display: flex;
   gap: 10px;
-  justify-content: center;
 }
 
 .resultados input {
-  width: 140px;
   background: #e0f2fe;
-  border: none;
   font-size: 18px;
 }
 
@@ -79,19 +71,18 @@ button {
 
 .pasos {
   background: #dbeafe;
+  color: black;
   padding: 14px;
   border-radius: 16px;
-  margin-top: 14px;
-  line-height: 1.6;
+  margin-top: 15px;
 }
 
-.azul { color: #1d4ed8; font-weight: bold; }
-.verde { color: #15803d; font-weight: bold; }
+.azul { color: #2563eb; font-weight: bold; }
+.verde { color: #16a34a; font-weight: bold; }
 .rojo { color: #dc2626; font-weight: bold; }
-.morado { color: #7c3aed; font-weight: bold; }
 
 footer {
   text-align: center;
-  margin-top: 14px;
-  font-size: 14px;
+  margin-top: 20px;
+  opacity: 0.7;
 }
