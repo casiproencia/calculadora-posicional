@@ -23,86 +23,75 @@ function calcular() {
     let A = rawA.replace(".", "");
     let B = rawB.replace(".", "");
 
-    A = A.padEnd(A.length + (decB > decA ? decB - decA : 0), "0");
-    B = B.padEnd(B.length + (decA > decB ? decA - decB : 0), "0");
+    /* ================= SUMA Y RESTA ================= */
+    if (op === "SUMA" || op === "RESTA") {
 
-    let aArr = A.split("").map(Number);
-    let bArr = B.padStart(A.length, "0").split("").map(Number);
+        const maxDec = Math.max(decA, decB);
+        A = A.padEnd(A.length + (maxDec - decA), "0");
+        B = B.padEnd(B.length + (maxDec - decB), "0");
 
-    /* ===== SUMA ===== */
-    if (op === "SUMA") {
+        let aArr = A.split("").map(Number);
+        let bArr = B.padStart(A.length, "0").split("").map(Number);
 
+        let res = "";
         let carry = 0;
-        let res = "";
-        proceso.innerHTML = "<strong>Suma paso a paso</strong><br><br>";
 
-        for (let i = aArr.length - 1; i >= 0; i--) {
-            const total = aArr[i] + bArr[i] + carry;
-            const dig = total % 10;
-
-            proceso.innerHTML += `
-                <div class="paso">
-                    ${aArr[i]} + ${bArr[i]}
-                    ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
-                    = <span class="resultado-num">${total}</span>
-                    → cifra <span class="resultado-num">${dig}</span>
-                </div>
-            `;
-
-            carry = Math.floor(total / 10);
-            res = dig + res;
-        }
-
-        if (carry) {
-            proceso.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
-            res = carry + res;
-        }
-
-        resultadoEl.textContent = recolocarComa(res, Math.max(decA, decB));
-    }
-
-    /* ===== RESTA ===== */
-    if (op === "RESTA") {
-
-        let res = "";
-        proceso.innerHTML = "<strong>Resta paso a paso</strong><br><br>";
+        proceso.innerHTML = `<strong>${op} paso a paso</strong><br><br>`;
 
         for (let i = aArr.length - 1; i >= 0; i--) {
 
-            if (aArr[i] < bArr[i]) {
+            if (op === "RESTA" && aArr[i] < bArr[i]) {
                 aArr[i] += 10;
                 aArr[i - 1] -= 1;
                 proceso.innerHTML += `<div class="llevada">Pedimos 1</div>`;
             }
 
-            const r = aArr[i] - bArr[i];
+            const total = op === "SUMA"
+                ? aArr[i] + bArr[i] + carry
+                : aArr[i] - bArr[i];
+
+            const dig = ((total % 10) + 10) % 10;
+
             proceso.innerHTML += `
                 <div class="paso">
-                    ${aArr[i]} - ${bArr[i]} =
-                    <span class="resultado-num">${r}</span>
+                    ${aArr[i]} ${op === "SUMA" ? "+" : "-"} ${bArr[i]}
+                    ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
+                    = <span class="resultado-num">${total}</span>
+                    → cifra <span class="resultado-num">${dig}</span>
                 </div>
             `;
-            res = r + res;
+
+            carry = op === "SUMA" ? Math.floor(total / 10) : 0;
+            res = dig + res;
         }
 
-        resultadoEl.textContent = recolocarComa(res, Math.max(decA, decB));
+        if (carry) {
+            proceso.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
+            res = carry + res;
+        }
+
+        resultadoEl.textContent = recolocarComa(res, maxDec);
+        return;
     }
 
-    /* ===== MULTIPLICACIÓN ===== */
+    /* ================= MULTIPLICACIÓN ================= */
     if (op === "MULTIPLICACIÓN") {
 
-        const multiplicador = parseInt(B, 10);
+        const multiplicador = Number(rawB);
+        const enteroA = A.split("").map(Number);
+
         let carry = 0;
         let res = "";
+
         proceso.innerHTML = "<strong>Multiplicación paso a paso</strong><br><br>";
 
-        for (let i = aArr.length - 1; i >= 0; i--) {
-            const total = aArr[i] * multiplicador + carry;
-            const dig = total % 10;
+        for (let i = enteroA.length - 1; i >= 0; i--) {
+            const total = enteroA[i] * multiplicador + carry;
+            const dig = Math.floor(total % 10);
 
             proceso.innerHTML += `
                 <div class="paso">
-                    ${aArr[i]} × ${multiplicador}
+                    ${enteroA[i]} × ${multiplicador}
                     ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
                     = <span class="resultado-num">${total}</span>
                     → cifra <span class="resultado-num">${dig}</span>
@@ -118,19 +107,21 @@ function calcular() {
             res = carry + res;
         }
 
-        resultadoEl.textContent = recolocarComa(res, decA + decB);
+        resultadoEl.textContent = recolocarComa(res, decA);
+        return;
     }
 
-    /* ===== DIVISIÓN ===== */
+    /* ================= DIVISIÓN ================= */
     if (op === "DIVISIÓN") {
 
-        const divisor = parseInt(B, 10);
+        const divisor = Number(rawB);
         let resto = 0;
         let cociente = "";
+
         proceso.innerHTML = "<strong>División paso a paso</strong><br><br>";
 
         for (let i = 0; i < A.length; i++) {
-            const num = resto * 10 + parseInt(A[i]);
+            const num = resto * 10 + Number(A[i]);
             const q = Math.floor(num / divisor);
             resto = num - q * divisor;
 
@@ -151,7 +142,7 @@ function calcular() {
 }
 
 function recolocarComa(num, dec) {
-    if (dec === 0) return num;
+    if (dec === 0) return num.replace(/^0+/, "") || "0";
     const p = num.length - dec;
     return num.slice(0, p) + "," + num.slice(p);
 }
