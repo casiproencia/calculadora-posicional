@@ -10,27 +10,23 @@
 
 <div class="titulo">CALCULADORA POSICIONAL</div>
 
-<select id="operacion">
+<select id="operacion" class="selector">
   <option value="suma">SUMA</option>
   <option value="resta">RESTA</option>
   <option value="multiplicacion">MULTIPLICACIÓN</option>
   <option value="division">DIVISIÓN</option>
 </select>
 
-<div class="bloque">
+<div class="bloque a">
   <h3>NÚMERO A</h3>
-  <div class="fila">
-    <input id="aE" type="number" placeholder="Entero">
-    <input id="aD" type="number" placeholder="Decimales">
-  </div>
+  <input type="number" id="aEntero" placeholder="Entero">
+  <input type="number" id="aDecimal" placeholder="Decimales">
 </div>
 
-<div class="bloque">
+<div class="bloque b">
   <h3>NÚMERO B</h3>
-  <div class="fila">
-    <input id="bE" type="number" placeholder="Entero">
-    <input id="bD" type="number" placeholder="Decimales">
-  </div>
+  <input type="number" id="bEntero" placeholder="Entero">
+  <input type="number" id="bDecimal" placeholder="Decimales">
 </div>
 
 <button onclick="calcular()">CALCULAR</button>
