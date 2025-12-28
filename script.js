@@ -8,7 +8,22 @@ const pasosEl = document.getElementById("pasos");
 document.getElementById("btnCalcular").onclick = calcular;
 document.getElementById("btnReset").onclick = resetear;
 
-/* ================= RESET ================= */
+/* ================= UTILIDADES ================= */
+
+function normalizar(n) {
+  return n.replace(",", ".");
+}
+
+function mostrarResultado(resArray, decs) {
+  let s = resArray.join("");
+  if (decs > 0) {
+    const p = s.length - decs;
+    s = s.slice(0, p) + "," + s.slice(p);
+  }
+  s = s.replace(/^0+(?!,)/, "");
+  resultadoEl.textContent = s || "0";
+}
+
 function resetear() {
   numA.value = "";
   numB.value = "";
@@ -17,36 +32,35 @@ function resetear() {
   pasosEl.innerHTML = "";
 }
 
-/* ================= CALCULAR ================= */
+/* ================= CONTROL ================= */
+
 function calcular() {
   pasosEl.innerHTML = "";
   restoEl.textContent = "—";
 
   if (!numA.value || !numB.value) return;
 
-  const a = numA.value.replace(",", ".");
-  const b = numB.value.replace(",", ".");
-
   switch (operacion.value) {
     case "suma":
-      suma(a, b);
+      suma(numA.value, numB.value);
       break;
     case "resta":
-      resta(a, b);
+      resta(numA.value, numB.value);
       break;
     case "multiplicacion":
-      multiplicacion(a, b);
+      multiplicacion(numA.value, numB.value);
       break;
     case "division":
-      division(a, b);
+      division(numA.value, numB.value);
       break;
   }
 }
 
 /* ================= SUMA ================= */
+
 function suma(a, b) {
-  const [ai, ad = ""] = a.split(".");
-  const [bi, bd = ""] = b.split(".");
+  const [ai, ad = ""] = a.split(",");
+  const [bi, bd = ""] = b.split(",");
   const decs = Math.max(ad.length, bd.length);
 
   const A = (ai + ad.padEnd(decs, "0")).split("").reverse().map(Number);
@@ -57,35 +71,35 @@ function suma(a, b) {
   let pasos = [];
 
   for (let i = 0; i < Math.max(A.length, B.length); i++) {
-    const x = A[i] ?? 0;
-    const y = B[i] ?? 0;
+    const x = A[i] || 0;
+    const y = B[i] || 0;
     const s = x + y + carry;
-    const cifra = s % 10;
 
     pasos.push(
-      `<span style="color:#00e5ff">${x}</span> + 
-       <span style="color:#ffd54f">${y}</span>
-       ${carry ? ` + <span style="color:#ff5252">${carry}</span>` : ""}
-       = <b>${s}</b> → cifra <span style="color:#00ff7f">${cifra}</span>`
+      `<span style="color:#0d47a1">${x}</span> + 
+       <span style="color:#1b5e20">${y}</span>
+       ${carry ? ` + <span style="color:#b71c1c">${carry}</span>` : ""} 
+       = <span style="color:#263238">${s}</span>`
     );
 
-    res.push(cifra);
+    res.push(s % 10);
     carry = Math.floor(s / 10);
   }
 
   if (carry) {
-    pasos.push(`Llevada final: <span style="color:#ff5252">${carry}</span>`);
     res.push(carry);
+    pasos.push(`<span style="color:#b71c1c">Llevada final: ${carry}</span>`);
   }
 
-  mostrarResultado(res, decs);
+  mostrarResultado(res.reverse(), decs);
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
-/* ================= RESTA ================= */
+/* ================= RESTA (ARREGLADA) ================= */
+
 function resta(a, b) {
-  const [ai, ad = ""] = a.split(".");
-  const [bi, bd = ""] = b.split(".");
+  const [ai, ad = ""] = a.split(",");
+  const [bi, bd = ""] = b.split(",");
   const decs = Math.max(ad.length, bd.length);
 
   let A = (ai + ad.padEnd(decs, "0")).split("").map(Number);
@@ -93,27 +107,33 @@ function resta(a, b) {
 
   while (B.length < A.length) B.unshift(0);
 
-  let pasos = [];
   let res = [];
+  let pasos = [];
 
   for (let i = A.length - 1; i >= 0; i--) {
-    if (A[i] < B[i]) {
+    let x = A[i];
+    let y = B[i];
+
+    if (x < y) {
       let j = i - 1;
       while (A[j] === 0) {
         A[j] = 9;
         j--;
       }
       A[j]--;
-      A[i] += 10;
-      pasos.push(`<span style="color:#ff5252">Pido 1</span>`);
+      x += 10;
+
+      pasos.push(`<span style="color:#b71c1c">Pido 1</span>`);
     }
 
-    const r = A[i] - B[i];
+    const r = x - y;
+
     pasos.push(
-      `<span style="color:#00e5ff">${A[i]}</span> − 
-       <span style="color:#ffd54f">${B[i]}</span> = 
-       <span style="color:#00ff7f">${r}</span>`
+      `<span style="color:#0d47a1">${x}</span> − 
+       <span style="color:#1b5e20">${y}</span> = 
+       <span style="color:#263238">${r}</span>`
     );
+
     res.unshift(r);
   }
 
@@ -122,90 +142,81 @@ function resta(a, b) {
 }
 
 /* ================= MULTIPLICACIÓN ================= */
-function multiplicacion(a, b) {
-  const decA = (a.split(".")[1] || "").length;
-  const decB = (b.split(".")[1] || "").length;
 
-  const A = a.replace(".", "");
-  const B = b.replace(".", "");
+function multiplicacion(a, b) {
+  const A = normalizar(a);
+  const B = normalizar(b);
+
+  const decA = (A.split(".")[1] || "").length;
+  const decB = (B.split(".")[1] || "").length;
+
+  const nA = A.replace(".", "");
+  const nB = Number(B.replace(".", ""));
 
   let carry = 0;
-  let res = "";
+  let res = [];
   let pasos = [];
 
-  for (let i = A.length - 1; i >= 0; i--) {
-    const total = Number(A[i]) * Number(B) + carry;
-    const cifra = total % 10;
+  for (let i = nA.length - 1; i >= 0; i--) {
+    const x = Number(nA[i]);
+    const t = x * nB + carry;
+    const d = t % 10;
 
     pasos.push(
-      `<span style="color:#00e5ff">${A[i]}</span> × 
-       <span style="color:#ffd54f">${B}</span>
-       ${carry ? ` + <span style="color:#ff5252">${carry}</span>` : ""}
-       = <b>${total}</b> → cifra <span style="color:#00ff7f">${cifra}</span>`
+      `<span style="color:#0d47a1">${x}</span> × 
+       <span style="color:#1b5e20">${nB}</span>
+       ${carry ? ` + <span style="color:#b71c1c">${carry}</span>` : ""} 
+       = <span style="color:#263238">${t}</span>`
     );
 
-    res = cifra + res;
-    carry = Math.floor(total / 10);
+    res.unshift(d);
+    carry = Math.floor(t / 10);
   }
 
   if (carry) {
-    pasos.push(`Llevada final: <span style="color:#ff5252">${carry}</span>`);
-    res = carry + res;
+    res.unshift(carry);
+    pasos.push(`<span style="color:#b71c1c">Llevada final: ${carry}</span>`);
   }
 
-  colocarComa(res, decA + decB);
+  mostrarResultado(res, decA + decB);
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
 /* ================= DIVISIÓN ================= */
+
 function division(a, b) {
-  const divisor = Number(b);
-  const A = a.replace(".", "");
-  const decA = (a.split(".")[1] || "").length;
+  const A = normalizar(a);
+  const B = Number(normalizar(b));
+  if (B === 0) return;
 
   let resto = 0;
   let cociente = "";
   let pasos = [];
 
-  for (let i = 0; i < A.length; i++) {
-    const num = resto * 10 + Number(A[i]);
-    const q = Math.floor(num / divisor);
-    resto = num - q * divisor;
+  const partes = A.split(".");
+  const enteroLen = partes[0].length;
+  const digits = A.replace(".", "").split("");
 
-    pasos.push(
-      `<span style="color:#00e5ff">${num}</span> ÷ 
-       <span style="color:#ffd54f">${divisor}</span> = 
-       <span style="color:#00ff7f">${q}</span><br>
-       <span style="color:#ff5252">Resto: ${resto}</span>`
-    );
-
+  for (let i = 0; i < digits.length; i++) {
+    const n = resto * 10 + Number(digits[i]);
+    const q = Math.floor(n / B);
+    resto = n % B;
     cociente += q;
 
-    if (i === A.length - decA - 1 && decA > 0) {
-      pasos.push(`<b>👉 Aquí colocamos la coma</b>`);
+    pasos.push(
+      `<span style="color:#263238">${n}</span> ÷ 
+       <span style="color:#1b5e20">${B}</span> = 
+       <span style="color:#0d47a1">${q}</span><br>
+       <span style="color:#b71c1c">Resto: ${resto}</span>`
+    );
+
+    if (i === enteroLen - 1 && partes[1]) {
+      pasos.push(`<span style="color:#6a1b9a">← coma decimal</span>`);
     }
   }
 
-  colocarComa(cociente, decA);
+  const decs = partes[1] ? partes[1].length : 0;
+  mostrarResultado(cociente.split(""), decs);
   restoEl.textContent = resto;
   pasosEl.innerHTML = pasos.join("<br>");
-}
-
-/* ================= UTILIDADES ================= */
-function mostrarResultado(res, decs) {
-  let num = res.reverse().join("");
-  if (decs > 0) {
-    const p = num.length - decs;
-    num = num.slice(0, p) + "," + num.slice(p);
-  }
-  resultadoEl.textContent = num.replace(/^0+/, "") || "0";
-}
-
-function colocarComa(num, dec) {
-  if (dec === 0) {
-    resultadoEl.textContent = num;
-    return;
-  }
-  const p = num.length - dec;
-  resultadoEl.textContent = num.slice(0, p) + "," + num.slice(p);
 }
