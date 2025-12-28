@@ -1,59 +1,231 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Calculadora Posicional</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Calculadora Posicional</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 95%;
+    max-width: 420px;
+    padding: 15px;
+}
+
+.header {
+    background: #1e7f3f;
+    padding: 14px;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+select {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #22a04b;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+}
+
+.block {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.block.a { border: 2px solid #2ecc71; }
+.block.b { border: 2px solid #3498db; }
+
+.block h3 {
+    margin: 0 0 10px;
+}
+
+.inputs {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.result-box {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.result-box div {
+    flex: 1;
+}
+
+.result {
+    background: #e0f2ff;
+    color: #000;
+    padding: 10px;
+    border-radius: 10px;
+    min-height: 30px;
+}
+
+.steps {
+    margin-top: 15px;
+    background: #dbeafe;
+    color: #000;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.green { color: #16a34a; font-weight: bold; }
+.blue { color: #2563eb; font-weight: bold; }
+.red { color: #dc2626; font-weight: bold; }
+</style>
 </head>
+
 <body>
+<div class="container">
 
-<div class="app">
+<div class="header">CALCULADORA POSICIONAL</div>
 
-  <div class="titulo">CALCULADORA POSICIONAL</div>
+<select id="op">
+<option value="suma">SUMA</option>
+<option value="resta">RESTA</option>
+<option value="multi">MULTIPLICACIÓN</option>
+<option value="div">DIVISIÓN</option>
+</select>
 
-  <select id="operacion" class="selector">
-    <option value="suma">SUMA</option>
-    <option value="resta">RESTA</option>
-    <option value="multiplicacion">MULTIPLICACIÓN</option>
-    <option value="division">DIVISIÓN</option>
-  </select>
+<div class="block a">
+<h3>NÚMERO A</h3>
+<div class="inputs">
+<input id="a_ent" placeholder="Entero">
+<input id="a_dec" placeholder="Decimales">
+</div>
+</div>
 
-  <div class="bloque a">
-    <h3>NÚMERO A</h3>
-    <div class="fila">
-      <input type="number" id="aEntero" placeholder="Entero">
-      <input type="number" id="aDecimal" placeholder="Decimales">
-    </div>
-  </div>
+<div class="block b">
+<h3>NÚMERO B</h3>
+<div class="inputs">
+<input id="b_ent" placeholder="Entero">
+<input id="b_dec" placeholder="Decimales">
+</div>
+</div>
 
-  <div class="bloque b">
-    <h3>NÚMERO B</h3>
-    <div class="fila">
-      <input type="number" id="bEntero" placeholder="Entero">
-      <input type="number" id="bDecimal" placeholder="Decimales">
-    </div>
-  </div>
+<button onclick="calcular()">CALCULAR</button>
 
-  <button id="btnCalcular">CALCULAR</button>
+<div class="result-box">
+<div>
+<label>Resultado</label>
+<div id="res" class="result"></div>
+</div>
+<div>
+<label>Resto</label>
+<div id="resto" class="result"></div>
+</div>
+</div>
 
-  <div class="resultados">
-    <div class="res">
-      <label>Resultado</label>
-      <input id="resultado" readonly>
-    </div>
-    <div class="res resto">
-      <label>Resto</label>
-      <input id="resto" readonly>
-    </div>
-  </div>
+<div id="pasos" class="steps"></div>
 
-  <div id="pasos" class="pasos"></div>
-
-  <footer>Creada por Jose Casanova</footer>
+<p style="text-align:center;margin-top:15px;">Creada por Jose Casanova</p>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+function num(ent, dec) {
+    ent = ent || "0";
+    dec = dec || "";
+    return { ent, dec, full: ent + "." + (dec || "0") };
+}
+
+function igualar(a, b) {
+    const max = Math.max(a.dec.length, b.dec.length);
+    a.dec = a.dec.padEnd(max, "0");
+    b.dec = b.dec.padEnd(max, "0");
+    return max;
+}
+
+function calcular() {
+    const op = document.getElementById("op").value;
+    let A = num(a_ent.value, a_dec.value);
+    let B = num(b_ent.value, b_dec.value);
+
+    let pasos = "";
+    let resto = "";
+
+    if (op !== "div") {
+        const decs = igualar(A, B);
+        pasos += `Igualamos decimales:<br>
+        <span class="green">${A.ent},${A.dec}</span> y 
+        <span class="blue">${B.ent},${B.dec}</span><br><br>`;
+
+        const nA = BigInt(A.ent + A.dec);
+        const nB = BigInt(B.ent + B.dec);
+
+        let r;
+        if (op === "suma") r = nA + nB;
+        if (op === "resta") r = nA - nB;
+        if (op === "multi") r = nA * nB;
+
+        pasos += `Operamos sin coma:<br>
+        <span class="green">${nA}</span> 
+        ${op === "suma" ? "+" : op === "resta" ? "-" : "×"} 
+        <span class="blue">${nB}</span><br><br>`;
+
+        let s = r.toString().padStart(decs + 1, "0");
+        const final = s.slice(0, -decs) + "," + s.slice(-decs);
+
+        pasos += `Colocamos la coma:<br>
+        <span class="green">${final}</span>`;
+
+        res.innerText = final;
+        resto = "";
+    } else {
+        const decs = A.dec.length;
+        const nA = BigInt(A.ent + A.dec);
+        const nB = BigInt(B.ent);
+
+        const coc = nA / nB;
+        const resRest = nA % nB;
+
+        pasos += `Dividimos:<br>
+        <span class="green">${nA}</span> ÷ <span class="blue">${nB}</span><br><br>
+        Cociente: <span class="green">${coc}</span><br>
+        Resto: <span class="red">${resRest}</span>`;
+
+        res.innerText = coc.toString();
+        resto = resRest.toString();
+    }
+
+    document.getElementById("pasos").innerHTML = pasos;
+    document.getElementById("resto").innerText = resto;
+}
+</script>
+
 </body>
 </html>
