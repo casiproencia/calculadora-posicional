@@ -10,40 +10,22 @@ body{
     margin:0;
     background:#020617;
     color:#fff;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    font-family: system-ui;
     display:flex;
     justify-content:center;
 }
-.app{
-    width:360px;
-    padding:16px;
-}
-h1{
-    text-align:center;
-    margin-bottom:14px;
-}
+.app{width:360px;padding:16px;}
+h1{text-align:center;margin-bottom:14px;}
 select,input,button{
-    width:100%;
-    padding:14px;
-    border-radius:14px;
-    border:none;
-    margin-bottom:10px;
-    font-size:16px;
+    width:100%;padding:14px;border-radius:14px;
+    border:none;margin-bottom:10px;font-size:16px;
 }
 select{background:#16a34a;color:#fff;font-weight:bold;}
 input{background:#1f2937;color:#fff;text-align:center;}
 button{background:#2563eb;color:#fff;font-weight:bold;}
 .btn-reset{background:#374151;}
-.boxes{
-    display:flex;
-    gap:10px;
-}
-.box{
-    flex:1;
-    padding:12px;
-    border-radius:14px;
-    font-weight:bold;
-}
+.boxes{display:flex;gap:10px;}
+.box{flex:1;padding:12px;border-radius:14px;font-weight:bold;}
 .res{background:#1e3a8a;}
 .rest{background:#14532d;}
 .paso{
@@ -53,9 +35,8 @@ button{background:#2563eb;color:#fff;font-weight:bold;}
     padding:12px;
     border-radius:14px;
     font-size:14px;
+    white-space:pre-line;
 }
-.resultado-num{color:#16a34a;font-weight:bold;}
-.llevada{color:#dc2626;font-weight:bold;}
 footer{text-align:center;margin-top:10px;font-size:12px;color:#94a3b8;}
 </style>
 </head>
@@ -66,96 +47,111 @@ footer{text-align:center;margin-top:10px;font-size:12px;color:#94a3b8;}
 <h1>CALCULADORA</h1>
 
 <select id="op">
-    <option>SUMA</option>
-    <option>RESTA</option>
-    <option>MULTIPLICACIÓN</option>
-    <option>DIVISIÓN</option>
+<option>SUMA</option>
+<option>RESTA</option>
+<option>MULTIPLICACIÓN</option>
+<option>DIVISIÓN</option>
 </select>
 
-<input id="a" type="text" inputmode="decimal" placeholder="Número A">
-<input id="b" type="text" inputmode="decimal" placeholder="Número B">
+<input id="a" inputmode="decimal" placeholder="Número A">
+<input id="b" inputmode="decimal" placeholder="Número B">
 
 <button onclick="calcular()">CALCULAR</button>
 <button class="btn-reset" onclick="resetear()">REINICIAR</button>
 
 <div class="boxes">
-    <div class="box res">Resultado<br><span id="res">—</span></div>
-    <div class="box rest">Resto<br><span id="resto">—</span></div>
+<div class="box res">Resultado<br><span id="res">—</span></div>
+<div class="box rest">Resto<br><span id="resto">—</span></div>
 </div>
 
 <div class="paso" id="paso">PROCESO PASO A PASO</div>
 
 <footer>Creada por Jose Casanova</footer>
-
 </div>
 
 <script>
-function parseNum(v){
-    return v.replace(',','.').trim();
-}
-function contarDec(v){
-    return v.includes('.') ? v.split('.')[1].length : 0;
-}
+function norm(v){return v.replace(',','.');}
+
 function calcular(){
-    const op=document.getElementById('op').value;
-    let a=parseNum(document.getElementById('a').value);
-    let b=parseNum(document.getElementById('b').value);
+    let op=document.getElementById('op').value;
+    let a=norm(document.getElementById('a').value);
+    let b=norm(document.getElementById('b').value);
+    if(!a||!b)return;
 
-    if(a===''||b===''){return;}
+    let da=(a.split('.')[1]||'').length;
+    let db=(b.split('.')[1]||'').length;
+    let f=Math.pow(10,Math.max(da,db));
 
-    const da=contarDec(a);
-    const db=contarDec(b);
+    let A=Math.round(parseFloat(a)*f);
+    let B=Math.round(parseFloat(b)*f);
 
-    const fa=Math.pow(10,da);
-    const fb=Math.pow(10,db);
-
-    const Ai=Math.round(parseFloat(a)*fa);
-    const Bi=Math.round(parseFloat(b)*fb);
-
-    let res=0,rest='—',txt='';
+    let pasos=[];
+    let res=0, resto='—';
 
     if(op==='SUMA'){
-        res=(Ai*fb + Bi*fa)/(fa*fb);
-        txt='Suma correcta alineando decimales.';
+        let carry=0;
+        let sa=A.toString().padStart(B.toString().length,'0');
+        let sb=B.toString().padStart(sa.length,'0');
+        for(let i=sa.length-1;i>=0;i--){
+            let s=parseInt(sa[i])+parseInt(sb[i])+carry;
+            pasos.push(`${sa[i]} + ${sb[i]}${carry?` + ${carry}`:''} = ${s} → cifra ${s%10}`);
+            carry=Math.floor(s/10);
+        }
+        if(carry)pasos.push(`Llevada final: ${carry}`);
+        res=(A+B)/f;
     }
 
     if(op==='RESTA'){
-        res=(Ai*fb - Bi*fa)/(fa*fb);
-        txt='Resta directa con decimales alineados.';
+        let borrow=0;
+        let sa=A.toString().padStart(B.toString().length,'0');
+        let sb=B.toString().padStart(sa.length,'0');
+        for(let i=sa.length-1;i>=0;i--){
+            let x=parseInt(sa[i])-borrow;
+            let y=parseInt(sb[i]);
+            if(x<y){x+=10;borrow=1;}else borrow=0;
+            pasos.push(`${x} - ${y} = ${x-y}`);
+        }
+        res=(A-B)/f;
     }
 
     if(op==='MULTIPLICACIÓN'){
-        res=(Ai*Bi)/(fa*fb);
-        txt='Multiplicación posicional correcta.';
+        let carry=0;
+        let sA=A.toString();
+        for(let i=sA.length-1;i>=0;i--){
+            let m=parseInt(sA[i])*B+carry;
+            pasos.push(`${sA[i]} × ${B} + ${carry} = ${m} → cifra ${m%10}`);
+            carry=Math.floor(m/10);
+        }
+        if(carry)pasos.push(`Llevada final: ${carry}`);
+        res=(A*B)/(f*f);
     }
 
     if(op==='DIVISIÓN'){
-        res=(Ai/Bi);
-        rest=Ai % Bi;
-        txt='División con colocación correcta de la coma.';
+        let parcial=0;
+        let sA=A.toString();
+        let coc='';
+        for(let i=0;i<sA.length;i++){
+            parcial=parcial*10+parseInt(sA[i]);
+            let q=Math.floor(parcial/B);
+            coc+=q;
+            pasos.push(`${parcial} ÷ ${B} = ${q}`);
+            parcial%=B;
+            pasos.push(`Resto: ${parcial}`);
+        }
+        res=parseFloat(coc)/f;
+        resto=parcial;
     }
 
-    const decFinal = (op==='MULTIPLICACIÓN') ? da+db :
-                     (op==='SUMA'||op==='RESTA') ? Math.max(da,db) :
-                     da;
-
-    document.getElementById('res').textContent =
-        Number(res).toFixed(decFinal).replace('.',',');
-
-    document.getElementById('resto').textContent =
-        (op==='DIVISIÓN') ? rest : '—';
-
-    document.getElementById('paso').innerHTML = txt;
+    document.getElementById('res').textContent=res.toString().replace('.',',');
+    document.getElementById('resto').textContent=resto;
+    document.getElementById('paso').textContent=pasos.join('\n');
 }
 
 function resetear(){
-    document.getElementById('a').value='';
-    document.getElementById('b').value='';
-    document.getElementById('res').textContent='—';
-    document.getElementById('resto').textContent='—';
-    document.getElementById('paso').textContent='PROCESO PASO A PASO';
+    a.value=b.value='';
+    res.textContent=resto.textContent='—';
+    paso.textContent='PROCESO PASO A PASO';
 }
 </script>
-
 </body>
 </html>
