@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>CALCULADORA POSICIONAL</title>
+
+    <!-- CLAVE PARA IPHONE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,44 +23,43 @@
     </select>
 
     <div class="fila">
-        <div>
-            <label>A ENTERA</label>
-            <input id="aEntera" type="number">
-        </div>
-        <div>
-            <label>A DECIMALES</label>
-            <input id="aDecimal" type="number">
-        </div>
+        <label>Número A (entero)</label>
+        <input id="aEntera" type="number">
     </div>
 
     <div class="fila">
-        <div>
-            <label>B ENTERA</label>
-            <input id="bEntera" type="number">
-        </div>
-        <div>
-            <label>B DECIMALES</label>
-            <input id="bDecimal" type="number">
-        </div>
+        <label>Número A (decimales)</label>
+        <input id="aDecimal" type="number">
+    </div>
+
+    <div class="fila">
+        <label>Número B (entero)</label>
+        <input id="bEntera" type="number">
+    </div>
+
+    <div class="fila">
+        <label>Número B (decimales)</label>
+        <input id="bDecimal" type="number">
     </div>
 
     <button onclick="calcular()">CALCULAR</button>
 
     <div class="resultado">
-        <div>
-            <label>RESULTADO</label>
-            <div id="resultadoFinal" class="caja azul"></div>
+        <div class="caja azul">
+            <div class="titulo">Resultado</div>
+            <div id="resultadoFinal"></div>
         </div>
-        <div>
-            <label>RESTO</label>
-            <div id="restoFinal" class="caja verde"></div>
+
+        <div class="caja verde">
+            <div class="titulo">Resto</div>
+            <div id="restoFinal"></div>
         </div>
     </div>
 
-    <div>
-        <label>PROCESO PASO A PASO</label>
-        <div id="proceso" class="caja proceso"></div>
-    </div>
+    <div class="titulo proceso-titulo">PROCESO PASO A PASO</div>
+    <div id="proceso" class="proceso"></div>
+
+    <div class="footer">Creada por Jose Casanova</div>
 
 </div>
 
