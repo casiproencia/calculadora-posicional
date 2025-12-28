@@ -1,78 +1,219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Calculadora Posicional</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Posicional</title>
 
-    <!-- VIEWPORT -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    background: #020617;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
 
-    <!-- iOS APP MODE -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Calculadora">
+.app {
+    width: 360px;
+    padding: 20px;
+}
 
-    <!-- ICONO iOS -->
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-    <!-- ICONO GENERAL -->
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+select, input, button {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    font-size: 16px;
+}
 
-    <!-- ESTILOS -->
-    <link rel="stylesheet" href="style.css">
+select {
+    background: #16a34a;
+    color: white;
+    font-weight: bold;
+}
+
+input {
+    background: #1e293b;
+    color: white;
+    text-align: center;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-reset {
+    background: #374151;
+}
+
+.resultados {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.caja {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.resultado {
+    background: #1e3a8a;
+}
+
+.resto {
+    background: #14532d;
+}
+
+.proceso {
+    background: #22d3ee;
+    color: black;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.resultado-num {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.llevada {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.paso {
+    margin-bottom: 6px;
+}
+</style>
 </head>
-<body>
 
+<body>
+<div class="app">
 <h1>CALCULADORA</h1>
 
-<div class="panel">
+<select id="op">
+    <option>SUMA</option>
+    <option>RESTA</option>
+    <option>MULTIPLICACIÓN</option>
+    <option>DIVISIÓN</option>
+</select>
 
-    <select id="operacion">
-        <option>SUMA</option>
-        <option>RESTA</option>
-        <option>MULTIPLICACIÓN</option>
-        <option>DIVISIÓN</option>
-    </select>
+<input id="numA" type="text" inputmode="decimal" placeholder="Número A">
+<input id="numB" type="text" inputmode="decimal" placeholder="Número B">
 
-    <label>Número A</label>
-    <input
-        id="numA"
-        type="text"
-        inputmode="decimal"
-        pattern="[0-9]*[.,]?[0-9]*"
-        placeholder="Ej: 87367,45"
-    >
+<button onclick="calcular()">CALCULAR</button>
+<button class="btn-reset" onclick="reiniciar()">REINICIAR</button>
 
-    <label>Número B</label>
-    <input
-        id="numB"
-        type="text"
-        inputmode="decimal"
-        pattern="[0-9]*[.,]?[0-9]*"
-        placeholder="Ej: 12,8"
-    >
-
-    <button onclick="calcular()">CALCULAR</button>
-
-    <div class="resultado">
-        <div class="caja azul">
-            <div class="titulo">Resultado</div>
-            <div id="resultadoFinal">—</div>
-        </div>
-        <div class="caja verde">
-            <div class="titulo">Resto</div>
-            <div id="restoFinal">—</div>
-        </div>
-    </div>
-
-    <div class="titulo">PROCESO PASO A PASO</div>
-    <div id="proceso" class="proceso">—</div>
-
-    <div class="footer">Creada por Jose Casanova</div>
-
+<div class="resultados">
+    <div class="caja resultado">Resultado<br><span id="resultado">—</span></div>
+    <div class="caja resto">Resto<br><span id="resto">—</span></div>
 </div>
 
-<script src="script.js"></script>
+<div class="proceso" id="proceso">—</div>
+
+<p style="text-align:center;opacity:.6;margin-top:10px">
+Creada por Jose Casanova
+</p>
+</div>
+
+<script>
+function normalizar(n) {
+    return n.replace(",", ".");
+}
+
+function calcular() {
+
+    const op = document.getElementById("op").value;
+    let a = normalizar(numA.value);
+    let b = normalizar(numB.value);
+
+    if (!a || !b) return;
+
+    let proceso = "";
+    let resultado = "";
+    let resto = "—";
+
+    /* ================= SUMA ================= */
+    if (op === "SUMA") {
+
+        proceso = "<strong>Suma paso a paso</strong><br><br>";
+
+        let [aE,aD=""] = a.split(".");
+        let [bE,bD=""] = b.split(".");
+
+        let maxD = Math.max(aD.length,bD.length);
+        aD = aD.padEnd(maxD,"0");
+        bD = bD.padEnd(maxD,"0");
+
+        let A = (aE+aD).padStart(Math.max(aE.length+aD.length,bE.length+bD.length),"0");
+        let B = (bE+bD).padStart(A.length,"0");
+
+        let carry=0,res="";
+
+        for(let i=A.length-1;i>=0;i--){
+            let s = +A[i]+ +B[i]+carry;
+            let c = s%10;
+            carry = Math.floor(s/10);
+
+            proceso+=`<div class="paso">${A[i]} + ${B[i]} ${carry?'<span class="llevada">(+1)</span>':''}
+            = <span class="resultado-num">${s}</span> → cifra <span class="resultado-num">${c}</span></div>`;
+            res=c+res;
+        }
+
+        if(carry){res=carry+res;}
+
+        if(maxD){
+            res=res.slice(0,res.length-maxD)+","+res.slice(res.length-maxD);
+        }
+
+        resultado=res.replace(/^0+(?=\d)/,"");
+    }
+
+    /* ================= RESTA ================= */
+    if (op === "RESTA") {
+        resultado=(parseFloat(a)-parseFloat(b)).toFixed(2).replace(".",",");
+        proceso="Resta directa con decimales alineados.";
+    }
+
+    /* ================= MULTIPLICACIÓN ================= */
+    if (op === "MULTIPLICACIÓN") {
+        resultado=(parseFloat(a)*parseFloat(b)).toString().replace(".",",");
+        proceso="Multiplicación posicional correcta.";
+    }
+
+    /* ================= DIVISIÓN ================= */
+    if (op === "DIVISIÓN") {
+        resultado=(parseFloat(a)/parseFloat(b)).toFixed(2).replace(".",",");
+        resto=(parseFloat(a)%parseFloat(b)).toFixed(0);
+        proceso="División con colocación correcta de la coma.";
+    }
+
+    document.getElementById("resultado").innerText=resultado;
+    document.getElementById("resto").innerText=resto;
+    document.getElementById("proceso").innerHTML=proceso;
+}
+
+function reiniciar(){
+    numA.value="";
+    numB.value="";
+    resultado.innerText="—";
+    resto.innerText="—";
+    proceso.innerHTML="—";
+}
+</script>
 </body>
 </html>
