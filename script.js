@@ -17,7 +17,7 @@ function calcular() {
         return;
     }
 
-    /* ========= NORMALIZAR DECIMALES ========= */
+    /* ========= NORMALIZACIÓN ========= */
     const decA = rawA.includes(".") ? rawA.split(".")[1].length : 0;
     const decB = rawB.includes(".") ? rawB.split(".")[1].length : 0;
     const maxDec = Math.max(decA, decB);
@@ -35,25 +35,28 @@ function calcular() {
     if (op === "SUMA") {
 
         proceso.innerHTML = "<strong>Suma paso a paso</strong><br><br>";
-
         let carry = 0;
         let res = "";
 
         for (let i = aArr.length - 1; i >= 0; i--) {
-            const suma = aArr[i] + bArr[i] + carry;
-            const dig = suma % 10;
+            const total = aArr[i] + bArr[i] + carry;
+            const dig = total % 10;
 
-            proceso.innerHTML +=
-                `${aArr[i]} + ${bArr[i]}` +
-                (carry ? ` <span class="llevada">(+${carry})</span>` : "") +
-                ` = <span class="resultado-num">${dig}</span><br>`;
+            proceso.innerHTML += `
+                <div class="paso">
+                    ${aArr[i]} + ${bArr[i]}
+                    ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
+                    = <span class="resultado-num">${total}</span>
+                    → cifra <span class="resultado-num">${dig}</span>
+                </div>
+            `;
 
-            carry = Math.floor(suma / 10);
+            carry = Math.floor(total / 10);
             res = dig + res;
         }
 
         if (carry) {
-            proceso.innerHTML += `<span class="llevada">Llevada final: ${carry}</span><br>`;
+            proceso.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
             res = carry + res;
         }
 
@@ -64,7 +67,6 @@ function calcular() {
     if (op === "RESTA") {
 
         proceso.innerHTML = "<strong>Resta paso a paso</strong><br><br>";
-
         let res = "";
 
         for (let i = aArr.length - 1; i >= 0; i--) {
@@ -72,12 +74,17 @@ function calcular() {
             if (aArr[i] < bArr[i]) {
                 aArr[i] += 10;
                 aArr[i - 1] -= 1;
-                proceso.innerHTML += `<span class="llevada">Pedimos 1</span><br>`;
+                proceso.innerHTML += `<div class="llevada">Pedimos 1</div>`;
             }
 
             const r = aArr[i] - bArr[i];
-            proceso.innerHTML +=
-                `${aArr[i]} - ${bArr[i]} = <span class="resultado-num">${r}</span><br>`;
+
+            proceso.innerHTML += `
+                <div class="paso">
+                    ${aArr[i]} - ${bArr[i]} =
+                    <span class="resultado-num">${r}</span>
+                </div>
+            `;
 
             res = r + res;
         }
@@ -96,20 +103,24 @@ function calcular() {
 
         for (let i = aArr.length - 1; i >= 0; i--) {
 
-            const prod = aArr[i] * multiplicador + carry;
-            const dig = prod % 10;
+            const total = aArr[i] * multiplicador + carry;
+            const dig = total % 10;
 
-            proceso.innerHTML +=
-                `${aArr[i]} × ${multiplicador}` +
-                (carry ? ` <span class="llevada">(+${carry})</span>` : "") +
-                ` = <span class="resultado-num">${dig}</span><br>`;
+            proceso.innerHTML += `
+                <div class="paso">
+                    ${aArr[i]} × ${multiplicador}
+                    ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
+                    = <span class="resultado-num">${total}</span>
+                    → cifra <span class="resultado-num">${dig}</span>
+                </div>
+            `;
 
-            carry = Math.floor(prod / 10);
+            carry = Math.floor(total / 10);
             res = dig + res;
         }
 
         if (carry) {
-            proceso.innerHTML += `<span class="llevada">Llevada final: ${carry}</span><br>`;
+            proceso.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
             res = carry + res;
         }
 
@@ -131,9 +142,14 @@ function calcular() {
             const q = Math.floor(num / divisor);
             resto = num - q * divisor;
 
-            proceso.innerHTML +=
-                `${num} ÷ ${divisor} = <span class="resultado-num">${q}</span><br>` +
-                `Resto: ${resto}<br><br>`;
+            proceso.innerHTML += `
+                <div class="paso">
+                    ${num} ÷ ${divisor} =
+                    <span class="resultado-num">${q}</span>
+                    <br>
+                    <span class="llevada">Resto: ${resto}</span>
+                </div>
+            `;
 
             cociente += q;
         }
@@ -143,7 +159,7 @@ function calcular() {
     }
 }
 
-/* ========= UTILIDAD ========= */
+/* ========= UTIL ========= */
 function recolocarComa(num, dec) {
     if (dec === 0) return num;
     const p = num.length - dec;
