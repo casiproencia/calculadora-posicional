@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    font-family: -apple-system, BlinkMacSystemFont, system-ui;
 }
 
 body {
@@ -21,10 +21,15 @@ h1 {
     margin-bottom: 20px;
 }
 
+label {
+    margin-top: 10px;
+    display: block;
+}
+
 select, input, button {
     width: 100%;
     padding: 14px;
-    margin-bottom: 12px;
+    margin-top: 8px;
     border-radius: 14px;
     border: none;
     font-size: 16px;
@@ -42,39 +47,37 @@ input {
     text-align: center;
 }
 
-.btn-calcular {
+button {
     background: #2563eb;
     color: white;
     font-weight: bold;
+    margin-top: 14px;
 }
 
-.btn-reset {
+button.reset {
     background: #374151;
-    color: white;
-    font-weight: bold;
 }
 
-.resultado-box {
+.resultados {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
-.resultado-box div {
+.box {
     flex: 1;
-    background: #1e3a8a;
-    padding: 10px;
+    padding: 12px;
     border-radius: 12px;
     text-align: center;
 }
 
-.resultado-box div:last-child {
-    background: #14532d;
-}
+.azul { background: #1e3a8a; }
+.verde { background: #14532d; }
 
 #resultado, #resto {
     font-size: 20px;
     font-weight: bold;
+    margin-top: 6px;
 }
 
 .proceso {
@@ -83,20 +86,6 @@ input {
     margin-top: 15px;
     padding: 12px;
     border-radius: 14px;
-}
-
-.paso {
-    margin-bottom: 6px;
-}
-
-.resultado-num {
-    color: #16a34a;
-    font-weight: bold;
-}
-
-.llevada {
-    color: #dc2626;
-    font-weight: bold;
 }
 
 footer {
