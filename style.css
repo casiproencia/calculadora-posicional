@@ -7,10 +7,11 @@ body {
   align-items: center;
 }
 
-/* CONTENEDOR GENERAL */
+/* CONTENEDOR */
 body > * {
   width: 100%;
-  max-width: 380px; /* MÁS ESTRECHO para iPhone */
+  max-width: 360px;
+  box-sizing: border-box;
 }
 
 /* CABECERA */
@@ -49,7 +50,7 @@ body > * {
   border: none;
 }
 
-/* BLOQUES NÚMERO */
+/* BLOQUES */
 .bloque-numero {
   background: white;
   padding: 12px;
@@ -64,11 +65,13 @@ body > * {
   margin-bottom: 6px;
 }
 
-/* AQUÍ ESTÁ LA CLAVE: inputs más estrechos */
 .fila-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px; /* menos separación */
+  display: flex;
+  gap: 8px;
+}
+
+.fila-inputs > div {
+  flex: 1;
 }
 
 .fila-inputs input {
@@ -77,7 +80,7 @@ body > * {
   padding: 9px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  box-sizing: border-box; /* evita que se salgan */
+  box-sizing: border-box;
 }
 
 small {
@@ -100,10 +103,13 @@ small {
 
 /* RESULTADOS */
 .resultados {
-  display: grid;
-  grid-template-columns: 2fr 1fr; /* RESTO MÁS ESTRECHO */
+  display: flex;
   gap: 8px;
   margin-top: 10px;
+}
+
+.resultados > div {
+  flex: 1;
 }
 
 .resultados input {
@@ -115,14 +121,22 @@ small {
   box-sizing: border-box;
 }
 
-/* EXPLICACIÓN */
+/* PROCESO PASO A PASO */
 .explicacion {
-  background: white;
-  margin-top: 10px;
+  display: none; /* OCULTO POR DEFECTO */
+  background: #16a34a;
+  color: white;
+  margin-top: 12px;
   padding: 14px;
   border-radius: 16px;
   font-size: 15px;
   line-height: 1.5;
+}
+
+.explicacion h3 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 8px;
 }
 
 /* FOOTER */
@@ -134,6 +148,7 @@ footer {
 }
 
 /* COLORES DIDÁCTICOS */
-.num { color: #1d4ed8; font-weight: bold; }
-.op { color: #16a34a; font-weight: bold; }
-.resto { color: #dc2626; font-weight: bold; }
+.num { color: #2563eb; font-weight: bold; }      /* resultado */
+.llevada { color: #f59e0b; font-weight: bold; } /* llevadas */
+.pedido { color: #dc2626; font-weight: bold; }  /* restas */
+.op { color: #bbf7d0; font-weight: bold; }
