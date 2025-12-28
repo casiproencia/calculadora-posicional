@@ -1,49 +1,45 @@
-function normalizar(n) {
-    return n.replace(",", ".");
+function normalizar(valor) {
+    return parseFloat(valor.replace(",", "."));
 }
 
 function calcular() {
     const op = document.getElementById("operacion").value;
-    let a = normalizar(document.getElementById("numA").value.trim());
-    let b = normalizar(document.getElementById("numB").value.trim());
+    const aTxt = document.getElementById("numA").value.trim();
+    const bTxt = document.getElementById("numB").value.trim();
 
-    if (a === "" || b === "") return;
+    if (!aTxt || !bTxt) return;
 
-    const A = parseFloat(a);
-    const B = parseFloat(b);
+    const A = normalizar(aTxt);
+    const B = normalizar(bTxt);
 
-    let resultado = "";
+    let resultado = "—";
     let resto = "—";
     let proceso = "";
 
-    /* ========= SUMA ========= */
     if (op === "SUMA") {
         resultado = (A + B).toFixed(2).replace(".", ",");
-        proceso = `<div class="paso">Suma directa alineando decimales.</div>`;
+        proceso = "Suma directa alineando decimales.";
     }
 
-    /* ========= RESTA ========= */
     if (op === "RESTA") {
         resultado = (A - B).toFixed(2).replace(".", ",");
-        proceso = `<div class="paso">Resta directa con decimales alineados.</div>`;
+        proceso = "Resta directa alineando decimales.";
     }
 
-    /* ========= MULTIPLICACIÓN ========= */
-    if (op === "MULTIPLICACIÓN") {
+    if (op === "MULTIPLICACION") {
         resultado = (A * B).toFixed(2).replace(".", ",");
-        proceso = `<div class="paso">Multiplicación posicional correcta.</div>`;
+        proceso = "Multiplicación directa.";
     }
 
-    /* ========= DIVISIÓN ========= */
-    if (op === "DIVISIÓN") {
+    if (op === "DIVISION") {
         resultado = (A / B).toFixed(2).replace(".", ",");
-        resto = (A % B).toFixed(0);
-        proceso = `<div class="paso">División con colocación correcta de la coma.</div>`;
+        resto = Math.round(A % B).toString();
+        proceso = "División con colocación correcta de la coma.";
     }
 
     document.getElementById("resultado").innerText = resultado;
     document.getElementById("resto").innerText = resto;
-    document.getElementById("proceso").innerHTML = proceso;
+    document.getElementById("proceso").innerText = proceso;
 }
 
 function resetear() {
