@@ -1,12 +1,8 @@
-* {
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, system-ui;
-}
-
 body {
     margin: 0;
-    background: radial-gradient(circle at top, #020617, #000);
-    color: white;
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    color: #fff;
     display: flex;
     justify-content: center;
 }
@@ -14,25 +10,25 @@ body {
 .app {
     width: 360px;
     padding: 20px;
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
 }
 
-label {
-    margin-top: 10px;
-    display: block;
-}
-
-select, input, button {
-    width: 100%;
+select,
+input,
+button {
+    width: 85%;
+    max-width: 260px;
+    margin: 8px auto;
     padding: 14px;
-    margin-top: 8px;
     border-radius: 14px;
     border: none;
     font-size: 16px;
+    display: block;
 }
 
 select {
@@ -51,45 +47,57 @@ button {
     background: #2563eb;
     color: white;
     font-weight: bold;
-    margin-top: 14px;
 }
 
-button.reset {
+.btn-reset {
     background: #374151;
 }
 
 .resultados {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
     margin-top: 15px;
 }
 
 .box {
-    flex: 1;
+    width: 48%;
     padding: 12px;
-    border-radius: 12px;
-    text-align: center;
+    border-radius: 14px;
 }
 
-.azul { background: #1e3a8a; }
-.verde { background: #14532d; }
-
-#resultado, #resto {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 6px;
+.azul {
+    background: #1e3a8a;
 }
 
-.proceso {
+.verde {
+    background: #14532d;
+}
+
+.pasos {
     background: #22d3ee;
     color: #000;
     margin-top: 15px;
     padding: 12px;
     border-radius: 14px;
+    text-align: left;
+}
+
+.paso {
+    margin-bottom: 6px;
+}
+
+.resultado-num {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.llevada {
+    color: #dc2626;
+    font-weight: bold;
 }
 
 footer {
-    text-align: center;
-    margin-top: 20px;
-    opacity: 0.6;
+    margin-top: 15px;
+    font-size: 12px;
+    opacity: 0.7;
 }
