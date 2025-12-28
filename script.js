@@ -145,7 +145,7 @@ function calcular() {
             if (i === parteEnteraLen - 1 && decA > 0) {
                 proceso.innerHTML += `
                     <div class="paso llevada">
-                        👉 Aquí colocamos la coma en el cociente
+                        👉 Aquí colocamos la coma.
                     </div>
                 `;
             }
