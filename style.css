@@ -1,154 +1,97 @@
+
 body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   padding: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-/* CONTENEDOR */
-body > * {
-  width: 100%;
-  max-width: 360px;
-  box-sizing: border-box;
-}
-
-/* CABECERA */
-.cabecera {
+.titulo {
   background: #15803d;
   color: white;
   text-align: center;
-  font-size: 22px;
-  font-weight: bold;
   padding: 14px;
   border-radius: 16px;
+  font-size: 22px;
+  font-weight: bold;
   margin-bottom: 12px;
 }
 
-/* OPERACIÓN */
-.operacion-box {
-  background: #16a34a;
-  padding: 12px;
-  border-radius: 16px;
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-.operacion-box label {
-  display: block;
-  color: white;
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
-.operacion-box select {
+select {
   width: 100%;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 16px;
+  background: #16a34a;
+  color: white;
   border: none;
+  margin-bottom: 14px;
 }
 
-/* BLOQUES */
-.bloque-numero {
+.bloque {
   background: white;
   padding: 12px;
   border-radius: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.titulo-numero {
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.fila-inputs {
+.fila {
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  justify-content: center;
 }
 
-.fila-inputs > div {
-  flex: 1;
-}
-
-.fila-inputs input {
-  width: 100%;
-  font-size: 17px;
-  padding: 9px;
-  border-radius: 10px;
+input {
+  width: 120px;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 12px;
   border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-small {
-  display: block;
   text-align: center;
-  margin-bottom: 2px;
-  font-size: 12px;
 }
 
-/* BOTÓN */
-.calcular {
-  margin-top: 8px;
+button {
+  width: 100%;
   padding: 14px;
   font-size: 18px;
   border-radius: 16px;
   background: #2563eb;
   color: white;
   border: none;
+  margin: 14px 0;
 }
 
-/* RESULTADOS */
 .resultados {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.resultados > div {
-  flex: 1;
+  gap: 10px;
+  justify-content: center;
 }
 
 .resultados input {
-  font-size: 19px;
-  padding: 10px;
-  border-radius: 12px;
+  width: 140px;
   background: #e0f2fe;
   border: none;
-  box-sizing: border-box;
+  font-size: 18px;
 }
 
-/* PROCESO PASO A PASO */
-.explicacion {
-  display: none; /* OCULTO POR DEFECTO */
-  background: #16a34a;
-  color: white;
-  margin-top: 12px;
+.resto input {
+  width: 80px;
+}
+
+.pasos {
+  background: #dbeafe;
   padding: 14px;
   border-radius: 16px;
-  font-size: 15px;
-  line-height: 1.5;
+  margin-top: 14px;
+  line-height: 1.6;
 }
 
-.explicacion h3 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 8px;
-}
+.azul { color: #1d4ed8; font-weight: bold; }
+.verde { color: #15803d; font-weight: bold; }
+.rojo { color: #dc2626; font-weight: bold; }
+.morado { color: #7c3aed; font-weight: bold; }
 
-/* FOOTER */
 footer {
   text-align: center;
-  margin-top: 6px;
-  font-size: 13px;
-  color: #555;
+  margin-top: 14px;
+  font-size: 14px;
 }
-
-/* COLORES DIDÁCTICOS */
-.num { color: #2563eb; font-weight: bold; }      /* resultado */
-.llevada { color: #f59e0b; font-weight: bold; } /* llevadas */
-.pedido { color: #dc2626; font-weight: bold; }  /* restas */
-.op { color: #bbf7d0; font-weight: bold; }
