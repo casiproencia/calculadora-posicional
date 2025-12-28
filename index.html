@@ -2,68 +2,74 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Calculadora</title>
-    <meta name="apple-mobile-web-app-title" content="Calculadora">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Calculadora Posicional</title>
 
-    <!-- Icono para iOS -->
+    <!-- VIEWPORT -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- iOS APP MODE -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Calculadora Posicional">
+
+    <!-- ICONO iOS -->
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
+    <!-- ICONO GENERAL -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+    <!-- ESTILOS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<h1>CALCULADORA POSICIONAL</h1>
 
-    <h1>CALCULADORA POSICIONAL</h1>
+<div class="panel">
 
     <select id="operacion">
-        <option value="SUMA">SUMA</option>
-        <option value="RESTA">RESTA</option>
-        <option value="MULTIPLICACION">MULTIPLICACIÓN</option>
-        <option value="DIVISION">DIVISIÓN</option>
+        <option>SUMA</option>
+        <option>RESTA</option>
+        <option>MULTIPLICACIÓN</option>
+        <option>DIVISIÓN</option>
     </select>
 
     <label>Número A</label>
     <input
-        id="numeroA"
+        id="numA"
         type="text"
         inputmode="decimal"
-        placeholder="Ej: 87367.45"
+        pattern="[0-9]*[.,]?[0-9]*"
+        placeholder="Ej: 87367,45"
     >
 
     <label>Número B</label>
     <input
-        id="numeroB"
+        id="numB"
         type="text"
         inputmode="decimal"
-        placeholder="Ej: 12.8"
+        pattern="[0-9]*[.,]?[0-9]*"
+        placeholder="Ej: 12,8"
     >
 
     <button onclick="calcular()">CALCULAR</button>
 
-    <button class="btn-reset" onclick="resetear()">REINICIAR</button>
-
-    <div class="resultado-container">
-        <div class="resultado-box">
-            <span class="titulo">Resultado</span>
-            <span id="resultado">—</span>
+    <div class="resultado">
+        <div class="caja azul">
+            <div class="titulo">Resultado</div>
+            <div id="resultadoFinal">—</div>
         </div>
-
-        <div class="resultado-box resto">
-            <span class="titulo">Resto</span>
-            <span id="resto">—</span>
+        <div class="caja verde">
+            <div class="titulo">Resto</div>
+            <div id="restoFinal">—</div>
         </div>
     </div>
 
-    <div class="proceso-container">
-        <h3>PROCESO PASO A PASO</h3>
-        <div id="proceso">—</div>
-    </div>
+    <div class="titulo">PROCESO PASO A PASO</div>
+    <div id="proceso" class="proceso">—</div>
 
-    <footer>Creada por Jose Casanova</footer>
+    <div class="footer">Creada por Jose Casanova</div>
 
 </div>
 
