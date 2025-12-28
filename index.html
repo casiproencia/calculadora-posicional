@@ -2,15 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Calculadora Posicional</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Posicional</title>
 
 <style>
 body{
   margin:0;
   background:#000;
   color:#fff;
-  font-family: Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   display:flex;
   justify-content:center;
 }
@@ -18,93 +18,103 @@ body{
 .app{
   width:100%;
   max-width:420px;
-  padding:15px;
+  padding:14px;
 }
 
 .header{
-  background:#1e7f3b;
+  background:#1f8a3b;
   padding:14px;
-  text-align:center;
   border-radius:14px;
-  font-weight:bold;
+  text-align:center;
+  font-weight:700;
   margin-bottom:10px;
 }
 
-select{
+.select{
   width:100%;
+  background:#25a244;
+  color:#fff;
+  border:none;
   padding:12px;
   border-radius:12px;
-  border:none;
   font-size:16px;
-  background:#1fa34a;
-  color:#fff;
-  margin-bottom:14px;
+  margin-bottom:12px;
 }
 
-.bloque{
-  background:#111;
+.box{
   border-radius:14px;
   padding:12px;
   margin-bottom:12px;
 }
 
-.bloque.a{ border:2px solid #1fa34a; }
-.bloque.b{ border:2px solid #3b82f6; }
+.boxA{ border:2px solid #2ecc71; }
+.boxB{ border:2px solid #3498db; }
 
-.bloque h3{
+.box h3{
   margin:0 0 8px 0;
+  font-size:16px;
 }
 
-.inputs{
+.row{
   display:flex;
-  gap:10px;
+  gap:8px;
 }
 
 input{
   width:100%;
-  padding:12px;
-  font-size:18px;
+  padding:10px;
   border-radius:10px;
   border:none;
+  font-size:16px;
 }
 
 button{
   width:100%;
   padding:14px;
-  font-size:18px;
+  border:none;
   border-radius:14px;
   background:#2563eb;
   color:#fff;
-  border:none;
-  margin:10px 0;
+  font-size:18px;
+  margin:12px 0;
 }
 
-.resultados{
+.resultRow{
   display:flex;
   gap:10px;
+  margin-bottom:12px;
 }
 
-.resultados input{
-  background:#e0f2fe;
-  color:#000;
+.resultBox{
+  flex:1;
 }
 
-.pasos{
-  background:#dbeafe;
+.resultBox.small{ flex:0.6; }
+
+.resultBox input{
+  background:#e0f2ff;
   color:#000;
+  font-weight:600;
+}
+
+.steps{
+  background:#0b5ed7;
+  padding:14px;
   border-radius:14px;
-  padding:12px;
-  margin-top:12px;
+  color:#fff;
+  font-size:15px;
+  line-height:1.5;
 }
 
-.azul{ color:#2563eb; font-weight:bold; }
-.verde{ color:#16a34a; font-weight:bold; }
-.rojo{ color:#dc2626; font-weight:bold; }
+.blue{ color:#4fc3f7; font-weight:600; }
+.green{ color:#2ecc71; font-weight:600; }
+.red{ color:#ff5252; font-weight:600; }
 
 .footer{
   text-align:center;
-  margin-top:10px;
-  opacity:.7;
+  opacity:0.7;
+  margin-top:12px;
+  font-size:13px;
 }
 </style>
 </head>
@@ -114,110 +124,19 @@ button{
 
 <div class="header">CALCULADORA POSICIONAL</div>
 
-<select id="op">
-  <option value="suma">SUMA</option>
-  <option value="resta">RESTA</option>
-  <option value="multi">MULTIPLICACIÓN</option>
-  <option value="div">DIVISIÓN</option>
+<select class="select" disabled>
+  <option>DIVISIÓN</option>
 </select>
 
-<div class="bloque a">
+<div class="box boxA">
   <h3>NÚMERO A</h3>
-  <div class="inputs">
-    <input id="aE" inputmode="numeric" placeholder="Entero">
-    <input id="aD" inputmode="numeric" placeholder="Decimales">
+  <div class="row">
+    <input id="aEnt" type="number" inputmode="numeric" placeholder="Entero">
+    <input id="aDec" type="number" inputmode="numeric" placeholder="Decimales">
   </div>
 </div>
 
-<div class="bloque b">
-  <h3>NÚMERO B</h3>
-  <div class="inputs">
-    <input id="bE" inputmode="numeric" placeholder="Entero">
-    <input id="bD" inputmode="numeric" placeholder="Decimales">
-  </div>
-</div>
-
-<button onclick="calcular()">CALCULAR</button>
-
-<div class="resultados">
-  <div style="flex:2">
-    <label>Resultado</label>
-    <input id="res" readonly>
-  </div>
-  <div style="flex:1">
-    <label>Resto</label>
-    <input id="resto" readonly>
-  </div>
-</div>
-
-<div class="pasos" id="pasos"></div>
-
-<div class="footer">Creada por Jose Casanova</div>
-
-</div>
-
-<script>
-function num(e,d){
-  if(d==="") d="00";
-  return parseFloat(e+"."+d);
-}
-
-function calcular(){
-  const op = document.getElementById("op").value;
-
-  let aE = document.getElementById("aE").value || "0";
-  let aD = document.getElementById("aD").value || "00";
-  let bE = document.getElementById("bE").value || "0";
-  let bD = document.getElementById("bD").value || "00";
-
-  let A = num(aE,aD);
-  let B = num(bE,bD);
-
-  let pasos = "";
-  let resultado = "";
-  let resto = "";
-
-  if(op==="suma"){
-    resultado = (A+B).toFixed(2);
-    pasos = `
-      <div class="azul">${aE}.${aD} + ${bE}.${bD}</div>
-      <div class="verde">Resultado: ${resultado}</div>
-    `;
-  }
-
-  if(op==="resta"){
-    resultado = (A-B).toFixed(2);
-    pasos = `
-      <div class="azul">${aE}.${aD} - ${bE}.${bD}</div>
-      <div class="verde">Resultado: ${resultado}</div>
-    `;
-  }
-
-  if(op==="multi"){
-    resultado = (A*B).toFixed(2);
-    pasos = `
-      <div class="azul">${aE}.${aD} × ${bE}.${bD}</div>
-      <div class="verde">Resultado: ${resultado}</div>
-    `;
-  }
-
-  if(op==="div"){
-    let div = Math.floor(A/B);
-    let r = (A - div*B).toFixed(2);
-    resultado = div;
-    resto = r;
-    pasos = `
-      <div class="azul">${aE}.${aD} ÷ ${bE}.${bD}</div>
-      <div>Cociente: <span class="verde">${div}</span></div>
-      <div>Resto: <span class="rojo">${r}</span></div>
-    `;
-  }
-
-  document.getElementById("res").value = resultado;
-  document.getElementById("resto").value = resto;
-  document.getElementById("pasos").innerHTML = pasos;
-}
-</script>
-
-</body>
-</html>
+<div class="box boxB">
+  <h3>NÚMERO B (DIVISOR)</h3>
+  <div class="row">
+    <input id
