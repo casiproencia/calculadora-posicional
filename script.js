@@ -106,87 +106,91 @@ function restaPasoAPaso(a, b) {
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
-/* =========================
-   MULTIPLICACIÓN
-========================= */
-function multiplicacionPasoAPaso(a, b) {
-  const m = parseInt(b, 10);
-  const A = a.replace(",", "").split("").reverse().map(Number);
 
-  let carry = 0;
-  let res = [];
-  let pasos = [];
+    /* ================= MULTIPLICACIÓN ================= */
+    if (op === "MULTIPLICACIÓN") {
 
-  for (let i = 0; i < A.length; i++) {
-    const p = A[i] * m + carry;
-    pasos.push(`${A[i]} × ${m} + ${carry} = ${p} → cifra ${p % 10}`);
-    res.push(p % 10);
-    carry = Math.floor(p / 10);
-  }
+        const multiplicador = Number(rawB);
+        const enteroA = A.split("").map(Number);
 
-  if (carry) {
-    pasos.push(`Llevada final: ${carry}`);
-    res.push(carry);
-  }
+        let carry = 0;
+        let res = "";
 
-  resultadoEl.textContent =
-    (parseFloat(normalizar(a)) * m).toFixed(2).replace(".", ",");
+        proceso.innerHTML = "<strong>Multiplicación paso a paso</strong><br><br>";
 
-  pasosEl.innerHTML = pasos.join("<br>");
+        for (let i = enteroA.length - 1; i >= 0; i--) {
+
+            const total = enteroA[i] * multiplicador + carry;
+            const dig = Math.floor(total % 10);
+
+            proceso.innerHTML += `
+                <div class="paso">
+                    ${enteroA[i]} × ${multiplicador}
+                    ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
+                    = <span class="resultado-num">${total}</span>
+                    → cifra <span class="resultado-num">${dig}</span>
+                </div>
+            `;
+
+            carry = Math.floor(total / 10);
+            res = dig + res;
+        }
+
+        if (carry) {
+            proceso.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
+            res = carry + res;
+        }
+
+        resultadoEl.textContent = recolocarComa(res, decA);
+        return;
+    }
+
+    /* ================= DIVISIÓN ================= */
+    if (op === "DIVISIÓN") {
+
+        const divisor = Number(rawB);
+        let resto = 0;
+        let cociente = "";
+
+        const parteEnteraLen = rawA.includes(".")
+            ? rawA.split(".")[0].length
+            : rawA.length;
+
+        proceso.innerHTML = "<strong>División paso a paso</strong><br><br>";
+
+        for (let i = 0; i < A.length; i++) {
+
+            const num = resto * 10 + Number(A[i]);
+            const q = Math.floor(num / divisor);
+            resto = num - q * divisor;
+
+            proceso.innerHTML += `
+                <div class="paso">
+                    ${num} ÷ ${divisor} =
+                    <span class="resultado-num">${q}</span><br>
+                    <span class="llevada">Resto: ${resto}</span>
+                </div>
+            `;
+
+            cociente += q;
+
+            /* 👉 AQUÍ VA LA COMA */
+            if (i === parteEnteraLen - 1 && decA > 0) {
+                proceso.innerHTML += `
+                    <div class="paso llevada">
+                        👉 Aquí colocamos la coma en el cociente
+                    </div>
+                `;
+            }
+        }
+
+        resultadoEl.textContent = recolocarComa(cociente, decA);
+        restoEl.textContent = resto;
+    }
 }
 
-/* =========================
-   DIVISIÓN (con coma)
-========================= */
-function divisionPasoAPaso(a, b) {
-  const divisor = parseInt(b, 10);
-  const partes = a.split(",");
-  let cifras = partes[0].split("");
-  let decimales = partes[1] || "";
-
-  let resto = 0;
-  let cociente = "";
-  let pasos = [];
-  let comaPuesta = false;
-
-  for (let i = 0; i < cifras.length; i++) {
-    resto = resto * 10 + parseInt(cifras[i]);
-    const q = Math.floor(resto / divisor);
-    pasos.push(`${resto} ÷ ${divisor} = ${q}`);
-    resto = resto % divisor;
-    pasos.push(`<span style="color:#dc2626">Resto: ${resto}</span>`);
-    cociente += q;
-  }
-
-  if (decimales.length > 0) {
-    pasos.push(`<strong>👉 Aquí colocamos la coma en el cociente</strong>`);
-    cociente += ",";
-    comaPuesta = true;
-  }
-
-  for (let i = 0; i < decimales.length; i++) {
-    resto = resto * 10 + parseInt(decimales[i]);
-    const q = Math.floor(resto / divisor);
-    pasos.push(`${resto} ÷ ${divisor} = ${q}`);
-    resto = resto % divisor;
-    pasos.push(`<span style="color:#dc2626">Resto: ${resto}</span>`);
-    cociente += q;
-  }
-
-  resultadoEl.textContent =
-    (parseFloat(normalizar(a)) / divisor).toFixed(2).replace(".", ",");
-  restoEl.textContent = resto;
-
-  pasosEl.innerHTML = pasos.join("<br>");
-}
-
-/* =========================
-   FORMATO RESULTADO
-========================= */
-function mostrarResultado(resArray, decs) {
-  const texto = resArray.reverse().join("");
-  const r =
-    texto.slice(0, texto.length - decs) +
-    (decs ? "," + texto.slice(-decs) : "");
-  resultadoEl.textContent = r;
+function recolocarComa(num, dec) {
+    if (dec === 0) return num.replace(/^0+/, "") || "0";
+    const p = num.length - dec;
+    return num.slice(0, p) + "," + num.slice(p);
 }
