@@ -12,6 +12,14 @@ function normalizar(n) {
   return n.replace(",", ".");
 }
 
+function resetear() {
+  numA.value = "";
+  numB.value = "";
+  resultadoEl.textContent = "—";
+  restoEl.textContent = "—";
+  pasosEl.innerHTML = "";
+}
+
 function calcular() {
   pasosEl.innerHTML = "";
   restoEl.textContent = "—";
@@ -34,17 +42,7 @@ function calcular() {
   }
 }
 
-function resetear() {
-  numA.value = "";
-  numB.value = "";
-  resultadoEl.textContent = "—";
-  restoEl.textContent = "—";
-  pasosEl.innerHTML = "";
-}
-
-/* =========================
-   SUMA
-========================= */
+/* ===================== SUMA ===================== */
 function sumaPasoAPaso(a, b) {
   const [ai, ad = ""] = a.split(",");
   const [bi, bd = ""] = b.split(",");
@@ -61,23 +59,30 @@ function sumaPasoAPaso(a, b) {
     const x = A[i] || 0;
     const y = B[i] || 0;
     const s = x + y + carry;
-    pasos.push(`${x} + ${y}${carry ? " + " + carry : ""} = ${s} → cifra ${s % 10}`);
+
+    pasos.push(
+      `<div class="paso">
+        ${x} + ${y}
+        ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
+        = <span class="resultado-num">${s}</span>
+        → cifra <span class="resultado-num">${s % 10}</span>
+      </div>`
+    );
+
     res.push(s % 10);
     carry = Math.floor(s / 10);
   }
 
   if (carry) {
-    pasos.push(`Llevada final: ${carry}`);
+    pasos.push(`<div class="llevada">Llevada final: ${carry}</div>`);
     res.push(carry);
   }
 
   mostrarResultado(res, decs);
-  pasosEl.innerHTML = pasos.join("<br>");
+  pasosEl.innerHTML = pasos.join("");
 }
 
-/* =========================
-   RESTA
-========================= */
+/* ===================== RESTA ===================== */
 function restaPasoAPaso(a, b) {
   const [ai, ad = ""] = a.split(",");
   const [bi, bd = ""] = b.split(",");
@@ -95,102 +100,109 @@ function restaPasoAPaso(a, b) {
     if (A[i] < B[i]) {
       A[i] += 10;
       A[i - 1]--;
-      pasos.push(`Pido 1 → ${A[i]} - ${B[i]}`);
+      pasos.push(`<div class="llevada">Pido 1</div>`);
     }
+
     const r = A[i] - B[i];
-    pasos.push(`${A[i]} - ${B[i]} = ${r}`);
+
+    pasos.push(
+      `<div class="paso">
+        ${A[i]} - ${B[i]} = <span class="resultado-num">${r}</span>
+      </div>`
+    );
+
     res.unshift(r);
   }
 
   mostrarResultado(res, decs);
-  pasosEl.innerHTML = pasos.join("<br>");
+  pasosEl.innerHTML = pasos.join("");
 }
 
+/* ===================== MULTIPLICACIÓN ===================== */
+function multiplicacionPasoAPaso(a, b) {
+  const decA = (a.split(",")[1] || "").length;
+  const decB = (b.split(",")[1] || "").length;
+  const totalDec = decA + decB;
 
-    /* ================= MULTIPLICACIÓN ================= */
-    if (op === "MULTIPLICACIÓN") {
+  const A = a.replace(",", "").split("").reverse().map(Number);
+  const B = parseInt(b.replace(",", ""), 10);
 
-        const multiplicador = Number(rawB);
-        const enteroA = A.split("").map(Number);
+  let carry = 0;
+  let res = [];
+  let pasos = [];
 
-        let carry = 0;
-        let res = "";
+  for (let i = 0; i < A.length; i++) {
+    const t = A[i] * B + carry;
+    pasos.push(
+      `<div class="paso">
+        ${A[i]} × ${B}
+        ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
+        = <span class="resultado-num">${t}</span>
+        → cifra <span class="resultado-num">${t % 10}</span>
+      </div>`
+    );
+    res.push(t % 10);
+    carry = Math.floor(t / 10);
+  }
 
-        proceso.innerHTML = "<strong>Multiplicación paso a paso</strong><br><br>";
+  if (carry) {
+    pasos.push(`<div class="llevada">Llevada final: ${carry}</div>`);
+    res.push(carry);
+  }
 
-        for (let i = enteroA.length - 1; i >= 0; i--) {
-
-            const total = enteroA[i] * multiplicador + carry;
-            const dig = Math.floor(total % 10);
-
-            proceso.innerHTML += `
-                <div class="paso">
-                    ${enteroA[i]} × ${multiplicador}
-                    ${carry ? `<span class="llevada"> + ${carry}</span>` : ""}
-                    = <span class="resultado-num">${total}</span>
-                    → cifra <span class="resultado-num">${dig}</span>
-                </div>
-            `;
-
-            carry = Math.floor(total / 10);
-            res = dig + res;
-        }
-
-        if (carry) {
-            proceso.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
-            res = carry + res;
-        }
-
-        resultadoEl.textContent = recolocarComa(res, decA);
-        return;
-    }
-
-    /* ================= DIVISIÓN ================= */
-    if (op === "DIVISIÓN") {
-
-        const divisor = Number(rawB);
-        let resto = 0;
-        let cociente = "";
-
-        const parteEnteraLen = rawA.includes(".")
-            ? rawA.split(".")[0].length
-            : rawA.length;
-
-        proceso.innerHTML = "<strong>División paso a paso</strong><br><br>";
-
-        for (let i = 0; i < A.length; i++) {
-
-            const num = resto * 10 + Number(A[i]);
-            const q = Math.floor(num / divisor);
-            resto = num - q * divisor;
-
-            proceso.innerHTML += `
-                <div class="paso">
-                    ${num} ÷ ${divisor} =
-                    <span class="resultado-num">${q}</span><br>
-                    <span class="llevada">Resto: ${resto}</span>
-                </div>
-            `;
-
-            cociente += q;
-
-            /* 👉 AQUÍ VA LA COMA */
-            if (i === parteEnteraLen - 1 && decA > 0) {
-                proceso.innerHTML += `
-                    <div class="paso llevada">
-                        👉 Aquí colocamos la coma en el cociente
-                    </div>
-                `;
-            }
-        }
-
-        resultadoEl.textContent = recolocarComa(cociente, decA);
-        restoEl.textContent = resto;
-    }
+  mostrarResultado(res, totalDec);
+  pasosEl.innerHTML = pasos.join("");
 }
 
-function recolocarComa(num, dec) {
-    if (dec === 0) return num.replace(/^0+/, "") || "0";
-    const p = num.length - dec;
-    return num.slice(0, p) + "," + num.slice(p);
+/* ===================== DIVISIÓN ===================== */
+function divisionPasoAPaso(a, b) {
+  const divisor = parseInt(b.replace(",", ""), 10);
+  const [ent, dec = ""] = a.split(",");
+  const cifras = (ent + dec).split("");
+
+  let resto = 0;
+  let cociente = "";
+  let pasos = [];
+
+  for (let i = 0; i < cifras.length; i++) {
+    const n = resto * 10 + Number(cifras[i]);
+    const q = Math.floor(n / divisor);
+    resto = n % divisor;
+
+    pasos.push(
+      `<div class="paso">
+        ${n} ÷ ${divisor} =
+        <span class="resultado-num">${q}</span><br>
+        <span class="llevada">Resto: ${resto}</span>
+      </div>`
+    );
+
+    cociente += q;
+
+    if (i === ent.length - 1 && dec.length > 0) {
+      pasos.push(
+        `<div class="llevada">👉 Aquí colocamos la coma en el cociente</div>`
+      );
+    }
+  }
+
+  resultadoEl.textContent =
+    (parseFloat(normalizar(a)) / parseFloat(normalizar(b)))
+      .toFixed(2)
+      .replace(".", ",");
+
+  restoEl.textContent = resto;
+  pasosEl.innerHTML = pasos.join("");
+}
+
+/* ===================== RESULTADO ===================== */
+function mostrarResultado(res, decs) {
+  const texto = res.reverse().join("");
+  if (decs === 0) {
+    resultadoEl.textContent = texto.replace(/^0+/, "") || "0";
+  } else {
+    const p = texto.length - decs;
+    resultadoEl.textContent =
+      texto.slice(0, p) + "," + texto.slice(p);
+  }
 }
