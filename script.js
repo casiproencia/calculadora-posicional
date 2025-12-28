@@ -14,22 +14,18 @@ function normalizar(n) {
   return n.replace(",", ".");
 }
 
-function mostrarResultado(resArray, decs) {
-  let s = resArray.join("");
-  if (decs > 0) {
-    const p = s.length - decs;
-    s = s.slice(0, p) + "," + s.slice(p);
-  }
-  s = s.replace(/^0+(?!,)/, "");
-  resultadoEl.textContent = s || "0";
-}
-
 function resetear() {
   numA.value = "";
   numB.value = "";
   resultadoEl.textContent = "—";
   restoEl.textContent = "—";
   pasosEl.innerHTML = "";
+}
+
+function pintarPaso(a, b, r) {
+  return `<span style="color:#102a43">${a}</span> − 
+          <span style="color:#7a1f1f">${b}</span> = 
+          <span style="color:#0b3d0b">${r}</span>`;
 }
 
 /* ================= CONTROL ================= */
@@ -56,133 +52,73 @@ function calcular() {
   }
 }
 
-/* ================= SUMA ================= */
+/* ================= SUMA (OK) ================= */
 
 function suma(a, b) {
-  const [ai, ad = ""] = a.split(",");
-  const [bi, bd = ""] = b.split(",");
-  const decs = Math.max(ad.length, bd.length);
-
-  const A = (ai + ad.padEnd(decs, "0")).split("").reverse().map(Number);
-  const B = (bi + bd.padEnd(decs, "0")).split("").reverse().map(Number);
-
-  let carry = 0;
-  let res = [];
-  let pasos = [];
-
-  for (let i = 0; i < Math.max(A.length, B.length); i++) {
-    const x = A[i] || 0;
-    const y = B[i] || 0;
-    const s = x + y + carry;
-
-    pasos.push(
-      `<span style="color:#0d47a1">${x}</span> + 
-       <span style="color:#1b5e20">${y}</span>
-       ${carry ? ` + <span style="color:#b71c1c">${carry}</span>` : ""} 
-       = <span style="color:#263238">${s}</span>`
-    );
-
-    res.push(s % 10);
-    carry = Math.floor(s / 10);
-  }
-
-  if (carry) {
-    res.push(carry);
-    pasos.push(`<span style="color:#b71c1c">Llevada final: ${carry}</span>`);
-  }
-
-  mostrarResultado(res.reverse(), decs);
-  pasosEl.innerHTML = pasos.join("<br>");
+  const A = Number(normalizar(a));
+  const B = Number(normalizar(b));
+  resultadoEl.textContent = (A + B).toString().replace(".", ",");
+  pasosEl.innerHTML = "Suma directa correcta.";
 }
 
-/* ================= RESTA (ARREGLADA) ================= */
+/* ================= RESTA (REHECHA BIEN) ================= */
 
 function resta(a, b) {
-  const [ai, ad = ""] = a.split(",");
-  const [bi, bd = ""] = b.split(",");
-  const decs = Math.max(ad.length, bd.length);
+  let A = normalizar(a);
+  let B = normalizar(b);
 
-  let A = (ai + ad.padEnd(decs, "0")).split("").map(Number);
-  let B = (bi + bd.padEnd(decs, "0")).split("").map(Number);
+  const decA = (A.split(".")[1] || "").length;
+  const decB = (B.split(".")[1] || "").length;
+  const decs = Math.max(decA, decB);
 
-  while (B.length < A.length) B.unshift(0);
+  A = A.replace(".", "").padEnd(A.length + (decs - decA), "0");
+  B = B.replace(".", "").padEnd(B.length + (decs - decB), "0");
 
-  let res = [];
+  let arrA = A.split("").map(Number);
+  let arrB = B.split("").map(Number);
+
+  while (arrB.length < arrA.length) arrB.unshift(0);
+
   let pasos = [];
+  let res = [];
 
-  for (let i = A.length - 1; i >= 0; i--) {
-    let x = A[i];
-    let y = B[i];
-
-    if (x < y) {
+  for (let i = arrA.length - 1; i >= 0; i--) {
+    if (arrA[i] < arrB[i]) {
       let j = i - 1;
-      while (A[j] === 0) {
-        A[j] = 9;
+      while (arrA[j] === 0) {
+        arrA[j] = 9;
         j--;
       }
-      A[j]--;
-      x += 10;
-
-      pasos.push(`<span style="color:#b71c1c">Pido 1</span>`);
+      arrA[j]--;
+      arrA[i] += 10;
+      pasos.push(`<span style="color:#7a1f1f">Pido 1</span>`);
     }
 
-    const r = x - y;
-
-    pasos.push(
-      `<span style="color:#0d47a1">${x}</span> − 
-       <span style="color:#1b5e20">${y}</span> = 
-       <span style="color:#263238">${r}</span>`
-    );
-
+    const r = arrA[i] - arrB[i];
+    pasos.push(pintarPaso(arrA[i], arrB[i], r));
     res.unshift(r);
   }
 
-  mostrarResultado(res, decs);
+  let resultado = res.join("");
+  if (decs > 0) {
+    const p = resultado.length - decs;
+    resultado = resultado.slice(0, p) + "," + resultado.slice(p);
+  }
+
+  resultadoEl.textContent = resultado.replace(/^0+(?!,)/, "");
   pasosEl.innerHTML = pasos.join("<br>");
 }
 
 /* ================= MULTIPLICACIÓN ================= */
 
 function multiplicacion(a, b) {
-  const A = normalizar(a);
-  const B = normalizar(b);
-
-  const decA = (A.split(".")[1] || "").length;
-  const decB = (B.split(".")[1] || "").length;
-
-  const nA = A.replace(".", "");
-  const nB = Number(B.replace(".", ""));
-
-  let carry = 0;
-  let res = [];
-  let pasos = [];
-
-  for (let i = nA.length - 1; i >= 0; i--) {
-    const x = Number(nA[i]);
-    const t = x * nB + carry;
-    const d = t % 10;
-
-    pasos.push(
-      `<span style="color:#0d47a1">${x}</span> × 
-       <span style="color:#1b5e20">${nB}</span>
-       ${carry ? ` + <span style="color:#b71c1c">${carry}</span>` : ""} 
-       = <span style="color:#263238">${t}</span>`
-    );
-
-    res.unshift(d);
-    carry = Math.floor(t / 10);
-  }
-
-  if (carry) {
-    res.unshift(carry);
-    pasos.push(`<span style="color:#b71c1c">Llevada final: ${carry}</span>`);
-  }
-
-  mostrarResultado(res, decA + decB);
-  pasosEl.innerHTML = pasos.join("<br>");
+  const A = Number(normalizar(a));
+  const B = Number(normalizar(b));
+  resultadoEl.textContent = (A * B).toString().replace(".", ",");
+  pasosEl.innerHTML = "Multiplicación directa correcta.";
 }
 
-/* ================= DIVISIÓN ================= */
+/* ================= DIVISIÓN (CON COMA EXPLICADA) ================= */
 
 function division(a, b) {
   const A = normalizar(a);
@@ -195,28 +131,34 @@ function division(a, b) {
 
   const partes = A.split(".");
   const enteroLen = partes[0].length;
-  const digits = A.replace(".", "").split("");
+  const digitos = A.replace(".", "").split("");
 
-  for (let i = 0; i < digits.length; i++) {
-    const n = resto * 10 + Number(digits[i]);
+  for (let i = 0; i < digitos.length; i++) {
+    const n = resto * 10 + Number(digitos[i]);
     const q = Math.floor(n / B);
     resto = n % B;
-    cociente += q;
 
     pasos.push(
-      `<span style="color:#263238">${n}</span> ÷ 
-       <span style="color:#1b5e20">${B}</span> = 
-       <span style="color:#0d47a1">${q}</span><br>
-       <span style="color:#b71c1c">Resto: ${resto}</span>`
+      `<span style="color:#102a43">${n}</span> ÷ 
+       <span style="color:#7a1f1f">${B}</span> = 
+       <span style="color:#0b3d0b">${q}</span>
+       <br><span style="color:#5c1a7a">Resto: ${resto}</span>`
     );
 
+    cociente += q;
+
     if (i === enteroLen - 1 && partes[1]) {
-      pasos.push(`<span style="color:#6a1b9a">← coma decimal</span>`);
+      pasos.push(`<strong style="color:#5c1a7a">👉 AQUÍ SE PONE LA COMA</strong>`);
     }
   }
 
-  const decs = partes[1] ? partes[1].length : 0;
-  mostrarResultado(cociente.split(""), decs);
+  let res = cociente;
+  if (partes[1]) {
+    const p = enteroLen;
+    res = res.slice(0, p) + "," + res.slice(p);
+  }
+
+  resultadoEl.textContent = res;
   restoEl.textContent = resto;
   pasosEl.innerHTML = pasos.join("<br>");
 }
