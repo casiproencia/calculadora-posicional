@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CALCULADORA POSICIONAL</title>
-
-    <!-- CLAVE PARA IPHONE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,25 +19,11 @@
         <option>DIVISIÓN</option>
     </select>
 
-    <div class="fila">
-        <label>Número A (entero)</label>
-        <input id="aEntera" type="number">
-    </div>
+    <label>Número A</label>
+    <input id="numA" type="text" placeholder="Ej: 87367.45">
 
-    <div class="fila">
-        <label>Número A (decimales)</label>
-        <input id="aDecimal" type="number">
-    </div>
-
-    <div class="fila">
-        <label>Número B (entero)</label>
-        <input id="bEntera" type="number">
-    </div>
-
-    <div class="fila">
-        <label>Número B (decimales)</label>
-        <input id="bDecimal" type="number">
-    </div>
+    <label>Número B</label>
+    <input id="numB" type="text" placeholder="Ej: 12.8">
 
     <button onclick="calcular()">CALCULAR</button>
 
@@ -60,7 +43,6 @@
     <div id="proceso" class="proceso"></div>
 
     <div class="footer">Creada por Jose Casanova</div>
-
 </div>
 
 <script src="script.js"></script>
