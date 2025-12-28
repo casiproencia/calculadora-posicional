@@ -1,8 +1,18 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
+  margin: 0;
   background: #000;
   font-family: Arial, sans-serif;
   color: white;
-  padding: 15px;
+}
+
+.app {
+  max-width: 420px;
+  margin: auto;
+  padding: 16px;
 }
 
 .titulo {
@@ -10,8 +20,8 @@ body {
   text-align: center;
   padding: 14px;
   border-radius: 16px;
-  font-size: 22px;
-  margin-bottom: 15px;
+  font-size: 20px;
+  margin-bottom: 14px;
 }
 
 .selector {
@@ -22,12 +32,12 @@ body {
   color: white;
   font-size: 16px;
   border: none;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
 .bloque {
   background: #111;
-  padding: 12px;
+  padding: 14px;
   border-radius: 14px;
   margin-bottom: 12px;
 }
@@ -35,12 +45,16 @@ body {
 .bloque.a { border: 2px solid #22c55e; }
 .bloque.b { border: 2px solid #3b82f6; }
 
+.fila {
+  display: flex;
+  gap: 10px;
+}
+
 input {
-  width: 48%;
+  width: 100%;
   padding: 10px;
   border-radius: 10px;
   border: none;
-  margin: 5px 1%;
   font-size: 16px;
 }
 
@@ -52,21 +66,26 @@ button {
   border-radius: 16px;
   border: none;
   font-size: 18px;
-  margin: 15px 0;
+  margin: 16px 0;
 }
 
 .resultados {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+}
+
+.res {
+  flex: 1;
+}
+
+.resto {
+  max-width: 90px;
 }
 
 .resultados input {
   background: #e0f2fe;
+  color: black;
   font-size: 18px;
-}
-
-.resto input {
-  width: 80px;
 }
 
 .pasos {
@@ -74,7 +93,7 @@ button {
   color: black;
   padding: 14px;
   border-radius: 16px;
-  margin-top: 15px;
+  margin-top: 16px;
 }
 
 .azul { color: #2563eb; font-weight: bold; }
