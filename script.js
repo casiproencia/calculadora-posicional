@@ -8,6 +8,10 @@ const pasosEl = document.getElementById("pasos");
 document.getElementById("btnCalcular").onclick = calcular;
 document.getElementById("btnReset").onclick = resetear;
 
+function normaliza(v) {
+    return v.replace(/\./g, "").replace(",", ".");
+}
+
 function resetear() {
     aInp.value = "";
     bInp.value = "";
@@ -16,47 +20,38 @@ function resetear() {
     pasosEl.innerHTML = "";
 }
 
-function parseNum(v) {
-    return v.replace(/\./g, "").replace(",", ".");
+function calcular() {
+    const A = aInp.value.trim();
+    const B = bInp.value.trim();
+    if (!A || !B) return;
+
+    pasosEl.innerHTML = "";
+    restoEl.textContent = "—";
+
+    if (op.value === "suma") suma(A, B);
+    if (op.value === "resta") resta(A, B);
+    if (op.value === "multiplicacion") multiplicacion(A, B);
+    if (op.value === "division") division(A, B);
 }
 
-/* ================= SUMA ================= */
+/* ===== SUMA ===== */
 function suma(a, b) {
-    const pasos = [];
-    const x = parseFloat(parseNum(a));
-    const y = parseFloat(parseNum(b));
-    const r = x + y;
-
-    pasos.push("Suma correcta alineando decimales.");
-
-    return {
-        res: r.toFixed(2).replace(".", ","),
-        pasos: pasos.join("")
-    };
+    const r = parseFloat(normaliza(a)) + parseFloat(normaliza(b));
+    resEl.textContent = r.toFixed(2).replace(".", ",");
+    pasosEl.innerHTML = "Suma correcta alineando decimales.";
 }
 
-/* ================= RESTA ================= */
+/* ===== RESTA ===== */
 function resta(a, b) {
-    const pasos = [];
-    const x = parseFloat(parseNum(a));
-    const y = parseFloat(parseNum(b));
-    const r = x - y;
-
-    pasos.push("Resta directa con decimales alineados.");
-
-    return {
-        res: r.toFixed(2).replace(".", ","),
-        pasos: pasos.join("")
-    };
+    const r = parseFloat(normaliza(a)) - parseFloat(normaliza(b));
+    resEl.textContent = r.toFixed(2).replace(".", ",");
+    pasosEl.innerHTML = "Resta correcta alineando decimales.";
 }
 
-/* ================= MULTIPLICACIÓN ================= */
+/* ===== MULTIPLICACIÓN (SIN ×100) ===== */
 function multiplicacion(a, b) {
-    const pasos = [];
-
-    const decA = a.includes(",") ? a.split(",")[1].length : 0;
-    const decB = b.includes(",") ? b.split(",")[1].length : 0;
-    const totalDec = decA + decB;
+    const da = a.includes(",") ? a.split(",")[1].length : 0;
+    const db = b.includes(",") ? b.split(",")[1].length : 0;
 
     const A = a.replace(",", "");
     const B = b.replace(",", "");
@@ -65,43 +60,37 @@ function multiplicacion(a, b) {
     let res = "";
 
     [...A].reverse().forEach(d => {
-        const mult = parseInt(d) * parseInt(B) + carry;
-        const cifra = mult % 10;
-        carry = Math.floor(mult / 10);
+        const m = parseInt(d) * parseInt(B) + carry;
+        const cifra = m % 10;
+        carry = Math.floor(m / 10);
 
-        pasos.push(`
+        pasosEl.innerHTML += `
             <div class="paso">
-                ${d} × ${B} = 
-                <span class="resultado-num">${mult}</span>
+                ${d} × ${B} =
+                <span class="resultado-num">${m}</span>
                 → cifra <span class="resultado-num">${cifra}</span>
                 <span class="llevada"> llevada ${carry}</span>
-            </div>
-        `);
-
+            </div>`;
         res = cifra + res;
     });
 
     if (carry) {
-        pasos.push(`<div class="llevada">Llevada final: ${carry}</div>`);
+        pasosEl.innerHTML += `<div class="llevada">Llevada final: ${carry}</div>`;
         res = carry + res;
     }
 
-    if (totalDec > 0) {
-        res =
-            res.slice(0, res.length - totalDec) +
-            "," +
-            res.slice(res.length - totalDec);
+    const dec = da + db;
+    if (dec > 0) {
+        res = res.slice(0, -dec) + "," + res.slice(-dec);
     }
 
-    return { res, pasos: pasos.join("") };
+    resEl.textContent = res;
 }
 
-/* ================= DIVISIÓN ================= */
+/* ===== DIVISIÓN (SIN ×100) ===== */
 function division(a, b) {
-    const pasos = [];
-
-    const decA = a.includes(",") ? a.split(",")[1].length : 0;
-    let A = a.replace(",", "");
+    const da = a.includes(",") ? a.split(",")[1].length : 0;
+    const A = a.replace(",", "");
     const B = parseInt(b.replace(",", ""));
 
     let resto = 0;
@@ -109,66 +98,22 @@ function division(a, b) {
 
     for (let i = 0; i < A.length; i++) {
         const n = resto * 10 + parseInt(A[i]);
-        const cifra = Math.floor(n / B);
+        const c = Math.floor(n / B);
         resto = n % B;
 
-        pasos.push(`
+        pasosEl.innerHTML += `
             <div class="paso">
                 ${n} ÷ ${B} =
-                <span class="resultado-num">${cifra}</span>
-                <br>
+                <span class="resultado-num">${c}</span><br>
                 <span class="llevada">Resto: ${resto}</span>
-            </div>
-        `);
-
-        cociente += cifra;
+            </div>`;
+        cociente += c;
     }
 
-    if (decA > 0) {
-        cociente =
-            cociente.slice(0, cociente.length - decA) +
-            "," +
-            cociente.slice(cociente.length - decA);
+    if (da > 0) {
+        cociente = cociente.slice(0, -da) + "," + cociente.slice(-da);
     }
 
-    return {
-        res: cociente.replace(/^0+(?=\d)/, ""),
-        resto,
-        pasos: pasos.join("")
-    };
-}
-
-/* ================= CONTROL ================= */
-function calcular() {
-    const a = aInp.value.trim();
-    const b = bInp.value.trim();
-    if (!a || !b) return;
-
-    pasosEl.innerHTML = "";
-    restoEl.textContent = "—";
-
-    if (op.value === "suma") {
-        const r = suma(a, b);
-        resEl.textContent = r.res;
-        pasosEl.innerHTML = r.pasos;
-    }
-
-    if (op.value === "resta") {
-        const r = resta(a, b);
-        resEl.textContent = r.res;
-        pasosEl.innerHTML = r.pasos;
-    }
-
-    if (op.value === "multiplicacion") {
-        const r = multiplicacion(a, b);
-        resEl.textContent = r.res;
-        pasosEl.innerHTML = r.pasos;
-    }
-
-    if (op.value === "division") {
-        const r = division(a, b);
-        resEl.textContent = r.res;
-        restoEl.textContent = r.resto;
-        pasosEl.innerHTML = r.pasos;
-    }
+    resEl.textContent = cociente.replace(/^0+(?=\d)/, "");
+    restoEl.textContent = resto;
 }
