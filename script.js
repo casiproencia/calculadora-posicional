@@ -1,40 +1,85 @@
-function realizarDivision(dividendo, divisor) {
-  let pasos = [];
-  let texto = dividendo.toString().replace('.', '');
-  let decimales = (dividendo.toString().split('.')[1] || '').length;
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  padding: 14px;
+}
 
-  let resto = 0;
-  let cociente = '';
+h1 {
+  text-align: center;
+}
 
-  pasos.push(`<strong>División paso a paso</strong><br><br>`);
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
-  for (let i = 0; i < texto.length; i++) {
-    let numeroActual = resto * 10 + parseInt(texto[i]);
-    let resultado = Math.floor(numeroActual / divisor);
-    resto = numeroActual % divisor;
+.inputs .full {
+  grid-column: span 2;
+}
 
-    if (i === texto.length - decimales) {
-      cociente += ',';
-      pasos.push(`👉 Aquí colocamos la coma en el cociente.<br><br>`);
-    }
+label {
+  font-size: 14px;
+}
 
-    cociente += resultado;
+input, select {
+  font-size: 18px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
 
-    pasos.push(
-      `<strong>${numeroActual} ÷ ${divisor}</strong><br>
-       • Cabe ${resultado}<br>
-       • ${resultado} × ${divisor} = ${resultado * divisor}<br>
-       • Resto: ${resto}<br><br>`
-    );
-  }
+select {
+  background: #eef2ff;
+}
 
-  document.getElementById('resultado').value = cociente;
-  document.getElementById('resto').value = resto;
+.calcular {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 14px;
+  background: #16a34a;
+  color: white;
+  border: none;
+}
 
-  pasos.push(`<strong>Resultado final</strong><br><br>
-    ${dividendo} ÷ ${divisor} = ${cociente}<br>
-    Resto: ${resto}
-  `);
+.resultados {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 15px;
+}
 
-  document.getElementById('pasos').innerHTML = pasos.join('');
+.resultados input {
+  font-size: 20px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #e0f2fe;
+  border: none;
+}
+
+.explicacion {
+  background: white;
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Colores didácticos */
+.num {
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.op {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.resto {
+  color: #dc2626;
+  font-weight: bold;
 }
