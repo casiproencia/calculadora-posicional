@@ -3,73 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora</title>
+<title>Calculadora Paso a Paso</title>
 
 <style>
 body{
-    margin:0;
-    background:#0b1020;
-    font-family:system-ui,-apple-system,BlinkMacSystemFont;
-    color:#fff;
-    display:flex;
-    justify-content:center;
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#020617;
+  color:#fff;
+  display:flex;
+  justify-content:center;
 }
+
 .app{
-    width:360px;
-    padding:15px;
+  width:360px;
+  padding:14px;
 }
+
 h1{
-    text-align:center;
-    margin-bottom:12px;
+  text-align:center;
+  margin-bottom:12px;
 }
-select,input,button{
-    width:100%;
-    padding:12px;
-    margin-bottom:10px;
-    border-radius:12px;
-    border:none;
-    font-size:16px;
+
+select, input, button{
+  width:100%;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
 }
-select{background:#22a34a;color:#fff;}
-input{background:#1f2937;color:#fff;}
-button{font-weight:bold;}
-#btnCalcular{background:#2563eb;color:#fff;}
-#btnReset{background:#374151;color:#fff;}
+
+/* SELECT */
+select{
+  background:#16a34a;
+  color:#fff;
+  font-weight:bold;
+  padding:12px;
+  margin-bottom:10px;
+}
+
+/* INPUTS */
+input{
+  background:#1e293b;
+  color:#fff;
+  height:46px;
+  padding:6px 10px;
+  margin-bottom:10px;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+/* BOTONES */
+button{
+  padding:12px;
+  margin-bottom:10px;
+  font-weight:bold;
+  color:#fff;
+}
+
+#btnCalcular{ background:#2563eb; }
+.btn-reset{ background:#374151; }
 
 .resultados{
-    display:flex;
-    gap:10px;
+  display:flex;
+  gap:10px;
+  margin-top:10px;
 }
+
 .box{
-    flex:1;
-    padding:12px;
-    border-radius:12px;
-    text-align:center;
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  font-weight:bold;
+  text-align:center;
 }
-.azul{background:#1e3a8a;}
-.verde{background:#14532d;}
+
+.azul{ background:#1e3a8a; }
+.verde{ background:#166534; }
 
 .pasos{
-    margin-top:12px;
-    background:#22d3ee;
-    color:#000;
-    border-radius:12px;
-    padding:12px;
-    font-size:15px;
+  margin-top:12px;
+  background:#22d3ee;
+  color:#020617;
+  padding:12px;
+  border-radius:12px;
 }
-.pasos strong{display:block;margin-bottom:6px;}
-
-.num{font-weight:bold;color:#111;}
-.op{color:#2563eb;font-weight:bold;}
-.res{color:#047857;font-weight:bold;}
-.carry{color:#b91c1c;font-weight:bold;}
 
 footer{
-    text-align:center;
-    margin-top:12px;
-    opacity:.6;
-    font-size:13px;
+  text-align:center;
+  margin-top:12px;
+  opacity:0.7;
+  font-size:13px;
 }
+
+/* COLORES PASO A PASO */
+.paso{ line-height:1.5; }
+.num{ color:#020617; font-weight:900; }
+.op{ color:#6d28d9; font-weight:900; }
+.res{ color:#15803d; font-weight:900; }
+.llevada{ color:#c2410c; font-weight:900; }
 </style>
 </head>
 
@@ -79,30 +110,127 @@ footer{
 <h1>CALCULADORA</h1>
 
 <select id="operacion">
-    <option value="suma">SUMA</option>
-    <option value="resta">RESTA</option>
-    <option value="multiplicacion">MULTIPLICACIÓN</option>
-    <option value="division">DIVISIÓN</option>
+  <option value="suma">SUMA</option>
+  <option value="resta">RESTA</option>
+  <option value="multiplicacion">MULTIPLICACIÓN</option>
+  <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="numA" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
-<input id="numB" inputmode="decimal" placeholder="Número B (ej: 8)">
+<input id="numA" type="text" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
+<input id="numB" type="text" inputmode="decimal" placeholder="Número B (ej: 8)">
 
 <button id="btnCalcular">CALCULAR</button>
-<button id="btnReset">REINICIAR</button>
+<button id="btnReset" class="btn-reset">REINICIAR</button>
 
 <div class="resultados">
-    <div class="box azul">Resultado<br><strong id="resultado">—</strong></div>
-    <div class="box verde">Resto<br><strong id="resto">—</strong></div>
+  <div class="box azul">Resultado<br><span id="resultado">—</span></div>
+  <div class="box verde">Resto<br><span id="resto">—</span></div>
 </div>
 
 <div class="pasos">
-    <strong>PROCESO PASO A PASO</strong>
-    <div id="pasos">—</div>
+  <strong>PROCESO PASO A PASO</strong>
+  <div id="pasos">—</div>
 </div>
 
 <footer>Creada por Jose Casanova</footer>
 </div>
 
 <script>
+/* ===== REFERENCIAS ===== */
 const numA = document.getElementById("numA");
+const numB = document.getElementById("numB");
+const operacion = document.getElementById("operacion");
+const resultadoEl = document.getElementById("resultado");
+const restoEl = document.getElementById("resto");
+const pasosEl = document.getElementById("pasos");
+const btnCalcular = document.getElementById("btnCalcular");
+const btnReset = document.getElementById("btnReset");
+
+/* ===== EVENTOS ===== */
+btnCalcular.onclick = calcular;
+btnReset.onclick = resetear;
+
+/* ===== UTIL ===== */
+function n(v){ return v.replace(",", "."); }
+
+/* ===== CONTROL ===== */
+function calcular(){
+  pasosEl.innerHTML="";
+  restoEl.textContent="—";
+
+  if(!numA.value || !numB.value) return;
+
+  const A = parseFloat(n(numA.value));
+  const B = parseFloat(n(numB.value));
+  if(isNaN(A) || isNaN(B)) return;
+
+  if(operacion.value==="suma") suma(A,B);
+  if(operacion.value==="resta") resta(A,B);
+  if(operacion.value==="multiplicacion") multiplicacion(A,B);
+  if(operacion.value==="division") division(A,B);
+}
+
+function resetear(){
+  numA.value="";
+  numB.value="";
+  resultadoEl.textContent="—";
+  restoEl.textContent="—";
+  pasosEl.innerHTML="—";
+}
+
+/* ===== OPERACIONES (LAS QUE FALTABAN) ===== */
+
+function suma(A,B){
+  const r=A+B;
+  resultadoEl.textContent=r.toString().replace(".",",");
+  pasosEl.innerHTML=`<div class="paso">
+    <span class="num">${A}</span>
+    <span class="op"> + </span>
+    <span class="num">${B}</span>
+    <span class="op"> = </span>
+    <span class="res">${r}</span>
+  </div>`;
+}
+
+function resta(A,B){
+  const r=A-B;
+  resultadoEl.textContent=r.toString().replace(".",",");
+  pasosEl.innerHTML=`<div class="paso">
+    <span class="num">${A}</span>
+    <span class="op"> − </span>
+    <span class="num">${B}</span>
+    <span class="op"> = </span>
+    <span class="res">${r}</span>
+  </div>`;
+}
+
+function multiplicacion(A,B){
+  const r=A*B;
+  resultadoEl.textContent=r.toString().replace(".",",");
+  pasosEl.innerHTML=`<div class="paso">
+    <span class="num">${A}</span>
+    <span class="op"> × </span>
+    <span class="num">${B}</span>
+    <span class="op"> = </span>
+    <span class="res">${r}</span>
+  </div>`;
+}
+
+function division(A,B){
+  if(B===0) return;
+  const r=A/B;
+  resultadoEl.textContent=r.toString().replace(".",",");
+  restoEl.textContent=(A%B).toString().replace(".",",");
+  pasosEl.innerHTML=`<div class="paso">
+    <span class="num">${A}</span>
+    <span class="op"> ÷ </span>
+    <span class="num">${B}</span>
+    <span class="op"> = </span>
+    <span class="res">${r}</span><br>
+    <span class="llevada">Resto: ${A%B}</span>
+  </div>`;
+}
+</script>
+
+</body>
+</html>
