@@ -8,11 +8,9 @@
 </head>
 <body>
 
-<div class="titulo">
-  CALCULADORA POSICIONAL
-</div>
+<div class="titulo">CALCULADORA POSICIONAL</div>
 
-<select id="operacion" class="operacion">
+<select id="operacion">
   <option value="suma">SUMA</option>
   <option value="resta">RESTA</option>
   <option value="multiplicacion">MULTIPLICACIÓN</option>
@@ -22,37 +20,35 @@
 <div class="bloque">
   <h3>NÚMERO A</h3>
   <div class="fila">
-    <input type="number" id="aEntero" placeholder="ENTERO">
-    <input type="number" id="aDecimal" placeholder="DECIMALES">
+    <input id="aE" type="number" placeholder="Entero">
+    <input id="aD" type="number" placeholder="Decimales">
   </div>
 </div>
 
 <div class="bloque">
   <h3>NÚMERO B</h3>
   <div class="fila">
-    <input type="number" id="bEntero" placeholder="ENTERO">
-    <input type="number" id="bDecimal" placeholder="DECIMALES">
+    <input id="bE" type="number" placeholder="Entero">
+    <input id="bD" type="number" placeholder="Decimales">
   </div>
 </div>
 
-<button class="btn" onclick="calcular()">CALCULAR</button>
+<button onclick="calcular()">CALCULAR</button>
 
 <div class="resultados">
   <div>
     <label>Resultado</label>
-    <input type="text" id="resultado" readonly>
+    <input id="resultado" readonly>
   </div>
   <div class="resto">
     <label>Resto</label>
-    <input type="text" id="resto" readonly>
+    <input id="resto" readonly>
   </div>
 </div>
 
 <div id="pasos" class="pasos"></div>
 
-<div class="firma">
-  Creada por Jose Casanova
-</div>
+<footer>Creada por Jose Casanova</footer>
 
 <script src="script.js"></script>
 </body>
