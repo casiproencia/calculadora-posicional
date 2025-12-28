@@ -26,9 +26,7 @@ function sumaPasoAPaso(A, B) {
 
   let a = A.replace('.', '').split('').reverse();
   let b = B.replace('.', '').split('').reverse();
-  let decA = (A.split('.')[1] || '').length;
-  let decB = (B.split('.')[1] || '').length;
-  let dec = Math.max(decA, decB);
+  let dec = Math.max((A.split('.')[1] || '').length, (B.split('.')[1] || '').length);
 
   let llevar = 0;
   let resultado = [];
@@ -36,16 +34,17 @@ function sumaPasoAPaso(A, B) {
   for (let i = 0; i < Math.max(a.length, b.length); i++) {
     let da = parseInt(a[i] || 0);
     let db = parseInt(b[i] || 0);
-    let suma = da + db + llevar;
 
+    let suma = da + db + llevar;
     let cifra = suma % 10;
+    let llevadaAnterior = llevar;
     llevar = Math.floor(suma / 10);
 
     resultado.push(cifra);
 
     pasos.push(
       `${da} + ${db}` +
-      (llevar ? ` + 1 (llevada)` : ``) +
+      (llevadaAnterior ? ` + (${llevadaAnterior})` : ``) +
       ` = <span class="num">${suma}</span><br>
        Escribimos <span class="op">${cifra}</span>` +
       (llevar ? ` y llevamos <span class="op">1</span>` : ``) +
@@ -59,7 +58,10 @@ function sumaPasoAPaso(A, B) {
   }
 
   resultado = resultado.reverse();
-  if (dec > 0) resultado.splice(resultado.length - dec, 0, ',');
+  if (dec > 0) {
+    resultado.splice(resultado.length - dec, 0, ',');
+    pasos.push(`👉 Aquí colocamos la coma en el resultado<br><br>`);
+  }
 
   const res = resultado.join('');
   document.getElementById('resultado').value = res;
@@ -74,9 +76,7 @@ function restaPasoAPaso(A, B) {
 
   let a = A.replace('.', '').split('').reverse();
   let b = B.replace('.', '').split('').reverse();
-  let decA = (A.split('.')[1] || '').length;
-  let decB = (B.split('.')[1] || '').length;
-  let dec = Math.max(decA, decB);
+  let dec = Math.max((A.split('.')[1] || '').length, (B.split('.')[1] || '').length);
 
   let pedir = 0;
   let resultado = [];
@@ -101,7 +101,10 @@ function restaPasoAPaso(A, B) {
   }
 
   resultado = resultado.reverse();
-  if (dec > 0) resultado.splice(resultado.length - dec, 0, ',');
+  if (dec > 0) {
+    resultado.splice(resultado.length - dec, 0, ',');
+    pasos.push(`👉 Aquí colocamos la coma en el resultado<br><br>`);
+  }
 
   const res = resultado.join('').replace(/^0+/, '');
   document.getElementById('resultado').value = res;
@@ -129,30 +132,43 @@ function multiplicacionPasoAPaso(A, B) {
 
     for (let j = 0; j < a.length; j++) {
       let da = parseInt(a[j]);
-      let mult = da * db + llevar;
-      let cifra = mult % 10;
-      llevar = Math.floor(mult / 10);
+      let productoBase = da * db;
+      let producto = productoBase + llevar;
+      let cifra = producto % 10;
+      let llevadaAnterior = llevar;
+      llevar = Math.floor(producto / 10);
 
       parcial.push(cifra);
 
       pasos.push(
-        `${da} × ${db} = ${da * db}` +
-        (llevar ? ` + llevamos ${llevar}` : ``) +
-        `<br>`
+        `${da} × ${db} = ${productoBase}` +
+        (llevadaAnterior ? ` + (${llevadaAnterior})` : ``) +
+        ` = <span class="num">${producto}</span><br>
+         Escribimos <span class="op">${cifra}</span>` +
+        (llevar ? ` y llevamos <span class="op">${llevar}</span>` : ``) +
+        `<br><br>`
       );
     }
 
-    if (llevar) parcial.push(llevar);
-    parcial = parcial.reverse().join('') + '0'.repeat(i);
-    parciales.push(parseInt(parcial));
+    if (llevar) {
+      parcial.push(llevar);
+      pasos.push(`Añadimos la llevada final: <span class="op">${llevar}</span><br><br>`);
+    }
 
-    pasos.push(`Resultado parcial: <span class="num">${parcial}</span><br><br>`);
+    let parcialStr = parcial.reverse().join('') + '0'.repeat(i);
+    parciales.push(parseInt(parcialStr));
+
+    pasos.push(`Resultado parcial: <span class="num">${parcialStr}</span><br><br>`);
   }
 
   let total = parciales.reduce((a, b) => a + b, 0).toString();
-  if (dec > 0) total = total.slice(0, -dec) + ',' + total.slice(-dec);
+  if (dec > 0) {
+    total = total.slice(0, -dec) + ',' + total.slice(-dec);
+    pasos.push(`👉 Aquí colocamos la coma en el resultado final<br><br>`);
+  }
 
   document.getElementById('resultado').value = total;
+
   pasos.push(`<strong>Resultado final</strong><br>${A} × ${B} = <span class="num">${total}</span>`);
   document.getElementById('pasos').innerHTML = pasos.join('');
 }
