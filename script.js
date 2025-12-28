@@ -1,53 +1,62 @@
 function calcular() {
 
     const op = document.getElementById("operacion").value;
-
     const rawA = document.getElementById("numA").value.trim().replace(",", ".");
     const rawB = document.getElementById("numB").value.trim().replace(",", ".");
 
-    const numA = parseFloat(rawA);
-    const numB = parseFloat(rawB);
+    const numA = Number(rawA);
+    const numB = Number(rawB);
+
+    const resultadoEl = document.getElementById("resultadoFinal");
+    const restoEl = document.getElementById("restoFinal");
+    const procesoEl = document.getElementById("proceso");
+
+    resultadoEl.textContent = "—";
+    restoEl.textContent = "—";
+    procesoEl.innerHTML = "";
 
     if (isNaN(numA) || isNaN(numB)) {
-        document.getElementById("proceso").innerHTML =
-            "<span class='llevada'>Introduce números válidos</span>";
+        procesoEl.textContent = "Introduce números válidos";
         return;
     }
 
-    let resultado = "";
+    let resultado;
     let resto = "";
-    let proceso = "";
 
-    /* ========= SUMA ========= */
     if (op === "SUMA") {
-        proceso = "<strong>Suma paso a paso</strong><br><br>";
-        resultado = (numA + numB).toString().replace(".", ",");
-        proceso += `${rawA} + ${rawB} = <span class="resultado-num">${resultado}</span>`;
+        resultado = numA + numB;
+        procesoEl.innerHTML =
+            `<strong>Suma paso a paso</strong><br>
+             ${numA} + ${numB} = ${resultado}`;
     }
 
-    /* ========= RESTA ========= */
     if (op === "RESTA") {
-        proceso = "<strong>Resta paso a paso</strong><br><br>";
-        resultado = (numA - numB).toString().replace(".", ",");
-        proceso += `${rawA} - ${rawB} = <span class="resultado-num">${resultado}</span>`;
+        resultado = numA - numB;
+        procesoEl.innerHTML =
+            `<strong>Resta paso a paso</strong><br>
+             ${numA} - ${numB} = ${resultado}`;
     }
 
-    /* ========= MULTIPLICACIÓN ========= */
     if (op === "MULTIPLICACIÓN") {
-        proceso = "<strong>Multiplicación paso a paso</strong><br><br>";
-        resultado = (numA * numB).toString().replace(".", ",");
-        proceso += `${rawA} × ${rawB} = <span class="resultado-num">${resultado}</span>`;
+        resultado = numA * numB;
+        procesoEl.innerHTML =
+            `<strong>Multiplicación paso a paso</strong><br>
+             ${numA} × ${numB} = ${resultado}`;
     }
 
-    /* ========= DIVISIÓN ========= */
     if (op === "DIVISIÓN") {
-        proceso = "<strong>División paso a paso</strong><br><br>";
-        resultado = (numA / numB).toString().replace(".", ",");
-        resto = numA % numB;
-        proceso += `${rawA} ÷ ${rawB} = <span class="resultado-num">${resultado}</span>`;
+        resultado = numA / numB;
+        resultado = Number(resultado.toFixed(3));   // LIMITE CLARO
+
+        if (Number.isInteger(numA) && Number.isInteger(numB)) {
+            resto = numA % numB;
+        }
+
+        procesoEl.innerHTML =
+            `<strong>División paso a paso</strong><br>
+             ${numA} ÷ ${numB} = ${resultado}`;
     }
 
-    document.getElementById("resultadoFinal").innerHTML = resultado;
-    document.getElementById("restoFinal").innerHTML = resto ? resto : "";
-    document.getElementById("proceso").innerHTML = proceso;
+    resultadoEl.textContent = resultado.toString().replace(".", ",");
+    restoEl.textContent = resto !== "" ? resto : "—";
 }
