@@ -1,107 +1,76 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
-  margin: 0;
-  background: #000;
-  font-family: Arial, sans-serif;
-  color: white;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    padding: 20px;
 }
 
-.app {
-  max-width: 420px;
-  margin: auto;
-  padding: 16px;
+h1 {
+    text-align: center;
 }
 
-.titulo {
-  background: #15803d;
-  text-align: center;
-  padding: 14px;
-  border-radius: 16px;
-  font-size: 20px;
-  margin-bottom: 14px;
+.panel {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
 }
-
-.selector {
-  width: 100%;
-  padding: 12px;
-  border-radius: 14px;
-  background: #16a34a;
-  color: white;
-  font-size: 16px;
-  border: none;
-  margin-bottom: 14px;
-}
-
-.bloque {
-  background: #111;
-  padding: 14px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-}
-
-.bloque.a { border: 2px solid #22c55e; }
-.bloque.b { border: 2px solid #3b82f6; }
 
 .fila {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  font-size: 16px;
+label {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 6px;
 }
 
 button {
-  width: 100%;
-  background: #2563eb;
-  color: white;
-  padding: 14px;
-  border-radius: 16px;
-  border: none;
-  font-size: 18px;
-  margin: 16px 0;
+    width: 100%;
+    margin: 15px 0;
+    padding: 10px;
+    font-weight: bold;
 }
 
-.resultados {
-  display: flex;
-  gap: 12px;
+.resultado {
+    display: flex;
+    gap: 10px;
 }
 
-.res {
-  flex: 1;
+.caja {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 40px;
 }
 
-.resto {
-  max-width: 90px;
+.azul {
+    background: #e6f0ff;
 }
 
-.resultados input {
-  background: #e0f2fe;
-  color: black;
-  font-size: 18px;
+.verde {
+    background: #e6ffe6;
 }
 
-.pasos {
-  background: #dbeafe;
-  color: black;
-  padding: 14px;
-  border-radius: 16px;
-  margin-top: 16px;
+.proceso {
+    white-space: pre-line;
 }
 
-.azul { color: #2563eb; font-weight: bold; }
-.verde { color: #16a34a; font-weight: bold; }
-.rojo { color: #dc2626; font-weight: bold; }
+.resultado-num {
+    color: green;
+    font-weight: bold;
+}
 
-footer {
-  text-align: center;
-  margin-top: 20px;
-  opacity: 0.7;
+.llevada {
+    color: red;
+}
+
+.intermedio {
+    color: black;
 }
