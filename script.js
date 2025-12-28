@@ -23,7 +23,7 @@ function calcular() {
     let A = rawA.replace(".", "");
     let B = rawB.replace(".", "");
 
-    /* ================= SUMA Y RESTA ================= */
+    /* ================= SUMA / RESTA ================= */
     if (op === "SUMA" || op === "RESTA") {
 
         const maxDec = Math.max(decA, decB);
@@ -86,6 +86,7 @@ function calcular() {
         proceso.innerHTML = "<strong>Multiplicación paso a paso</strong><br><br>";
 
         for (let i = enteroA.length - 1; i >= 0; i--) {
+
             const total = enteroA[i] * multiplicador + carry;
             const dig = Math.floor(total % 10);
 
@@ -118,9 +119,14 @@ function calcular() {
         let resto = 0;
         let cociente = "";
 
+        const parteEnteraLen = rawA.includes(".")
+            ? rawA.split(".")[0].length
+            : rawA.length;
+
         proceso.innerHTML = "<strong>División paso a paso</strong><br><br>";
 
         for (let i = 0; i < A.length; i++) {
+
             const num = resto * 10 + Number(A[i]);
             const q = Math.floor(num / divisor);
             resto = num - q * divisor;
@@ -134,6 +140,15 @@ function calcular() {
             `;
 
             cociente += q;
+
+            /* 👉 AQUÍ VA LA COMA */
+            if (i === parteEnteraLen - 1 && decA > 0) {
+                proceso.innerHTML += `
+                    <div class="paso llevada">
+                        👉 Aquí colocamos la coma en el cociente
+                    </div>
+                `;
+            }
         }
 
         resultadoEl.textContent = recolocarComa(cociente, decA);
