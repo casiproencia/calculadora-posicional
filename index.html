@@ -14,14 +14,8 @@ body{
   display:flex;
   justify-content:center;
 }
-.app{
-  width:360px;
-  padding:14px;
-}
-h1{
-  text-align:center;
-  margin-bottom:12px;
-}
+.app{ width:360px; padding:14px; }
+h1{ text-align:center; margin-bottom:12px; }
 
 select,input,button{
   width:100%;
@@ -52,7 +46,6 @@ button{
   color:#fff;
   margin-bottom:10px;
 }
-
 #btnCalcular{ background:#2563eb; }
 #btnReset{ background:#374151; }
 
@@ -60,7 +53,6 @@ button{
   display:flex;
   gap:10px;
 }
-
 .box{
   flex:1;
   padding:10px;
@@ -68,7 +60,6 @@ button{
   text-align:center;
   font-weight:bold;
 }
-
 .azul{ background:#1e3a8a; }
 .verde{ background:#166534; }
 
@@ -78,7 +69,15 @@ button{
   color:#020617;
   padding:12px;
   border-radius:12px;
+  line-height:1.6;
 }
+
+/* COLORES */
+.num{ font-weight:900; }
+.op{ color:#6d28d9; font-weight:900; }
+.res{ color:#15803d; font-weight:900; }
+.llevada{ color:#c2410c; font-weight:900; }
+.coma{ color:#1d4ed8; font-weight:900; }
 
 footer{
   text-align:center;
@@ -86,14 +85,6 @@ footer{
   opacity:.7;
   font-size:13px;
 }
-
-/* COLORES */
-.num{ color:#020617; font-weight:900; }
-.op{ color:#6d28d9; font-weight:900; }
-.res{ color:#15803d; font-weight:900; }
-.llevada{ color:#c2410c; font-weight:900; }
-.coma{ color:#1d4ed8; font-weight:900; }
-.paso{ line-height:1.6; }
 </style>
 </head>
 
@@ -109,8 +100,8 @@ footer{
   <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="numA" type="text" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
-<input id="numB" type="text" inputmode="decimal" placeholder="Número B (ej: 8)">
+<input id="numA" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
+<input id="numB" inputmode="numeric" placeholder="Número B (ej: 7)">
 
 <button id="btnCalcular">CALCULAR</button>
 <button id="btnReset">REINICIAR</button>
@@ -129,15 +120,15 @@ footer{
 </div>
 
 <script>
-const numA=document.getElementById("numA");
-const numB=document.getElementById("numB");
-const operacion=document.getElementById("operacion");
-const resultadoEl=document.getElementById("resultado");
-const restoEl=document.getElementById("resto");
-const pasosEl=document.getElementById("pasos");
+const numA = document.getElementById("numA");
+const numB = document.getElementById("numB");
+const operacion = document.getElementById("operacion");
+const resultadoEl = document.getElementById("resultado");
+const restoEl = document.getElementById("resto");
+const pasosEl = document.getElementById("pasos");
 
-btnCalcular.onclick=calcular;
-btnReset.onclick=resetear;
+btnCalcular.onclick = calcular;
+btnReset.onclick = resetear;
 
 function n(v){ return v.replace(",","."); }
 
@@ -152,30 +143,31 @@ function resetear(){
 function calcular(){
   pasosEl.innerHTML="";
   restoEl.textContent="—";
-  if(!numA.value||!numB.value) return;
+  if(!numA.value || !numB.value) return;
 
-  const a=n(numA.value);
-  const b=n(numB.value);
+  const a = n(numA.value);
+  const b = n(numB.value);
 
   if(operacion.value==="suma") suma(a,b);
   if(operacion.value==="resta") resta(a,b);
   if(operacion.value==="multiplicacion") multiplicacion(a,b);
-  if(operacion.value==="division") division(a,b);
+  if(operacion.value==="division") divisionLarga();
 }
 
-/* SUMA */
+/* ===== SUMA ===== */
 function suma(a,b){
   let A=a.replace(".","").split("").reverse();
   let B=b.replace(".","").split("").reverse();
-  let carry=0,res=[];
+  let carry=0;
+
   for(let i=0;i<Math.max(A.length,B.length);i++){
     let x=+A[i]||0, y=+B[i]||0;
     let s=x+y+carry;
     carry=Math.floor(s/10);
     let r=s%10;
-    res.push(r);
+
     pasosEl.innerHTML+=`
-      <div class="paso">
+      <div>
         <span class="num">${x}</span>
         <span class="op"> + </span>
         <span class="num">${y}</span>
@@ -184,23 +176,25 @@ function suma(a,b){
         <span class="res">${r}</span>
       </div>`;
   }
-  if(carry) pasosEl.innerHTML+=`<div class="llevada">Llevada final ${carry}</div>`;
+
   resultadoEl.textContent=(parseFloat(a)+parseFloat(b)).toString().replace(".",",");
 }
 
-/* RESTA */
+/* ===== RESTA ===== */
 function resta(a,b){
   let A=a.replace(".","").split("").reverse();
   let B=b.replace(".","").split("").reverse();
   let borrow=0;
+
   for(let i=0;i<A.length;i++){
     let x=+A[i]-borrow;
     let y=+B[i]||0;
     if(x<y){ x+=10; borrow=1; }
     else borrow=0;
     let r=x-y;
+
     pasosEl.innerHTML+=`
-      <div class="paso">
+      <div>
         <span class="num">${x}</span>
         <span class="op"> − </span>
         <span class="num">${y}</span>
@@ -209,21 +203,24 @@ function resta(a,b){
         <span class="res">${r}</span>
       </div>`;
   }
+
   resultadoEl.textContent=(parseFloat(a)-parseFloat(b)).toString().replace(".",",");
 }
 
-/* MULTIPLICACIÓN */
+/* ===== MULTIPLICACIÓN ===== */
 function multiplicacion(a,b){
   let A=a.replace(".","").split("").reverse();
   let m=parseInt(b);
   let carry=0;
+
   for(let i=0;i<A.length;i++){
     let x=+A[i];
     let p=x*m+carry;
     carry=Math.floor(p/10);
     let r=p%10;
+
     pasosEl.innerHTML+=`
-      <div class="paso">
+      <div>
         <span class="num">${x}</span>
         <span class="op"> × </span>
         <span class="num">${m}</span>
@@ -232,30 +229,45 @@ function multiplicacion(a,b){
         <span class="res">${r}</span>
       </div>`;
   }
+
   resultadoEl.textContent=(parseFloat(a)*parseFloat(b)).toString().replace(".",",");
 }
 
-/* DIVISIÓN */
-function division(a,b){
-  let A=a.replace(".","");
-  let d=parseInt(b);
-  let resto=0;
-  for(let i=0;i<A.length;i++){
-    let n=parseInt(""+resto+A[i]);
-    let q=Math.floor(n/d);
-    resto=n%d;
-    pasosEl.innerHTML+=`
-      <div class="paso">
-        <span class="num">${n}</span>
+/* ===== DIVISIÓN (NO TOCADA) ===== */
+function divisionLarga(){
+  const divisor = parseInt(numB.value,10);
+  let texto = numA.value.replace(",","");
+  let decimales = numA.value.includes(",") ? numA.value.split(",")[1].length : 0;
+
+  let cociente = "";
+  let resto = 0;
+  let comaPuesta = false;
+
+  for(let i=0;i<texto.length;i++){
+    const cifra = resto*10 + parseInt(texto[i],10);
+    const q = Math.floor(cifra/divisor);
+    resto = cifra % divisor;
+    cociente += q;
+
+    pasosEl.innerHTML += `
+      <div>
+        <span class="num">${cifra}</span>
         <span class="op"> ÷ </span>
-        <span class="num">${d}</span>
+        <span class="num">${divisor}</span>
         <span class="op"> = </span>
         <span class="res">${q}</span>
-        <span class="llevada"> resto ${resto}</span>
+        &nbsp; resto <span class="llevada">${resto}</span>
       </div>`;
+
+    if(i === texto.length - decimales - 1 && decimales>0 && !comaPuesta){
+      cociente += ",";
+      comaPuesta = true;
+      pasosEl.innerHTML += `<div class="coma">Colocamos la coma</div>`;
+    }
   }
-  resultadoEl.textContent=(parseFloat(a)/parseFloat(b)).toString().replace(".",",");
-  restoEl.textContent=resto;
+
+  resultadoEl.textContent = cociente;
+  restoEl.textContent = resto;
 }
 </script>
 
