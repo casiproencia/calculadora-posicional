@@ -131,31 +131,65 @@ function multiplicacionPaso(a,b){
 /* ========================== */
 /* === DIVISIÓN PASO A PASO === */
 /* ========================== */
-function divisionPaso(a,b){
-  let A=a.replace(".","").replace(",","");
-  let d=parseInt(b);
-  let resto=0;
-  let res="";
-  pasosEl.innerHTML="";
+<script>
+function division(){
+  pasos.innerHTML = "";
+  restoEl.textContent = "—";
 
-  for(let i=0;i<A.length;i++){
-    let n=parseInt(""+resto+A[i]);
-    let q=Math.floor(n/d);
-    resto=n%d;
-    res+=q;
+  let A = numA.value.replace(",", ".");
+  let divisor = parseInt(numB.value);
 
-    pasosEl.innerHTML+=`
+  if (divisor === 0) {
+    pasos.innerHTML = "No se puede dividir entre 0";
+    return;
+  }
+
+  let partes = A.split(".");
+  let entero = partes[0];
+  let resto = 0;
+  let cociente = "";
+
+  /* === PARTE ENTERA === */
+  for (let d of entero) {
+    let n = resto * 10 + parseInt(d);
+    let q = Math.floor(n / divisor);
+    resto = n % divisor;
+    cociente += q;
+
+    pasos.innerHTML += `
       <div class="paso">
         <span class="num">${n}</span>
         <span class="op"> ÷ </span>
-        <span class="num">${d}</span>
+        <span class="num">${divisor}</span>
         <span class="op"> = </span>
         <span class="res">${q}</span>
         <span class="llevada"> resto ${resto}</span>
       </div>`;
   }
 
-  resultadoEl.textContent=(parseFloat(n(a))/parseFloat(n(b))).toString().replace(".",",");
-  restoEl.textContent=resto;
+  /* === DECIMALES === */
+  cociente += ",";
+  pasos.innerHTML += `<div class="paso coma">Colocamos la coma</div>`;
+
+  let decimales = 10; // cantidad de decimales
+  for (let i = 0; i < decimales; i++) {
+    resto *= 10;
+    let q = Math.floor(resto / divisor);
+    resto = resto % divisor;
+    cociente += q;
+
+    pasos.innerHTML += `
+      <div class="paso">
+        <span class="num">${resto + q * divisor}</span>
+        <span class="op"> ÷ </span>
+        <span class="num">${divisor}</span>
+        <span class="op"> = </span>
+        <span class="res">${q}</span>
+        <span class="llevada"> resto ${resto}</span>
+      </div>`;
+  }
+
+  resEl.textContent = cociente;
+  restoEl.textContent = resto;
 }
 </script>
