@@ -101,7 +101,12 @@ footer{
 </select>
 
 <input id="numA" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
-<input id="numB" inputmode="numeric" placeholder="Número B (ej: 7)">
+<input
+  id="b"
+  type="text"
+  inputmode="decimal"
+  pattern="[0-9,.,]*"
+  placeholder="Número B (ej: 7,5)">
 
 <button id="btnCalcular">CALCULAR</button>
 <button id="btnReset">REINICIAR</button>
