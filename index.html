@@ -43,7 +43,7 @@ select{
 input{
   background:#1e293b;
   color:#fff;
-  height:44px;
+  height:42px;
   padding:6px 10px;
   margin-bottom:10px;
 }
@@ -83,17 +83,17 @@ button{
   border-radius:12px;
 }
 
+.num{ font-weight:900; }
+.op{ color:#6d28d9; font-weight:900; }
+.res{ color:#15803d; font-weight:900; }
+.coma{ color:#1d4ed8; font-weight:900; }
+
 footer{
   text-align:center;
   margin-top:12px;
   opacity:0.7;
   font-size:13px;
 }
-
-.num{ font-weight:900; }
-.op{ color:#6d28d9; font-weight:900; }
-.res{ color:#15803d; font-weight:900; }
-.coma{ color:#1d4ed8; font-weight:900; }
 </style>
 </head>
 
@@ -129,82 +129,78 @@ footer{
 </div>
 
 <script>
-const numA = document.getElementById("numA");
-const numB = document.getElementById("numB");
-const operacion = document.getElementById("operacion");
-const resultadoEl = document.getElementById("resultado");
-const restoEl = document.getElementById("resto");
-const pasosEl = document.getElementById("pasos");
+const A = document.getElementById("numA");
+const B = document.getElementById("numB");
+const op = document.getElementById("operacion");
+const res = document.getElementById("resultado");
+const resto = document.getElementById("resto");
+const pasos = document.getElementById("pasos");
 
 btnCalcular.onclick = calcular;
 btnReset.onclick = resetear;
 
-function parse(v){ return parseFloat(v.replace(",", ".")); }
-function fmt(v){ return v.toString().replace(".", ","); }
+function p(v){ return parseFloat(v.replace(",", ".")); }
+function f(v){ return v.toString().replace(".", ","); }
 
 function calcular(){
-  pasosEl.innerHTML="";
-  restoEl.textContent="—";
+  pasos.innerHTML = "";
+  resto.textContent = "—";
 
-  if(!numA.value || !numB.value) return;
+  if(!A.value || !B.value) return;
 
-  const a = parse(numA.value);
-  const b = parse(numB.value);
-
+  const a = p(A.value);
+  const b = p(B.value);
   if(isNaN(a) || isNaN(b)) return;
 
-  if(operacion.value==="suma") suma(a,b);
-  if(operacion.value==="resta") resta(a,b);
-  if(operacion.value==="multiplicacion") multiplicacion(a,b);
-  if(operacion.value==="division") division(a,b);
+  if(op.value==="suma") suma(a,b);
+  if(op.value==="resta") restaOp(a,b);
+  if(op.value==="multiplicacion") multi(a,b);
+  if(op.value==="division") divi(a,b);
 }
 
 function resetear(){
-  numA.value="";
-  numB.value="";
-  resultadoEl.textContent="—";
-  restoEl.textContent="—";
-  pasosEl.innerHTML="";
+  A.value="";
+  B.value="";
+  res.textContent="—";
+  resto.textContent="—";
+  pasos.innerHTML="";
 }
-
-/* === OPERACIONES === */
 
 function suma(a,b){
-  const r = a + b;
-  resultadoEl.textContent = fmt(r);
-  pasosEl.innerHTML = `
-    <div><span class="num">${fmt(a)}</span> <span class="op">+</span> <span class="num">${fmt(b)}</span></div>
-    <div>Sumamos ambos números</div>
-    <div>Resultado: <span class="res">${fmt(r)}</span></div>`;
+  const r = a+b;
+  res.textContent=f(r);
+  pasos.innerHTML=`
+  <div><span class="num">${f(a)}</span> <span class="op">+</span> <span class="num">${f(b)}</span></div>
+  <div>Sumamos ambos números</div>
+  <div>Resultado: <span class="res">${f(r)}</span></div>`;
 }
 
-function resta(a,b){
-  const r = a - b;
-  resultadoEl.textContent = fmt(r);
-  pasosEl.innerHTML = `
-    <div><span class="num">${fmt(a)}</span> <span class="op">−</span> <span class="num">${fmt(b)}</span></div>
-    <div>Restamos el segundo al primero</div>
-    <div>Resultado: <span class="res">${fmt(r)}</span></div>`;
+function restaOp(a,b){
+  const r = a-b;
+  res.textContent=f(r);
+  pasos.innerHTML=`
+  <div><span class="num">${f(a)}</span> <span class="op">−</span> <span class="num">${f(b)}</span></div>
+  <div>Restamos el segundo número al primero</div>
+  <div>Resultado: <span class="res">${f(r)}</span></div>`;
 }
 
-function multiplicacion(a,b){
-  const r = a * b;
-  resultadoEl.textContent = fmt(r);
-  pasosEl.innerHTML = `
-    <div><span class="num">${fmt(a)}</span> <span class="op">×</span> <span class="num">${fmt(b)}</span></div>
-    <div>Multiplicamos ambos números</div>
-    <div>Resultado: <span class="res">${fmt(r)}</span></div>`;
+function multi(a,b){
+  const r = a*b;
+  res.textContent=f(r);
+  pasos.innerHTML=`
+  <div><span class="num">${f(a)}</span> <span class="op">×</span> <span class="num">${f(b)}</span></div>
+  <div>Multiplicamos ambos números</div>
+  <div>Resultado: <span class="res">${f(r)}</span></div>`;
 }
 
-function division(a,b){
-  const r = a / b;
-  resultadoEl.textContent = fmt(r.toFixed(6));
-
-  pasosEl.innerHTML = `
-    <div><span class="num">${fmt(a)}</span> <span class="op">÷</span> <span class="num">${fmt(b)}</span></div>
-    <div>Dividimos normalmente</div>
-    <div>Al no ser exacta, aparece la <span class="coma">coma</span></div>
-    <div>Resultado: <span class="res">${fmt(r.toFixed(6))}</span></div>`;
+function divi(a,b){
+  const r = a/b;
+  res.textContent=f(r.toFixed(6));
+  pasos.innerHTML=`
+  <div><span class="num">${f(a)}</span> <span class="op">÷</span> <span class="num">${f(b)}</span></div>
+  <div>Dividimos normalmente</div>
+  <div>Si no es exacta, aparece la <span class="coma">coma</span></div>
+  <div>Resultado: <span class="res">${f(r.toFixed(6))}</span></div>`;
 }
 </script>
 
