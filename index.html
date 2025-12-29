@@ -8,22 +8,14 @@
 <style>
 body{
   margin:0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
   background:#020617;
   color:#fff;
   display:flex;
   justify-content:center;
 }
-
-.app{
-  width:360px;
-  padding:14px;
-}
-
-h1{
-  text-align:center;
-  margin-bottom:12px;
-}
+.app{width:360px;padding:14px;}
+h1{text-align:center;margin-bottom:12px;}
 
 select,input,button{
   width:100%;
@@ -46,35 +38,16 @@ input{
   height:42px;
   padding:6px 10px;
   margin-bottom:10px;
-  font-size:16px;
 }
 
-button{
-  padding:12px;
-  margin-bottom:10px;
-  font-weight:bold;
-  color:#fff;
-}
+button{padding:12px;margin-bottom:10px;font-weight:bold;color:#fff;}
+#calc{background:#2563eb;}
+#reset{background:#374151;}
 
-#calcular{ background:#2563eb; }
-#reset{ background:#374151; }
-
-.resultados{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-
-.box{
-  flex:1;
-  padding:10px;
-  border-radius:12px;
-  font-weight:bold;
-  text-align:center;
-}
-
-.azul{ background:#1e3a8a; }
-.verde{ background:#166534; }
+.resultados{display:flex;gap:10px;margin-top:10px;}
+.box{flex:1;padding:10px;border-radius:12px;font-weight:bold;text-align:center;}
+.azul{background:#1e3a8a;}
+.verde{background:#166534;}
 
 .pasos{
   margin-top:12px;
@@ -84,19 +57,12 @@ button{
   border-radius:12px;
 }
 
-footer{
-  text-align:center;
-  margin-top:12px;
-  opacity:0.7;
-  font-size:13px;
-}
+.num{font-weight:900;}
+.op{color:#7c3aed;font-weight:900;}
+.res{color:#15803d;font-weight:900;}
+.info{color:#1d4ed8;font-weight:900;}
 
-/* Colores paso a paso */
-.num{ color:#020617; font-weight:900; }
-.op{ color:#7c3aed; font-weight:900; }
-.res{ color:#15803d; font-weight:900; }
-.rest{ color:#c2410c; font-weight:900; }
-.coma{ color:#1d4ed8; font-weight:900; }
+footer{text-align:center;margin-top:12px;opacity:.7;font-size:13px;}
 </style>
 </head>
 
@@ -112,10 +78,10 @@ footer{
   <option value="div">DIVISIÓN</option>
 </select>
 
-<input id="a" type="text" inputmode="decimal" placeholder="Número A (ej: 65298,35)">
-<input id="b" type="text" inputmode="decimal" placeholder="Número B (ej: 7)">
+<input id="a" inputmode="decimal" placeholder="Número A (ej: 65298,35)">
+<input id="b" inputmode="decimal" placeholder="Número B (ej: 7)">
 
-<button id="calcular">CALCULAR</button>
+<button id="calc">CALCULAR</button>
 <button id="reset">REINICIAR</button>
 
 <div class="resultados">
@@ -132,30 +98,30 @@ footer{
 </div>
 
 <script>
-const a = document.getElementById("a");
-const b = document.getElementById("b");
-const op = document.getElementById("op");
-const res = document.getElementById("res");
-const restoEl = document.getElementById("resto");
-const pasos = document.getElementById("pasos");
+const a=document.getElementById("a");
+const b=document.getElementById("b");
+const op=document.getElementById("op");
+const res=document.getElementById("res");
+const resto=document.getElementById("resto");
+const pasos=document.getElementById("pasos");
 
-document.getElementById("calcular").onclick = calcular;
-document.getElementById("reset").onclick = reset;
+document.getElementById("calc").onclick=calcular;
+document.getElementById("reset").onclick=reset;
 
-function n(x){ return parseFloat(x.replace(",", ".")); }
+function n(v){return parseFloat(v.replace(",","."));}
+function f(v){return v.toString().replace(".",",");}
 
 function reset(){
-  a.value=""; b.value="";
+  a.value="";b.value="";
   res.textContent="—";
-  restoEl.textContent="—";
+  resto.textContent="—";
   pasos.innerHTML="";
 }
 
 function calcular(){
   pasos.innerHTML="";
-  restoEl.textContent="—";
-
-  if(!a.value || !b.value) return;
+  resto.textContent="—";
+  if(!a.value||!b.value) return;
 
   if(op.value==="suma") suma();
   if(op.value==="resta") resta();
@@ -163,57 +129,50 @@ function calcular(){
   if(op.value==="div") divi();
 }
 
-/* ===== SUMA ===== */
 function suma(){
-  let r = n(a.value)+n(b.value);
-  res.textContent = r.toString().replace(".",",");
-  pasos.innerHTML = `<div><span class="num">${a.value}</span>
+  let r=n(a.value)+n(b.value);
+  res.textContent=f(r);
+  pasos.innerHTML=
+   `<div><span class="num">${a.value}</span>
     <span class="op"> + </span>
     <span class="num">${b.value}</span>
     <span class="op"> = </span>
-    <span class="res">${res.textContent}</span></div>`;
+    <span class="res">${f(r)}</span></div>`;
 }
 
-/* ===== RESTA ===== */
 function resta(){
-  let r = n(a.value)-n(b.value);
-  res.textContent = r.toString().replace(".",",");
-  pasos.innerHTML = `<div><span class="num">${a.value}</span>
+  let r=n(a.value)-n(b.value);
+  res.textContent=f(r);
+  pasos.innerHTML=
+   `<div><span class="num">${a.value}</span>
     <span class="op"> − </span>
     <span class="num">${b.value}</span>
     <span class="op"> = </span>
-    <span class="res">${res.textContent}</span></div>`;
+    <span class="res">${f(r)}</span></div>`;
 }
 
-/* ===== MULTIPLICACIÓN ===== */
 function multi(){
-  let r = n(a.value)*n(b.value);
-  res.textContent = r.toString().replace(".",",");
-  pasos.innerHTML = `<div><span class="num">${a.value}</span>
+  let r=n(a.value)*n(b.value);
+  res.textContent=f(r);
+  pasos.innerHTML=
+   `<div><span class="num">${a.value}</span>
     <span class="op"> × </span>
     <span class="num">${b.value}</span>
     <span class="op"> = </span>
-    <span class="res">${res.textContent}</span></div>`;
+    <span class="res">${f(r)}</span></div>`;
 }
 
-/* ===== DIVISIÓN CORRECTA ===== */
 function divi(){
-  let dividendo = n(a.value);
-  let divisor = n(b.value);
-
-  let r = dividendo/divisor;
-  res.textContent = r.toFixed(10).replace(".",",");
-  restoEl.textContent = (dividendo % divisor).toString().replace(".",",");
-
-  pasos.innerHTML = `
-    <div>
-      <span class="num">${a.value}</span>
-      <span class="op"> ÷ </span>
-      <span class="num">${b.value}</span>
-      <span class="op"> = </span>
-      <span class="res">${res.textContent}</span>
-    </div>
-    <div class="coma">La coma aparece al pasar a decimales</div>`;
+  let r=n(a.value)/n(b.value);
+  res.textContent=f(r.toFixed(6));
+  resto.textContent=f(n(a.value)%n(b.value));
+  pasos.innerHTML=
+   `<div><span class="num">${a.value}</span>
+    <span class="op"> ÷ </span>
+    <span class="num">${b.value}</span>
+    <span class="op"> = </span>
+    <span class="res">${f(r.toFixed(6))}</span></div>
+    <div class="info">La coma aparece al continuar la división</div>`;
 }
 </script>
 
