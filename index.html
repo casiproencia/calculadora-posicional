@@ -32,7 +32,6 @@ select, input, button{
   font-size:16px;
 }
 
-/* SELECT */
 select{
   background:#16a34a;
   color:#fff;
@@ -41,17 +40,14 @@ select{
   margin-bottom:10px;
 }
 
-/* INPUTS (estrechos y teclado numérico) */
 input{
   background:#1e293b;
   color:#fff;
   height:44px;
   padding:6px 10px;
   margin-bottom:10px;
-  font-size:16px;
 }
 
-/* BOTONES */
 button{
   padding:12px;
   margin-bottom:10px;
@@ -94,11 +90,9 @@ footer{
   font-size:13px;
 }
 
-/* COLORES PASO A PASO */
-.num{ color:#020617; font-weight:900; }
+.num{ font-weight:900; }
 .op{ color:#6d28d9; font-weight:900; }
 .res{ color:#15803d; font-weight:900; }
-.resto{ color:#b91c1c; font-weight:900; }
 .coma{ color:#1d4ed8; font-weight:900; }
 </style>
 </head>
@@ -115,8 +109,8 @@ footer{
   <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="numA" type="text" inputmode="decimal" placeholder="Número A (ej: 65274,41)">
-<input id="numB" type="text" inputmode="decimal" placeholder="Número B (ej: 7)">
+<input id="numA" type="text" inputmode="decimal" placeholder="Número A (ej: 60000,47)">
+<input id="numB" type="text" inputmode="decimal" placeholder="Número B (ej: 2)">
 
 <button id="btnCalcular">CALCULAR</button>
 <button id="btnReset">REINICIAR</button>
@@ -145,12 +139,8 @@ const pasosEl = document.getElementById("pasos");
 btnCalcular.onclick = calcular;
 btnReset.onclick = resetear;
 
-function toNumber(v){
-  return parseFloat(v.replace(",", "."));
-}
-function toComma(v){
-  return v.toString().replace(".", ",");
-}
+function parse(v){ return parseFloat(v.replace(",", ".")); }
+function fmt(v){ return v.toString().replace(".", ","); }
 
 function calcular(){
   pasosEl.innerHTML="";
@@ -158,8 +148,8 @@ function calcular(){
 
   if(!numA.value || !numB.value) return;
 
-  const a = toNumber(numA.value);
-  const b = toNumber(numB.value);
+  const a = parse(numA.value);
+  const b = parse(numB.value);
 
   if(isNaN(a) || isNaN(b)) return;
 
@@ -177,56 +167,44 @@ function resetear(){
   pasosEl.innerHTML="";
 }
 
-/* === OPERACIONES CON PASO A PASO === */
+/* === OPERACIONES === */
 
 function suma(a,b){
   const r = a + b;
-  resultadoEl.textContent = toComma(r);
+  resultadoEl.textContent = fmt(r);
   pasosEl.innerHTML = `
-    <div><span class="num">${toComma(a)}</span>
-    <span class="op"> + </span>
-    <span class="num">${toComma(b)}</span></div>
+    <div><span class="num">${fmt(a)}</span> <span class="op">+</span> <span class="num">${fmt(b)}</span></div>
     <div>Sumamos ambos números</div>
-    <div>Resultado: <span class="res">${toComma(r)}</span></div>`;
+    <div>Resultado: <span class="res">${fmt(r)}</span></div>`;
 }
 
 function resta(a,b){
   const r = a - b;
-  resultadoEl.textContent = toComma(r);
+  resultadoEl.textContent = fmt(r);
   pasosEl.innerHTML = `
-    <div><span class="num">${toComma(a)}</span>
-    <span class="op"> − </span>
-    <span class="num">${toComma(b)}</span></div>
+    <div><span class="num">${fmt(a)}</span> <span class="op">−</span> <span class="num">${fmt(b)}</span></div>
     <div>Restamos el segundo al primero</div>
-    <div>Resultado: <span class="res">${toComma(r)}</span></div>`;
+    <div>Resultado: <span class="res">${fmt(r)}</span></div>`;
 }
 
 function multiplicacion(a,b){
   const r = a * b;
-  resultadoEl.textContent = toComma(r);
+  resultadoEl.textContent = fmt(r);
   pasosEl.innerHTML = `
-    <div><span class="num">${toComma(a)}</span>
-    <span class="op"> × </span>
-    <span class="num">${toComma(b)}</span></div>
+    <div><span class="num">${fmt(a)}</span> <span class="op">×</span> <span class="num">${fmt(b)}</span></div>
     <div>Multiplicamos ambos números</div>
-    <div>Resultado: <span class="res">${toComma(r)}</span></div>`;
+    <div>Resultado: <span class="res">${fmt(r)}</span></div>`;
 }
 
 function division(a,b){
   const r = a / b;
-  const resto = Math.round((a - Math.floor(r) * b) * 100) / 100;
-
-  resultadoEl.textContent = toComma(r.toFixed(6));
-  restoEl.textContent = toComma(resto);
+  resultadoEl.textContent = fmt(r.toFixed(6));
 
   pasosEl.innerHTML = `
-    <div><span class="num">${toComma(a)}</span>
-    <span class="op"> ÷ </span>
-    <span class="num">${toComma(b)}</span></div>
+    <div><span class="num">${fmt(a)}</span> <span class="op">÷</span> <span class="num">${fmt(b)}</span></div>
     <div>Dividimos normalmente</div>
-    <div>Aparece la <span class="coma">coma</span> al continuar la división</div>
-    <div>Resultado: <span class="res">${toComma(r.toFixed(6))}</span></div>
-    <div>Resto: <span class="resto">${toComma(resto)}</span></div>`;
+    <div>Al no ser exacta, aparece la <span class="coma">coma</span></div>
+    <div>Resultado: <span class="res">${fmt(r.toFixed(6))}</span></div>`;
 }
 </script>
 
