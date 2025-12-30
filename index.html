@@ -97,8 +97,8 @@ footer{text-align:center;margin-top:10px;opacity:.7;font-size:13px;}
   <option value="division">DIVISIÓN</option>
 </select>
 
-<input id="numA" type="text" inputmode="decimal" placeholder="Número A (ej: 60000,74)">
-<input id="numB" type="text" inputmode="decimal" placeholder="Número B (ej: 831,5)">
+<input id="numA" type="text" inputmode="decimal" placeholder="Número A (ej: 25387,23)">
+<input id="numB" type="text" inputmode="decimal" placeholder="Número B (ej: 9)">
 
 <button id="btnCalcular">CALCULAR</button>
 <button id="btnReset">REINICIAR</button>
@@ -127,7 +127,7 @@ const pasosEl = document.getElementById("pasos");
 btnCalcular.onclick = calcular;
 btnReset.onclick = resetear;
 
-function n(v){ return v.replace(",", "."); }
+function normaliza(v){ return v.replace(",", "."); }
 
 function resetear(){
   numA.value="";
@@ -142,8 +142,8 @@ function calcular(){
   restoEl.textContent="—";
   if(!numA.value || !numB.value) return;
 
-  const a = n(numA.value);
-  const b = n(numB.value);
+  const a = normaliza(numA.value);
+  const b = normaliza(numB.value);
 
   if(operacion.value==="suma") sumaPasoAPaso(a,b);
   if(operacion.value==="resta") restaPasoAPaso(a,b);
@@ -208,12 +208,11 @@ function restaPasoAPaso(a,b){
   resultadoEl.textContent=res.reverse().join("");
 }
 
-/* ===== MULTIPLICACIÓN PASO A PASO ===== */
+/* ===== MULTIPLICACIÓN ===== */
 function multiplicacionPasoAPaso(a,b){
   const A=a.replace(".","").split("").reverse();
   const m=parseInt(b,10);
-  let carry=0;
-  let res=[];
+  let carry=0,res=[];
 
   for(let i=0;i<A.length;i++){
     let x=parseInt(A[i],10);
@@ -244,12 +243,16 @@ function multiplicacionPasoAPaso(a,b){
   resultadoEl.textContent=r.replace(".",",");
 }
 
-/* ===== DIVISIÓN PASO A PASO ===== */
+/* ===== DIVISIÓN (DECIMALES CORREGIDOS) ===== */
 function divisionPasoAPaso(a,b){
   const divisor=parseInt(b,10);
+  const partes=a.split(".");
+  const parteEnteraLen=partes[0].length;
+
   let texto=a.replace(".","");
   let resto=0;
   let cociente="";
+  let comaPuesta=false;
 
   for(let i=0;i<texto.length;i++){
     let n=resto*10+parseInt(texto[i],10);
@@ -266,6 +269,12 @@ function divisionPasoAPaso(a,b){
         <span class="res">${q}</span>,
         resto <span class="llevada">${resto}</span>
       </div>`;
+
+    if(i===parteEnteraLen-1 && !comaPuesta && partes[1]){
+      cociente+=",";
+      pasosEl.innerHTML+=`<div class="coma">Colocamos la coma</div>`;
+      comaPuesta=true;
+    }
   }
 
   resultadoEl.textContent=cociente;
