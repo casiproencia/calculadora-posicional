@@ -78,6 +78,7 @@ button{
 .op{color:#6d28d9;font-weight:900;}
 .res{color:#15803d;font-weight:900;}
 .llevada{color:#c2410c;font-weight:900;}
+.coma{color:#1d4ed8;font-weight:900;}
 .paso{margin-bottom:6px;}
 
 footer{text-align:center;margin-top:10px;opacity:.7;font-size:13px;}
@@ -146,15 +147,15 @@ function calcular(){
 
   if(operacion.value==="suma") sumaPasoAPaso(a,b);
   if(operacion.value==="resta") restaPasoAPaso(a,b);
-  if(operacion.value==="multiplicacion") multiplicacion(a,b);
-  if(operacion.value==="division") division(a,b);
+  if(operacion.value==="multiplicacion") multiplicacionPasoAPaso(a,b);
+  if(operacion.value==="division") divisionPasoAPaso(a,b);
 }
 
-/* ===== SUMA PASO A PASO ===== */
+/* ===== SUMA ===== */
 function sumaPasoAPaso(a,b){
   let A=a.replace(".","").split("").reverse();
   let B=b.replace(".","").split("").reverse();
-  let carry=0, res=[];
+  let carry=0,res=[];
 
   for(let i=0;i<Math.max(A.length,B.length);i++){
     let x=+A[i]||0;
@@ -178,14 +179,14 @@ function sumaPasoAPaso(a,b){
     carry=llevo;
   }
   if(carry) res.push(carry);
-  resultadoEl.textContent = res.reverse().join("");
+  resultadoEl.textContent=res.reverse().join("");
 }
 
-/* ===== RESTA PASO A PASO ===== */
+/* ===== RESTA ===== */
 function restaPasoAPaso(a,b){
   let A=a.replace(".","").split("").reverse();
   let B=b.replace(".","").split("").reverse();
-  let borrow=0, res=[];
+  let borrow=0,res=[];
 
   for(let i=0;i<A.length;i++){
     let x=(+A[i]||0)-borrow;
@@ -204,35 +205,71 @@ function restaPasoAPaso(a,b){
       </div>`;
     res.push(r);
   }
-  resultadoEl.textContent = res.reverse().join("");
+  resultadoEl.textContent=res.reverse().join("");
 }
 
-/* ===== MULTIPLICACIÓN (FUNCIONAL) ===== */
-function multiplicacion(a,b){
-  const r = parseFloat(a) * parseFloat(b);
-  resultadoEl.textContent = r.toFixed(2).replace(".",",");
-  pasosEl.innerHTML = `
-    <div class="paso">
-      <span class="num">${numA.value}</span>
-      <span class="op"> × </span>
-      <span class="num">${numB.value}</span>
-      <span class="op"> = </span>
-      <span class="res">${resultadoEl.textContent}</span>
-    </div>`;
+/* ===== MULTIPLICACIÓN PASO A PASO ===== */
+function multiplicacionPasoAPaso(a,b){
+  const A=a.replace(".","").split("").reverse();
+  const m=parseInt(b,10);
+  let carry=0;
+  let res=[];
+
+  for(let i=0;i<A.length;i++){
+    let x=parseInt(A[i],10);
+    let base=x*m;
+    let total=base+carry;
+    let pongo=total%10;
+    let llevo=Math.floor(total/10);
+
+    pasosEl.innerHTML+=`
+      <div class="paso">
+        <span class="num">${x}</span>
+        <span class="op"> × </span>
+        <span class="num">${m}</span>
+        <span class="op"> = </span>
+        <span class="num">${base}</span>
+        ${carry?` <span class="op"> + </span><span class="llevada">${carry}</span>`:""}
+        <span class="op"> = </span>
+        <span class="res">${total}</span>
+        → pongo <span class="res">${pongo}</span>,
+        llevo <span class="llevada">${llevo}</span>
+      </div>`;
+    res.push(pongo);
+    carry=llevo;
+  }
+  if(carry) res.push(carry);
+
+  const r=(parseFloat(a)*parseFloat(b)).toFixed(2);
+  resultadoEl.textContent=r.replace(".",",");
 }
 
-/* ===== DIVISIÓN (FUNCIONAL) ===== */
-function division(a,b){
-  const r = parseFloat(a) / parseFloat(b);
-  resultadoEl.textContent = r.toFixed(2).replace(".",",");
-  pasosEl.innerHTML = `
-    <div class="paso">
-      <span class="num">${numA.value}</span>
-      <span class="op"> ÷ </span>
-      <span class="num">${numB.value}</span>
-      <span class="op"> = </span>
-      <span class="res">${resultadoEl.textContent}</span>
-    </div>`;
+/* ===== DIVISIÓN PASO A PASO ===== */
+function divisionPasoAPaso(a,b){
+  const divisor=parseInt(b,10);
+  let texto=a.replace(".","");
+  let resto=0;
+  let cociente="";
+
+  for(let i=0;i<texto.length;i++){
+    let n=resto*10+parseInt(texto[i],10);
+    let q=Math.floor(n/divisor);
+    resto=n%divisor;
+    cociente+=q;
+
+    pasosEl.innerHTML+=`
+      <div class="paso">
+        <span class="num">${n}</span>
+        <span class="op"> ÷ </span>
+        <span class="num">${divisor}</span>
+        <span class="op"> = </span>
+        <span class="res">${q}</span>,
+        resto <span class="llevada">${resto}</span>
+      </div>`;
+  }
+
+  resultadoEl.textContent=cociente;
+  restoEl.textContent=resto;
 }
 </script>
 
