@@ -31,10 +31,15 @@ button {
     display: block;
 }
 
-select {
-    background: #16a34a;
-    color: white;
-    font-weight: bold;
+select{
+  background:#16a34a;
+  color:#fff;
+  font-weight:800;
+  padding:16px 14px;      /* MÁS GORDITA */
+  margin-bottom:12px;
+  font-size:17px;
+  min-height:54px;        /* CLAVE PARA macOS */
+  border-radius:14px;
 }
 
 input {
